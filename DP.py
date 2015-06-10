@@ -228,7 +228,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
     return Dictionary
->>>>>>> Stashed changes
+
 
 def findBest(Parasite, MinimumDict):
     treeMin = {}
