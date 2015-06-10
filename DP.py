@@ -174,32 +174,38 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
-<<<<<<< Updated upstream
-        BestSwitchLocations[(ep, eh)] = []
         BestSwitchLocations[(ep, "hTop")] = [(None, None)]
-=======
-        BestSwitchLocations[(ep, "hTop")] = (None,None)
->>>>>>> Stashed changes
+
+
         for eh in preorder(hostTree, "hTop"):
             eh1 = hostTree[eh][2]
             eh2 = hostTree[eh][3]
             if eh1 != None and eh2 != None:
-
+            	BestSwitchLocations[(ep, eh1)] = []
+            	BestSwitchLocations[(ep, eh2)] = []
                 BestSwitch[(ep, eh1)] = min(BestSwitch[(ep, eh)], O[(ep, eh2)])
                 BestSwitch[(ep, eh2)] = min(BestSwitch[(ep, eh)], O[(ep, eh1)])
-
+                print BestSwitch[(ep, eh1)]
+                print BestSwitch[(ep, eh2)]
+                print ep
+                print eh
+                print eh1
+                print eh2
                 if BestSwitch[(ep, eh1)] == BestSwitch[(ep, eh)]:
-                	BestSwitchLocations[(ep, eh1)].append(BestSwitchLocations[(ep, eh)])
+                	BestSwitchLocations[(ep, eh1)].extend(BestSwitchLocations[(ep, eh)])
                 if BestSwitch[(ep, eh1)] == O[(ep, eh2)]:
-                	BestSwitchLocations[(ep, eh1)].append(Obest[(vp, hChild2)])
+                	BestSwitchLocations[(ep, eh1)].extend(Obest[(vp, hChild2)])
                 if BestSwitch[(ep, eh2)] == BestSwitch[(ep, eh)]:
-                	BestSwitchLocations[(ep, eh2)].append(BestSwitchLocations[(ep, eh)])
+                	BestSwitchLocations[(ep, eh2)].extend(BestSwitchLocations[(ep, eh)])
                 if BestSwitch[(ep, eh2)] == O[(ep, eh1)]:
-                	BestSwitchLocations[(ep, eh2)].append(Obest[(vp, hChild1)])
+                	BestSwitchLocations[(ep, eh2)].extend(Obest[(vp, hChild1)])
+    for key in BestSwitchLocations.keys():
+     	if BestSwitchLocations[key][0] == (None, None):
+     		BestSwitchLocations[key] = BestSwitchLocations[key][1:]
     # print BestSwitchLocations
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
-    return O, Obest, BestSwitch
+    return BestSwitchLocations
 
 def findBest(Parasite, MinimumDict):
     treeMin = {}
