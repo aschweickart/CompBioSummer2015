@@ -227,9 +227,9 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # print BestSwitchLocations
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
-
     treeMin = findBest(parasiteTree, Minimums)
-    
+    DTL = {}
+    DTL = findPath(treeMin, Dictionary, DTL)
     return DTL
 
 
