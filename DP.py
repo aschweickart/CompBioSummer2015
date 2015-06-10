@@ -9,8 +9,6 @@
 # An edge name may be None.  The "dummy" edge leading to the root of the
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
 
-import newickFormatReader
-
 H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): ('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': ('Top', 'h6', ('h6', 'h7'), ('h6', 'h8')), ('h7', 'h2'): ('h7', 'h2', None, None), ('h8', 'h4'): ('h8', 'h4', None, None), ('h7', 'h1'): ('h7', 'h1', None, None)}
 P = {('p6', 'p8'): ('p6', 'p8', ('p8', 'p3'), ('p8', 'p4')), ('p7', 'p2'): ('p7', 'p2', None, None), ('p6', 'p7'): ('p6', 'p7', ('p7', 'p1'), ('p7', 'p2')), ('p8', 'p4'): ('p8', 'p4', None, None), ('p8', 'p3'): ('p8', 'p3', None, None), 'pTop': ('Top', 'p6', ('p6', 'p7'), ('p6', 'p8')), ('p7', 'p1'): ('p7', 'p1', None, None)}
 phi =  {'p2': 'h3', 'p3': 'h2', 'p1': 'h1', 'p4': 'h4'} 
@@ -59,6 +57,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     Dictionary = {}
     BestSwitch = {}
     Minimums = {}
+    Obest = {}
+
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
             vp = parasiteTree[ep][1]
@@ -106,22 +106,22 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                         coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2)]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
                         coMin = ["CO", (pChild1, hChild1), (pChild2, hChild2)]
-                    else: coMin = ["CO2", (pChild2, hChild1), (pChild1, hChild2), (pChild1, hChild1), (pChild2, hChild2)]
+                    else: coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2)]+["CO", (pChild1, hChild1), (pChild2, hChild2)]
                 else:
                     COepeh = Infinity
                     coMin = ["inf"]
                 # Compute LOSS
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
-                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["LOSS", (ep[1], hChild1)]
-                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["LOSS", (ep[1], hChild2)]
-                else: lossMin =["LOSS2", (ep[1], hChild1), (ep[1], hChild2)]
+                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["LOSS", (ep[1], hChild1), (None, None)]
+                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["LOSS", (ep[1], hChild2), (None, None)]
+                else: lossMin =["LOSS", (ep[1], hChild1), (None, None)] + ["LOSS", (ep[1], hChild2), (None, None)]
                 # else:
                 #     LOSSepeh = min(C[(ep, eh1)], C[(ep, eh2)])
                 #     lossMin = "Skip"
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
-                if min(COepeh, LOSSepeh) == COepeh:
+                if COepeh<LOSSepeh:
                    Amin = coMin
-                elif min(COepeh, LOSSepeh) == LOSSepeh: 
+                elif LOSSepeh<COepeh: 
                     Amin = lossMin
                 else: Amin = lossMin + coMin
 
@@ -145,16 +145,26 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
                 dupList = ["DUP", (pChild1, eh[1]), (pChild2, eh[1])]
-                Dictionary[(vp, vh)].extend(dupList)
+                Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
-                Dictionary[(vp, vh)].extend(switchList)
-            if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].extend(Amin)
+                Dictionary[(vp, vh)].append(switchList)
+            if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].append(Amin)
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
                 del Dictionary[(vp, vh)]
             # Compute O(ep, eh)
-            if vhIsATip: O[(ep, eh)] = C[(ep, eh)]                
-            else: O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
+            if vhIsATip: 
+                O[(ep, eh)] = C[(ep, eh)]  
+                Obest[(vp, vh)] = (vp, vh)              
+            else: 
+                omin = [C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]].index(min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]))
+                if omin == 0:
+                    Obest[(vp,vh)] =  (vp, vh)
+                if omin == 1:
+                    Obest[(vp,vh)] = Obest[(vp, hChild1)]
+                else:
+                    Obest[(vp,vh)] = Obest[(vp, hChild2)]
+                O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
 
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
@@ -191,8 +201,8 @@ def findPath(Tuple, eventDict):
         if type(thing) == tuple:
             findPath(thing, eventDict)
 
-def reconcile(fileName, D, T, L):
-    """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
-        Those Values"""
-    host, paras, phi = newickFormatReader.getInput(fileName)
-    return DP(host, paras, phi, D, T, L)            
+            
+
+            
+    
+        
