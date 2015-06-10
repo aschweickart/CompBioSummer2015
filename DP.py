@@ -158,7 +158,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
-                dupList = ["DUP", (pChild1, eh[1]), (pChild2, eh[1])]
+                dupList = ["DUP", (pChild1, vh), (pChild2, vh)]
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].append(switchList)
