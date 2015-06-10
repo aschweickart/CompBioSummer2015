@@ -180,7 +180,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
-        BestSwitchLocations[(ep[1], H["hTop"][1])] = [(None,None)]
+        BestSwitchLocations[(ep[1], hostTree["hTop"][1])] = [(None,None)]
         for eh in preorder(hostTree, "hTop"):
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
