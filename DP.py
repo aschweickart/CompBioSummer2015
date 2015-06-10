@@ -60,6 +60,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     BestSwitch = {}
     Minimums = {}
     Obest = {}
+    BestSwitchLocations = {}
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
@@ -137,9 +138,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if not vpIsATip:
                 SWITCHepeh = T + min(C[(ep1, eh)] + BestSwitch[(ep2, eh)], \
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)])
-                if SWITCHepeh == T + C[(ep1, eh)] + BestSwitch[(ep2, eh)]:
-                    switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, None)]
-                else: switchList = ["SWITCH", (pChild2, eh[1]), (pChild1, None)]
+                if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
+                    switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(ep1, eh)][1])]
+                elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
+                    switchList= ["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(ep2, eh)][1])]
+                else: switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(ep1, eh)][1])]+["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(ep2, eh)][1])]
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
@@ -174,6 +177,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             eh1 = hostTree[eh][2]
             eh2 = hostTree[eh][3]
             if eh1 != None and eh2 != None:
+                if BestSwitch[(ep, eh)] <= O[(ep,eh2)]:
+                    BestSwitchLocations[(ep,eh1)] = BestSwitchLocations[(ep, eh)]
+                else:
+                    BestSwitchLocations[(ep,eh1)] = Obest[(vp,hChild2)]
+                if BestSwitch[(ep,eh)] <= O[(ep,eh1)]:
+                    BestSwitchLocations[(ep,eh2)] = BestSwitchLocations[(ep,eh)]
+                else:
+                    BestSwitchLocations[(ep,eh2)] = Obest[(vp,hChild1)]
+
                 BestSwitch[(ep, eh1)] = min(BestSwitch[(ep, eh)], O[(ep, eh2)])
                 BestSwitch[(ep, eh2)] = min(BestSwitch[(ep, eh)], O[(ep, eh1)])
     for key in Dictionary.keys():
