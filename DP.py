@@ -228,12 +228,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
 
-    return Minimums, Dictionary
-# =======
-#     treeMin = findBest(parasiteTree, Minimums)
-    
-#     return DTL
-# >>>>>>> origin/Annalise's-Branch
+    treeMin = findBest(parasiteTree, Minimums)
+    DTL = {}
+    DTL = findPath(treeMin, Dictionary, DTL)
+    return DTL
+
 
 
 def findBest(Parasite, MinimumDict):
