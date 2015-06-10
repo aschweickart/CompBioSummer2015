@@ -45,11 +45,29 @@ def postorder(Tree, rootEdgeName):
                postorder(Tree, rightChildEdgeName) + \
                [rootEdgeName]
 
+def postorderDTLwrapper(DTL, ParasiteTree):
+    postorderDTL(DTL, ParasiteTree, 0)
+
+def postorderDTL(DTL, ParasiteTree, level):
+
+    keysL = []
+    ParasiteRoot = ParasiteTree['pTop'][1]
+    for key in DTL:
+        if DTL[key][0] == ParasiteRoot:
+            for i in range(length(DTL[key]) - 1):
+                event = DTL[key][i]
+                child1 = event[1]
+                child2 = event[2]
+                keysL = keysL + [(event, level)] + [postorderDTL(DTL, child1, level + 1), postorderDTL(DTL, child2, level + 1)]
+
+    return keysL
+
+
 	 
 
-def bookkeeping(DTL):
-	"""This function inputs the DTL graph and then records what the max is at each mapping node and 
-	where the max came from so outputs BSFH"""
+"""def bookkeeping(DTL):
+	This function inputs the DTL graph and then records what the max is at each mapping node and 
+	where the max came from so outputs BSFH
 
     #BSFHMap = {(mapping node): [['event', (vertex), (vertex), prob], maxProb]}
     #BSFHEvent = {(event node): max}
@@ -80,7 +98,7 @@ def bookkeeping(DTL):
 
         
 
-
+"""
 
 def greedy(DTL, k):
 	"""This function inputs the BSFH, DTL and k, and calls bokkeeping to find the best k reconciliations,
