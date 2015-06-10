@@ -146,10 +146,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 SWITCHepeh = T + min(C[(ep1, eh)] + BestSwitch[(ep2, eh)], \
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)])
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
-                    switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0])]
+                    switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0][1])]
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
-                    switchList= ["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0])]
-                else: switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0])]+["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0])]
+                    switchList= ["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0][1])]
+                else: switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0][1])]+["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0][1])]
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
@@ -248,11 +248,13 @@ def findBest(Parasite, MinimumDict):
 
 
 def findPath(Tuple, eventDict):
-    print Tuple
+    List = [Tuple, eventDict[Tuple][0][0], eventDict[Tuple][-1]]
     for thing1 in eventDict[Tuple]:
-        for thing2 in thing1:
-            if type(thing2) == tuple:
-                findPath(thing2, eventDict)
+        if type(thing1)==list:
+            for thing2 in thing1:
+                if type(thing2) == tuple:
+                    List.append(findPath(thing2, eventDict))
+    return List
 
 def reconcile(fileName, D, T, L):
     """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
