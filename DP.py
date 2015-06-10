@@ -228,9 +228,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
     treeMin = findBest(parasiteTree, Minimums)
-    DTL = {}
-    for base in treeMin:
-        DTL.extend(findBest(treeMin[base]))
+    
     return DTL
 
 
@@ -246,8 +244,7 @@ def findBest(Parasite, MinimumDict):
             newMin = treeMin[key]
     for key in treeMin.keys():
         if treeMin[key] > newMin:
-            del treeMin[key]
-            
+            del treeMin[key]      
     return treeMin
 
 
