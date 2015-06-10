@@ -13,7 +13,6 @@
 #key: mapping node
 #value: List of (0) max (1) where the max came from
 
-BSFH  = {}
 
 def preorder(Tree, rootEdgeName):
     """ Takes a tree as input (see format description above) and returns
@@ -45,45 +44,61 @@ def postorder(Tree, rootEdgeName):
                postorder(Tree, rightChildEdgeName) + \
                [rootEdgeName]
 
-def postorderDTLwrapper(DTL, ParasiteTree):
+def findRoot(Tree):
+    root = Tree['pTop'][1]
+    return root
+
+
+def postorderDTLwrapper(DTL, ParasiteRoot):
     postorderDTL(DTL, ParasiteTree, 0)
 
-def postorderDTL(DTL, ParasiteTree, level):
+def postorderDTL(DTL, ParasiteRoot, level):
 
     keysL = []
-    ParasiteRoot = ParasiteTree['pTop'][1]
+    print ParasiteRoot
     for key in DTL:
-        if DTL[key][0] == ParasiteRoot:
-            for i in range(length(DTL[key]) - 1):
-                event = DTL[key][i]
-                child1 = event[1]
-                child2 = event[2]
-                keysL = keysL + [(event, level)] + [postorderDTL(DTL, child1, level + 1), postorderDTL(DTL, child2, level + 1)]
+        if key[0] == ParasiteRoot:
+            if ParasiteRoot != None:
+                for i in range(len(DTL[key]) - 1):
+                    event = DTL[key][i]
+                    child1 = event[1]
+                    child2 = event[2]
+                    keysL = keysL + [(key, level)] + [postorderDTL(DTL, child1[0], level + 1), postorderDTL(DTL, child2[0], level + 1)]
 
     return keysL
 
+def postorderDTLsort(keysL):
+    orderedKeysL = []
+    levelCounter = 0
+    while len(orderedKeysL) < len(keysL):
+        for mapping in keysL:
+            if mapping[-1] == levelCounter:
+                orderedKeysL = [mapping] + orderedKeysL
 
-	 
+    return orderedKeysL
 
-"""def bookkeeping(DTL):
-	This function inputs the DTL graph and then records what the max is at each mapping node and 
-	where the max came from so outputs BSFH
+
+     
+
+def bookkeeping(DTL, ParasiteTree):
+    """This function inputs the DTL graph and then records what the max is at each mapping node and 
+    where the max came from so outputs BSFH"""
 
     #BSFHMap = {(mapping node): [['event', (vertex), (vertex), prob], maxProb]}
     #BSFHEvent = {(event node): max}
 
-    PROBTIP = 1
+    #PROBTIP = 1
 
     BSFHMap = {}
     BSFHEvent = {}
 
     BSFHMap[None] = 0
 
-    orderedKeys = postorder(DTL)
+    orderedKeys = postorderDTLsort(postorderDTLwrapper(DTL, ParasiteTree))
 
     for key in orderedKeys:
         if DTL[key][0][0] == 'C':                   #check if the key is a tip
-           BSFHMap[key] = [DTL[key][0], PROBTIP]    #set BSFH of tip to some global variable
+           BSFHMap[key] = [DTL[key][0], 1]    #set BSFH of tip to some global variable
         else:                                       #if key isn't a tip:
             maxProb = 0                             #initialize counter
             maxEvent = []                           #initialize variable to keep track of where max came from
@@ -98,24 +113,23 @@ def postorderDTL(DTL, ParasiteTree, level):
 
         
 
-"""
 
 def greedy(DTL, k):
-	"""This function inputs the BSFH, DTL and k, and calls bokkeeping to find the best k reconciliations,
-	which is represented in a dictionary. Greedy is also going to reset the BSFH scores to 0 and then call
-	bookkeeping with the new DTL. We do this k times""" 
+    """This function inputs the BSFH, DTL and k, and calls bokkeeping to find the best k reconciliations,
+    which is represented in a dictionary. Greedy is also going to reset the BSFH scores to 0 and then call
+    bookkeeping with the new DTL. We do this k times""" 
 
-	for i in range(k):
-		"""we find the max"""
-		BSFH = bookkeeping(DTL)
+    for i in range(k):
+        """we find the max"""
+        BSFH = bookkeeping(DTL)
 
-		bestKey = ''
-		bestScore = 0
-		for key in BSFH:
-			if BSFH[key][0] > bestScore:
-				bestKey = key
-				bestScore = BSFH[key][0]
-			
+        bestKey = ''
+        bestScore = 0
+        for key in BSFH:
+            if BSFH[key][0] > bestScore:
+                bestKey = key
+                bestScore = BSFH[key][0]
+            
 
 
 
