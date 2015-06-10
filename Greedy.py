@@ -58,12 +58,16 @@ def postorderDTL(DTL, ParasiteRoot, level):
     print ParasiteRoot
     for key in DTL:
         if key[0] == ParasiteRoot:
-            if ParasiteRoot != None:
-                for i in range(len(DTL[key]) - 1):
-                    event = DTL[key][i]
-                    child1 = event[1]
-                    child2 = event[2]
-                    keysL = keysL + [(key, level)] + [postorderDTL(DTL, child1[0], level + 1), postorderDTL(DTL, child2[0], level + 1)]
+            for i in range(len(DTL[key]) - 1):
+                event = DTL[key][i]
+                child1 = event[1]
+                child2 = event[2]
+                if child1[0] == None and child2[0] == None:
+                    keysL = keysL + [(key, level)]
+                elif child2[0] == None:
+                    keysL = keysL + [(key, level)] + [postorderDTL(DTL, child1[0], level + 1)]
+                else:
+                    keysL = keysL + [(key, level)] + [postorderDTL(DTL, child2[0], level + 1)]
 
     return keysL
 
@@ -97,8 +101,8 @@ def bookkeeping(DTL, ParasiteTree):
     orderedKeys = postorderDTLsort(postorderDTLwrapper(DTL, ParasiteTree))
 
     for key in orderedKeys:
-        if DTL[key][0][0] == 'C':                   #check if the key is a tip
-           BSFHMap[key] = [DTL[key][0], 1]    #set BSFH of tip to some global variable
+        if DTL[key[0]][0][0] == 'C':                   #check if the key is a tip
+           BSFHMap[key] = [DTL[key][0], 1]    #set BSFH of tip to some global variable (1 should be PROBTIP)
         else:                                       #if key isn't a tip:
             maxProb = 0                             #initialize counter
             maxEvent = []                           #initialize variable to keep track of where max came from
@@ -108,8 +112,9 @@ def bookkeeping(DTL, ParasiteTree):
                 if BSFHEvent[event][-1] > maxProb:  #check if current event has a higher prob than current max
                     maxProb = BSFHEvent[event][-1]  #if so, set new max prob
                     maxEvent = event                #record where new max came from
-                    BSFHMap[key] = [maxEvent, maxProb]      #set BSFH value of key
+            BSFHMap[key] = [maxEvent, maxProb]      #set BSFH value of key
 
+    return BSFHMap, BSFHEvent
 
         
 
@@ -121,7 +126,7 @@ def greedy(DTL, k):
 
     for i in range(k):
         """we find the max"""
-        BSFH = bookkeeping(DTL)
+        BSFHMap, BSFHEvent = bookkeeping(DTL)
 
         bestKey = ''
         bestScore = 0
