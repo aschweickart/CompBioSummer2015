@@ -70,7 +70,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             eh1 = hostTree[eh][2]
             eh2 = hostTree[eh][3]
             Dictionary[(vp, vh)] = []
-            
+            Obest[(vp, vh)] = []
             # is vp a tip?
             if ep1 == None: # then ep2 == None too and vp is a tip!
                 vpIsATip = True
@@ -161,11 +161,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             else: 
                 omin = [C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]].index(min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]))
                 if omin == 0:
-                    Obest[(vp,vh)] =  (vp, vh)
+                    Obest[(vp,vh)].append((vp, vh))
                 if omin == 1:
-                    Obest[(vp,vh)] = Obest[(vp, hChild1)]
-                else:
-                    Obest[(vp,vh)] = Obest[(vp, hChild2)]
+                    Obest[(vp,vh)].append(Obest[(vp, hChild1)])
+                if omin == 2:
+                    Obest[(vp,vh)].append(Obest[(vp, hChild2)])
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
 
         # Compute BestSwitch values
@@ -203,12 +203,13 @@ def findPath(Tuple, eventDict):
         if type(thing) == tuple:
             findPath(thing, eventDict)
 
-            
 def reconcile(fileName, D, T, L):
     """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
         Those Values"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
+            
+
             
     
         
