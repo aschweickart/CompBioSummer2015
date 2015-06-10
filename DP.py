@@ -227,13 +227,13 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # print BestSwitchLocations
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
-<<<<<<< HEAD
+
     return Minimums, Dictionary
-=======
-    treeMin = findBest(parasiteTree, Minimums)
+# =======
+#     treeMin = findBest(parasiteTree, Minimums)
     
-    return DTL
->>>>>>> origin/Annalise's-Branch
+#     return DTL
+# >>>>>>> origin/Annalise's-Branch
 
 
 def findBest(Parasite, MinimumDict):
@@ -258,12 +258,11 @@ def findPath(TupleList, eventDict, uniqueDict):
         if not Tuple in uniqueDict:
             uniqueDict[(Tuple)] = eventDict[(Tuple)]
         for thing1 in eventDict[Tuple]:
-            print thing1
             if type(thing1)==list:
                 for thing2 in thing1:
                     if type(thing2) == tuple and thing2 != (None, None):
                         findPath([thing2], eventDict, uniqueDict)
-    return UniqueDict
+    return uniqueDict
 
 
 def reconcile(fileName, D, T, L):
