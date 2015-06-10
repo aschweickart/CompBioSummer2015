@@ -71,8 +71,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
-            if eh[1] == 'T':
-                print eh
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
             ep1 = parasiteTree[ep][2]
@@ -232,7 +230,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    return DTL, Minimums
+    return DTL
 
 
 
@@ -247,7 +245,7 @@ def findBest(Parasite, MinimumDict):
             minimum = treeMin[key]
     for key in treeMin.keys():
         if treeMin[key] > minimum:
-            del treeMin[key]      
+            del treeMin[key]     
     return treeMin.keys()
 
 
