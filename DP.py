@@ -103,7 +103,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
-                    Amin = ["C"]
+                    Amin = ["C", (None, None), (None, None)]
                 else: 
                     A[(ep, eh)] = Infinity
                     Amin = ["inf"]
@@ -227,7 +227,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # print BestSwitchLocations
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
-    return Dictionary
+    return Minimums, Dictionary
 
 
 def findBest(Parasite, MinimumDict):
@@ -244,17 +244,21 @@ def findBest(Parasite, MinimumDict):
         if treeMin[key] > newMin:
             del treeMin[key]
             
-    return treeMin
+    return treeMin.keys()
 
 
-def findPath(Tuple, eventDict):
-    List = [Tuple, eventDict[Tuple][0][0], eventDict[Tuple][-1]]
-    for thing1 in eventDict[Tuple]:
-        if type(thing1)==list:
-            for thing2 in thing1:
-                if type(thing2) == tuple:
-                    List.append(findPath(thing2, eventDict))
-    return List
+def findPath(TupleList, eventDict, uniqueDict):
+    for Tuple in TupleList:
+        if not Tuple in uniqueDict:
+            uniqueDict[(Tuple)] = eventDict[(Tuple)]
+        for thing1 in eventDict[Tuple]:
+            print thing1
+            if type(thing1)==list:
+                for thing2 in thing1:
+                    if type(thing2) == tuple and thing2 != (None, None):
+                        findPath([thing2], eventDict, uniqueDict)
+    return UniqueDict
+
 
 def reconcile(fileName, D, T, L):
     """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
