@@ -9,6 +9,8 @@
 # An edge name may be None.  The "dummy" edge leading to the root of the
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
 
+import newickFormatReader
+
 H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): ('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': ('Top', 'h6', ('h6', 'h7'), ('h6', 'h8')), ('h7', 'h2'): ('h7', 'h2', None, None), ('h8', 'h4'): ('h8', 'h4', None, None), ('h7', 'h1'): ('h7', 'h1', None, None)}
 P = {('p6', 'p8'): ('p6', 'p8', ('p8', 'p3'), ('p8', 'p4')), ('p7', 'p2'): ('p7', 'p2', None, None), ('p6', 'p7'): ('p6', 'p7', ('p7', 'p1'), ('p7', 'p2')), ('p8', 'p4'): ('p8', 'p4', None, None), ('p8', 'p3'): ('p8', 'p3', None, None), 'pTop': ('Top', 'p6', ('p6', 'p7'), ('p6', 'p8')), ('p7', 'p1'): ('p7', 'p1', None, None)}
 phi =  {'p2': 'h3', 'p3': 'h2', 'p1': 'h1', 'p4': 'h4'} 
@@ -202,7 +204,11 @@ def findPath(Tuple, eventDict):
             findPath(thing, eventDict)
 
             
-
+def reconcile(fileName, D, T, L):
+    """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
+        Those Values"""
+    host, paras, phi = newickFormatReader.getInput(fileName)
+    return DP(host, paras, phi, D, T, L)
             
     
         
