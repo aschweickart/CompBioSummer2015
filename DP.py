@@ -61,6 +61,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     Minimums = {}
     Obest = {}
     BestSwitchLocations = {}
+    BestSwitchLocations
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
@@ -173,8 +174,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
+<<<<<<< Updated upstream
         BestSwitchLocations[(ep, eh)] = []
         BestSwitchLocations[(ep, "hTop")] = [(None, None)]
+=======
+        BestSwitchLocations[(ep, "hTop")] = (None,None)
+>>>>>>> Stashed changes
         for eh in preorder(hostTree, "hTop"):
             eh1 = hostTree[eh][2]
             eh2 = hostTree[eh][3]
