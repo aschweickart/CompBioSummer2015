@@ -244,8 +244,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-
-    return DTL, Minimums
+    DrawDTL.drawNodes(treeMin, DTL, 200, {})
+    return DTL
 
 def findBest(Parasite, MinimumDict):
     treeMin = {}
