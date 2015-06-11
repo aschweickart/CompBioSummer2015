@@ -114,18 +114,22 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     COepeh = min(C[(ep1, eh1)] + C[(ep2, eh2)], \
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
                     if COepeh == C[(ep2, eh1)]+ C[(ep1, eh2)]:
+
                         coMin = ["S", (pChild2, hChild1), (pChild1, hChild2)]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
                         coMin = ["S", (pChild1, hChild1), (pChild2, hChild2)]
                     else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2)]+["S", (pChild1, hChild1), (pChild2, hChild2)]
+
                 else:
                     COepeh = Infinity
                     coMin = ["inf"]
                 # Compute LOSS
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
+
                 if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (ep[1], hChild1), (None, None)]
                 elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (ep[1], hChild2), (None, None)]
                 else: lossMin =["L", (ep[1], hChild1), (None, None)] + ["L", (ep[1], hChild2), (None, None)]
+
                 
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
@@ -147,6 +151,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)]) 
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
                     for item in BestSwitchLocations[(pChild2,vh)]:
+
                         switchList.append(["T", (pChild1, eh[1]), (pChild2, item[1])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
@@ -156,13 +161,16 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                         switchList.append(["T", (pChild1, eh[1]), (pChild2, item[1])])
                     for item in BestSwitchLocations[(pChild1,vh)]:
                         switchList.append(["T", (pChild2, eh[1]), (pChild1, item[1])])
+
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
+
                 dupList = ["D", (pChild1, vh), (pChild2, vh)]
+
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
@@ -236,7 +244,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    drawDTL()
+    drawDTL(treeMin, DTL)
+
     return DTL
 
 def findBest(Parasite, MinimumDict):
