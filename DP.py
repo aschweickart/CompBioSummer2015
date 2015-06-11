@@ -10,7 +10,6 @@
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
 
 import newickFormatReader
-#import turtle
 
 H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): \
 ('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': \
@@ -236,7 +235,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    #drawDTL(treeMin, DTL)
     return DTL
 
 def findBest(Parasite, MinimumDict):
@@ -269,5 +267,3 @@ def reconcile(fileName, D, T, L):
         Those Values"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
-            
-#def drawDTL(treeMin, DTLDict):
