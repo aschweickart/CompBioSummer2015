@@ -47,7 +47,30 @@ def connect(Turtle,Start,End):
 	Turtle.goto(loc,None)
 	Turtle.setheading(hed)
 	Turtle.pendown()
-
+def connectNodes(start, end):
+	turtle.penup()
+	turtle.setpos(start)
+	turtle.pendown()
+	turtle.setpos(end)
+	turtle.left(135)
+	turtle.forward(10)
+	turtle.right(180)
+	turtle.forward(10)
+	turtle.left(90)
+	turtle.forward(10)
+	turtle.right(180)
+	turtle.forward(10)
+	turtle.left(135)
+	# a = start[0]
+	# b = start[1]
+	# c = end[0]
+	# d = end[1]
+	# x = (a-c)/(b-d)
+	# rads = math.atan(x)
+	# angle = rads * (180/math.pi)
+	# turtle.penup()
+	# turtle.right(angle)
+	# turt
 def drawNodes(treeMin, eventDict, depth, nodeDict):
 	if treeMin == []:
 		return
@@ -63,7 +86,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	newtreeMin = []
 	for x in range(len(treeMin)):
 		if not treeMin[x] in nodeDict:
-			nodeDict[treeMin[x]] = [((x+1)*width/(numSols+1)-DISPLACE, depth+30)]
+			nodeDict[treeMin[x]] = [((x+1)*width/(numSols+1)-DISPLACE, depth)]
 			turtle.penup()
 			turtle.setpos((x+1)*width/(numSols+1)-DISPLACE, depth)
 			turtle.pendown()
@@ -85,7 +108,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
-		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 100))
+		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 40))
 		turtle.setpos((event+1)*width/(numEvents+1)-DISPLACE, depth - 100)
 		turtle.pendown()
 		turtle.circle(30)
@@ -96,6 +119,9 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.right(95)
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
+	for key in nodeDict.keys():
+		for n in range(len(nodeDict[key][1:])):
+			connectNodes(nodeDict[key][0], nodeDict[key][n+1])
 
 def DrawDTL(treeMin,DTL):
 	Bob = turtle.Turtle()
