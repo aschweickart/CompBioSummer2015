@@ -143,13 +143,20 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 DUPepeh = Infinity
             #   Next, Compute SWITCH
             if not vpIsATip:
+                switchList = []
                 SWITCHepeh = T + min(C[(ep1, eh)] + BestSwitch[(ep2, eh)], \
-                                     C[(ep2, eh)] + BestSwitch[(ep1, eh)])
+                                     C[(ep2, eh)] + BestSwitch[(ep1, eh)]) 
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
-                    switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0][1])]
+                    for item in BestSwitchLocations[(pChild2,vh)]:
+                        switchList.extend(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
-                    switchList= ["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0][1])]
-                else: switchList = ["SWITCH", (pChild1, eh[1]), (pChild2, BestSwitchLocations[(pChild2, vh)][0][1])]+["SWITCH", (pChild2, eh[1]), (pChild1, BestSwitchLocations[(pChild1, vh)][0][1])]
+                    for item in BestSwitchLocations[(pChild1,vh)]:
+                        switchList.extend(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
+                else: 
+                    for item in BestSwitchLocations[(pChild2, vh)]:
+                        switchList += ["SWITCH", (pChild1, eh[1]), (pChild2, item[1])]
+                    for item in BestSwitchLocations[(pChild1,vh)]:
+                        switchList += ["SWITCH", (pChild2, eh[1]), (pChild1, item[1])]
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
