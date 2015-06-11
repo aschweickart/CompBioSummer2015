@@ -114,18 +114,18 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     COepeh = min(C[(ep1, eh1)] + C[(ep2, eh2)], \
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
                     if COepeh == C[(ep2, eh1)]+ C[(ep1, eh2)]:
-                        coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2)]
+                        coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2), "score"]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
-                        coMin = ["CO", (pChild1, hChild1), (pChild2, hChild2)]
-                    else: coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2)]+["CO", (pChild1, hChild1), (pChild2, hChild2)]
+                        coMin = ["CO", (pChild1, hChild1), (pChild2, hChild2), "score"]
+                    else: coMin = ["CO", (pChild2, hChild1), (pChild1, hChild2), "score"]+["CO", (pChild1, hChild1), (pChild2, hChild2), "score"]
                 else:
                     COepeh = Infinity
                     coMin = ["inf"]
                 # Compute LOSS
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
-                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["LOSS", (ep[1], hChild1), (None, None)]
-                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["LOSS", (ep[1], hChild2), (None, None)]
-                else: lossMin =["LOSS", (ep[1], hChild1), (None, None)] + ["LOSS", (ep[1], hChild2), (None, None)]
+                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["LOSS", (ep[1], hChild1), (None, None), "score"]
+                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["LOSS", (ep[1], hChild2), (None, None), "score"]
+                else: lossMin =["LOSS", (ep[1], hChild1), (None, None), "score"] + ["LOSS", (ep[1], hChild2), (None, None), "score"]
                 
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
@@ -147,22 +147,22 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)]) 
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
                     for item in BestSwitchLocations[(pChild2,vh)]:
-                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1]), "score"])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1]), "score"])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
-                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1]), "score"])
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1]), "score"])
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
-                dupList = ["DUP", (pChild1, vh), (pChild2, vh)]
+                dupList = ["DUP", (pChild1, vh), (pChild2, vh), "score"]
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
