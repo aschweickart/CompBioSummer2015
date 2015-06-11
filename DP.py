@@ -267,8 +267,3 @@ def reconcile(fileName, D, T, L):
         Those Values"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
-            
-
-            
-    
-        
