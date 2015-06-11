@@ -9,7 +9,6 @@ DISPLACE = 500
 
 #tells a turtle to draw a line from start to end and returns to its position before the function call
 def connect(Turtle,Start,End):
-	End = (End[0], End[1] + 30)
 	Turtle.speed(0)
 	Turtle.pen(pencolor  = "black")
 	loc = Turtle.pos()
@@ -77,18 +76,18 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 			turtle.pendown()
 			turtle.right(130)
 			turtle.write(treeMin[x], font = ("arial", 12, "normal"))
-		for y in eventDict[treeMin[x]]:
-			if type(y)== list:
-				eventList.append((y[0], treeMin[x]))
-				if y[1] !=(None, None) and not y[1] in newtreeMin:
-					newtreeMin.append(y[1])
-				if y[2] !=(None, None) and not y[2] in newtreeMin:
-					newtreeMin.append(y[2])
+			for y in eventDict[treeMin[x]]:
+				if type(y)== list:
+					eventList.append((y[0], treeMin[x]))
+					if y[1] !=(None, None) and not y[1] in newtreeMin:
+						newtreeMin.append(y[1])
+					if y[2] !=(None, None) and not y[2] in newtreeMin:
+						newtreeMin.append(y[2])
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
-		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 100))
-		turtle.setpos((event+1)*width/(numEvents+1)-DISPLACE, depth - 100)
+		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 70))
+		turtle.setpos(((event+1)*width/(numEvents+1))-DISPLACE, depth - 100)
 		turtle.pendown()
 		turtle.circle(30)
 		turtle.left(95)
