@@ -9,7 +9,8 @@ DISPLACE = 500
 
 #tells a turtle to draw a line from start to end and returns to its position before the function call
 def connect(Turtle,Start,End):
-
+	Turtle.speed(0)
+	Turtle.pen(pencolor  = "black")
 	loc = Turtle.pos()
 	hed = Turtle.heading()
 	movr = Start[0] < End[0]
@@ -96,6 +97,9 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.right(95)
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
+	for key in nodeDict:
+		for item in nodeDict[key][:-1]:
+			connect(turtle.Turtle(), nodeDict[key], nodeDict[key][item + 1] )
 
 def DrawDTL(treeMin,DTL):
 	Bob = turtle.Turtle()
