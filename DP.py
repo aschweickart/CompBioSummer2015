@@ -152,9 +152,9 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                         switchList.extend(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
-                        switchList += ["SWITCH", (pChild1, eh[1]), (pChild2, item[1])]
+                        switchList.extend(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList += ["SWITCH", (pChild2, eh[1]), (pChild1, item[1])]
+                        switchList.extend(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
