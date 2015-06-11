@@ -75,7 +75,7 @@ def bookkeeping(DTL, ParasiteRoot):
     #BSFHMap = {(mapping node): [['event', (p, h), (p, h), score], maxScore]}
     #BSFHEvent = {(event node): max}
 
-    #PROBTIP = 1
+    #PROBTIP = 1 this will change depending on how we normalize 
 
     BSFHMap = {}
     BSFHEvent = {}
