@@ -96,6 +96,8 @@ def bookkeeping(DTL, ParasiteRoot):
                 if BSFHEvent[event][-1] > maxScore:  #check if current event has a higher prob than current max
                     maxScore = BSFHEvent[event][-1]  #if so, set new max prob
                     maxEvent = event                #record where new max came from
+                elif BSFHEvent[event][-1] == maxScore:
+                    maxEvent.append(event)
             BSFHMap[key] = [maxEvent, maxScore]      #set BSFH value of key
 
     return BSFHMap, BSFHEvent
