@@ -13,7 +13,7 @@ def findRoot(ParasiteTree):
 
 def orderDTLwrapper(DTL, ParasiteRoot):
     """This wrapper function uses orderDTL and starts with a level of 0. Returns keysL."""
-    orderDTL(DTL, ParasiteRoot, 0)
+    return orderDTL(DTL, ParasiteRoot, 0)
 
 def orderDTL(DTL, ParasiteRoot, level):
     """This function takes in a DTL dictionary, a ParasiteRoot, and a level that represents the depth of 
@@ -32,16 +32,18 @@ def orderDTL(DTL, ParasiteRoot, level):
                 if child1[0] == None and child2[0] == None:    #base case: mapping node (key) is a tip
                     keysL = keysL + [(key, level)]
                 elif child2[0] == None:                        #loss case: there is only one child (child1)
-                    keysL = keysL + [(key, level)] + [orderDTL(DTL, child1[0], level + 1)]
-                else:                                          #loss case: there is only one child (child2)
-                    keysL = keysL + [(key, level)] + [orderDTL(DTL, child2[0], level + 1)]
-    print keysL
+                    keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1)
+                elif child1[0] == None:                        #loss case: there is only one child (child2)
+                    keysL = keysL + [(key, level)] + orderDTL(DTL, child2[0], level + 1)
+                else:
+                    keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1) + orderDTL(DTL, child2[0], level + 1)
     return keysL
 
 
 def postorderDTLsort(DTL, ParasiteRoot):
     """This takes in a DTL dictionary and parasite root and returns a sorted list, orderedKeysL, that is ordered
     by level from largest to smallest, where level 0 is the root and the highest level has tips."""
+    #keysL = [(('p6', 'h6'), 0), (('p1', 'h1'), 1), (('p8', 'h8'), 1), (('p2', 'h2'), 2), (('p3', 'h3'), 2)]
     keysL = orderDTLwrapper(DTL, ParasiteRoot)
     orderedKeysL = []
     levelCounter = 0
@@ -49,7 +51,7 @@ def postorderDTLsort(DTL, ParasiteRoot):
         for mapping in keysL:
             if mapping[-1] == levelCounter:
                 orderedKeysL = [mapping] + orderedKeysL
-                levelCounter += 1
+        levelCounter += 1
     return orderedKeysL
 
 def preorderDTLsort(DTL, ParasiteRoot):
@@ -61,8 +63,8 @@ def preorderDTLsort(DTL, ParasiteRoot):
     while len(orderedKeysL) < len(keysL):
         for mapping in keysL:
             if mapping[-1] == levelCounter:
-                orderedKeysL = [mapping] + orderedKeysL
-                levelCounter += 1
+                orderedKeysL = orderedKeysL + [mapping] 
+        levelCounter += 1
     return orderedKeysL
 
 
