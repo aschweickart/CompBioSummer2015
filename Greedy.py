@@ -7,22 +7,21 @@
 def findRoot(ParasiteTree):
     """This function takes in a parasiteTree and returns a string with the name of
     the root vertex of the tree"""
-    root = ParasiteTree['pTop'][1]
-    return root
+    ParasiteRoot = ParasiteTree['pTop'][1]
+    return ParasiteRoot
 
 
-def orderDTLwrapper(DTL, ParasiteTree):
+def orderDTLwrapper(DTL, ParasiteRoot):
     """This wrapper function uses orderDTL and starts with a level of 0. Returns keysL."""
-    postorderDTL(DTL, ParasiteTree, 0)
+    orderDTL(DTL, ParasiteRoot, 0)
 
-def orderDTL(DTL, ParasiteTree, level):
+def orderDTL(DTL, ParasiteRoot, level):
     """This function takes in a DTL dictionary, a ParasiteRoot, and a level that represents the depth of 
     the of a vertex pair. It returns a list, keysL, that includes tuples with the first 
     elements being a mapping node of the form (p, h), and the second element being the depth of that node within 
     the graph. This function loops through the DTL graph and recruses on the two children of each DTL 
     mapping node, adding the results to keysL"""
 
-    ParasiteRoot = findRoot(ParasiteTree)
     keysL = []
     for key in DTL:
         if key[0] == ParasiteRoot:
@@ -39,10 +38,10 @@ def orderDTL(DTL, ParasiteTree, level):
     return keysL
 
 
-def postorderDTLsort(DTL, ParasiteTree):
-    """This takes in a DTL dictionary and parasite tree and returns a sorted list, orderedKeysL, that is ordered
+def postorderDTLsort(DTL, ParasiteRoot):
+    """This takes in a DTL dictionary and parasite root and returns a sorted list, orderedKeysL, that is ordered
     by level from largest to smallest, where level 0 is the root and the highest level has tips."""
-    keysL = orderDTLwrapper(DTL, ParasiteTree)
+    keysL = orderDTLwrapper(DTL, ParasiteRoot)
     orderedKeysL = []
     levelCounter = 0
     while len(orderedKeysL) < len(keysL):
@@ -52,10 +51,10 @@ def postorderDTLsort(DTL, ParasiteTree):
                 levelCounter += 1
     return orderedKeysL
 
-def preorderDTLsort(DTL, ParasiteTree):
-    """This takes in a DTL dictionary and a parasite tree and returns a sorted list, orderedKeysL, that is ordered
+def preorderDTLsort(DTL, ParasiteRoot):
+    """This takes in a DTL dictionary and a parasite root and returns a sorted list, orderedKeysL, that is ordered
     by level from smalles to largest, where level 0 is the root and the highest level has tips."""
-    keysL = orderDTLwrapper(DTL, ParasiteTree)
+    keysL = orderDTLwrapper(DTL, ParasiteRoot)
     orderedKeysL = []
     levelCounter = 0
     while len(orderedKeysL) < len(keysL):
@@ -87,7 +86,9 @@ def bookkeeping(DTL, ParasiteTree):
 
     BSFHMap[(None, None)] = 0           #BSFH value for empty children is 0
 
-    orderedKeys = postorderDTLsort(DTL, ParasiteTree)
+    ParasiteRoot = findRoot(ParasiteTree)
+
+    orderedKeys = postorderDTLsort(DTL, ParasiteRoot)
 
     for key in orderedKeys:
         if DTL[key[0]][0][0] == 'C':                   #check if the key is a tip
@@ -111,8 +112,8 @@ def bookkeeping(DTL, ParasiteTree):
 
 
 def greedy(DTL, k):
-    """This function inputs the BSFH, DTL and k, and calls bokkeeping to find the best k reconciliations,
-    which is represented in a dictionary. Greedy is also going to reset the BSFH scores to 0 and then call
+    """This function inputs the DTL and k, and calls bokkeeping to find BSFHMap and BSFHEvent,
+    which are both dictionaries. Greedy is also going to reset the BSFH scores to 0 and then call
     bookkeeping with the new DTL. We do this k times""" 
 
     for i in range(k):
