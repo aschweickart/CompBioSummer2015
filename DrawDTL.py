@@ -122,8 +122,13 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
 # <<<<<<< HEAD
 	for key in nodeDict.keys():
+		eventList = eventDict[key]
 		for n in range(len(nodeDict[key][1:])):
 			connectNodes(nodeDict[key][0], nodeDict[key][n+1])
+			if eventList[n][1] != (None, None):
+				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[eventList[n][1]][0][0],nodeDict[eventList[n][1]][0][1]+60))
+			if eventList[n][2] != (None, None):	
+				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[eventList[n][2]][0][0],nodeDict[eventList[n][2]][0][1]+60))
 # =======
 # 	for key in nodeDict:
 # 		for item in nodeDict[key][:-1]:
