@@ -35,6 +35,7 @@ def orderDTL(DTL, ParasiteRoot, level):
                     keysL = keysL + [(key, level)] + [orderDTL(DTL, child1[0], level + 1)]
                 else:                                          #loss case: there is only one child (child2)
                     keysL = keysL + [(key, level)] + [orderDTL(DTL, child2[0], level + 1)]
+    print keysL
     return keysL
 
 
