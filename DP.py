@@ -125,9 +125,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["LOSS", (ep[1], hChild1), (None, None)]
                 elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["LOSS", (ep[1], hChild2), (None, None)]
                 else: lossMin =["LOSS", (ep[1], hChild1), (None, None)] + ["LOSS", (ep[1], hChild2), (None, None)]
-                # else:
-                #     LOSSepeh = min(C[(ep, eh1)], C[(ep, eh2)])
-                #     lossMin = "Skip"
+                
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
                    Amin = coMin
@@ -213,7 +211,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 vhIsATip = False
                 hChild1 = hostTree[eh][2][1]
                 hChild2 = hostTree[eh][3][1]
-                
+            # find best place for a switch to occur    
             if eh1 != None and eh2 != None:
 
                 BestSwitchLocations[(vp, hChild1)] = []
@@ -231,15 +229,13 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in BestSwitchLocations.keys():
         if BestSwitchLocations[key][0] == (None, None):
             BestSwitchLocations[key] = BestSwitchLocations[key][1:]
-    # print BestSwitchLocations
+
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
     return DTL
-
-
 
 def findBest(Parasite, MinimumDict):
     treeMin = {}
@@ -255,7 +251,6 @@ def findBest(Parasite, MinimumDict):
             del treeMin[key]     
     return treeMin.keys()
 
-
 def findPath(TupleList, eventDict, uniqueDict):
     for Tuple in TupleList:
         if not Tuple in uniqueDict:
@@ -266,7 +261,6 @@ def findPath(TupleList, eventDict, uniqueDict):
                     if type(thing2) == tuple and thing2 != (None, None):
                         findPath([thing2], eventDict, uniqueDict)
     return uniqueDict
-
 
 def reconcile(fileName, D, T, L):
     """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
