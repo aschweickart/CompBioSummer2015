@@ -271,7 +271,4 @@ def reconcile(fileName, D, T, L):
     return DP(host, paras, phi, D, T, L)
             
 def drawDTL(treeMin, DTLDict):
-    
-            
-    
-        
+
