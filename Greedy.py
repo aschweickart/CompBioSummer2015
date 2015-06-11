@@ -68,7 +68,7 @@ def preorderDTLsort(DTL, ParasiteTree):
 
      
 
-def bookkeeping(DTL, ParasiteRoot):
+def bookkeeping(DTL, ParasiteTree):
     """This function inputs the DTL graph and ParasiteTree, and then records what the max is at each mapping node and 
     where the max came from. It outputs two dictionaries BSFHMap and BSFHEvent, by looping through the keys in orderedKeysL 
     and finding the max score at each mapping node and event node"""
@@ -87,7 +87,7 @@ def bookkeeping(DTL, ParasiteRoot):
 
     BSFHMap[(None, None)] = 0           #BSFH value for empty children is 0
 
-    orderedKeys = postorderDTLsort(postorderDTLwrapper(DTL, ParasiteRoot))
+    orderedKeys = postorderDTLsort(DTL, ParasiteTree)
 
     for key in orderedKeys:
         if DTL[key[0]][0][0] == 'C':                   #check if the key is a tip
