@@ -2,7 +2,7 @@
 
 #Team Srinidhi and Juliet
 
-#Our goal is to find the k best reconciliatioins
+#Our goal is to find the k best reconciliations
 
 #We are given a DTL reconciliation graph in the form of dictionaries
 
