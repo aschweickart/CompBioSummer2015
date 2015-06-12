@@ -9,6 +9,8 @@ DISPLACE = 500
 
 #tells a turtle to draw a line from start to end and returns to its position before the function call
 def connect(Turtle,Start,End):
+	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End, 
+	and connects the two locations with a line and arrow"""
 	Turtle.speed(0)
 	Turtle.pen(pencolor  = "black")
 	loc = Turtle.pos()
@@ -51,6 +53,8 @@ def connect(Turtle,Start,End):
 	Turtle.ht()
 
 def drawNodes(treeMin, eventDict, depth, nodeDict):
+	"""Takes as input a list of the starting nodes of the best reconciliations, treeMin, the DTL format dictionary, eventDict, 
+	a starting y-coordinate, depth, and a dictionary nodeDict and draws the DTL graph of the DTL dictionary"""
 	if treeMin == []:
 		return
 	for key in eventDict.keys():
@@ -105,5 +109,3 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 				if (thing[0] != None) and (thing[1] != None):
 					connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0])
 
-def DrawDTL(treeMin,DTL):
-	Bob = turtle.Turtle()
