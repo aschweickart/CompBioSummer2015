@@ -99,7 +99,8 @@ def bookkeeping(DTL, ParasiteTree):
         mapNode = key[0]
 
         if DTL[mapNode][0][0] == 'C':                   #check if the key is a tip
-           BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), TIPSCORE]    #set BSFH of tip to some global variable
+           #BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), TIPSCORE]    #set BSFH of tip to some global variable
+           BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), DTL[mapNode][0][-1]]
 
         else:                                       #if key isn't a tip:
             maxScore = 0                             #initialize counter
@@ -176,7 +177,7 @@ def greedyOnce(DTL, ParasiteTree):
     GreedyOnce = {}                     #initialize dictionary we will return
 
     bestKey = ()                        #variable to hold the key with the highers BSFH value
-    bestScore = 0                       #variable to hold the highest BSFH value seen so far
+    bestScore = float("-inf")                       #variable to hold the highest BSFH value seen so far
     for key in BSFHMap:                                             #iterate trough all the keys (verteces) in BSFHMap
         if BSFHMap[key][-1] > bestScore and key[0] == ParasiteRoot: #check if key has a score higher than bestScore and includes ParasiteRoot
             bestKey = key
