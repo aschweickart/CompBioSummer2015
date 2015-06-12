@@ -55,8 +55,6 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	   the DTL format dictionary, depth, a starting y-coordinate, and nodeDict, a dictionary of nodes and
 	   their coordinates. This function recursively draws the nodes of the DTL format dictionary, then 
 	   connects them using the connect function aboves"""
-	if treeMin == []:
-		return
 	numTips = 0
 	for key in eventDict.keys():
 		if eventDict[key][0][0] == "C":
@@ -66,7 +64,15 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	if numTips<15:
 		radius = 30
 	else:
-		radius = 20
+		radius = 10
+	if treeMin == []:
+		for key in nodeDict:
+			for item in range(len(nodeDict[key][1:])):
+				connect(turtle.Turtle(), nodeDict[key][0], nodeDict[key][item+1], radius)
+				for thing in eventDict[key][item][1:]:
+					if thing !=(None, None):
+						connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0], radius)
+		return
 
 	difference = ((len(eventDict))*25)/numTips
 
@@ -112,12 +118,4 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 		turtle.ht()
 	drawNodes(newtreeMin, eventDict, depth - 2*difference, nodeDict)
-	for key in nodeDict:
-		for item in range(len(nodeDict[key][1:])):
-			connect(turtle.Turtle(), nodeDict[key][0], nodeDict[key][item+1], radius)
-			for thing in eventDict[key][item][1:]:
-				print key
-				print thing
-				if thing !=(None, None):
-					connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0], radius)
 
