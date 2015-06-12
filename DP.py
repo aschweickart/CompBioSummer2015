@@ -244,8 +244,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    DrawDTLc.drawNodes(treeMin, DTL, 10, {})
+    DrawDTLc.drawNodes(treeMin, DTL, 200, {})
     return DTL
+
+
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of Minimum resolution costs. 
