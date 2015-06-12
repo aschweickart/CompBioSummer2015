@@ -249,6 +249,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = findPath(treeMin, Dictionary, DTL)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
+
     return DTL
 
 
