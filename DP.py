@@ -108,7 +108,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
-                    Amin = [["C", (None, None), (None, None), 1]] # Contemporary event to be added to Dictionary
+                    Amin = ["C", (None, None), (None, None), 1] # Contemporary event to be added to Dictionary
                     Score[(vp, vh)] = 1
                 else: 
                     Score[(vp, vh)] = Infinity
@@ -119,12 +119,13 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if not vpIsATip:
                     COepeh = min(C[(ep1, eh1)] + C[(ep2, eh2)], \
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
-                    if COepeh == C[(ep2, eh1)]+ C[(ep1, eh2)]:
+                    coMin = []
+                    if COepeh ==C[(ep2, eh1)]+ C[(ep1, eh2)]:
 
-                        coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])]
-                    elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
-                        coMin = ["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])]
-                    else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]+["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
+                        coMin.append(["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])])
+                    if COepeh == C[(ep1, eh1)] + C[(ep2, eh2)]:
+                        coMin.append(["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])])
+                   
 
                 else:
                     COepeh = Infinity
@@ -132,18 +133,17 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     Score[(vp, vh)] = Infinity
                 # Compute L and create event list to add to Dictionary
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
-
-                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]]
-                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]]
-                else: lossMin =["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]] + ["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]]
+                lossMin = []
+                if LOSSepeh == L + C[(ep, eh1)]: lossMin.append(["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]])
+                if LOSSepeh == L + C[(ep, eh2)]: lossMin.append(["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]])
 
                 # Determine which event occurs for A[(ep, eh)]
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
-                   Amin = [coMin]
+                   Amin = coMin
                 elif LOSSepeh<COepeh: 
-                    Amin = [lossMin]
-                else: Amin = [lossMin] + [coMin]
+                    Amin = lossMin
+                else: Amin = lossMin + coMin
 
             # Compute C(ep, eh)
             #   First, compute D
@@ -196,6 +196,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             for key in Dictionary.keys():
                 mapScore = 0
                 for item in Dictionary[key]:
+                    print item
                     if type(item) == list:
                         mapScore += item[-1]
                 Score[key] = mapScore
