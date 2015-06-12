@@ -68,7 +68,8 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	else:
 		radius = 20
 
-	difference = ((len(eventDict)+len(nodeDict))*20)/numTips
+	difference = ((len(eventDict))*25)/numTips
+
 	print difference
 
 	numSols = len(treeMin)
