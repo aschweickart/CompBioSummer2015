@@ -285,7 +285,8 @@ def findPath(TupleList, eventDict, uniqueDict):
     return uniqueDict
 
 def reconcile(fileName, D, T, L):
-    """Takes as input a newick file, FileName, a dupliction cost, a transfer cost, and a loss cost. This then calls 
+    """Takes as input a newick file, FileName, a dupliction cost, a transfer cost, and a loss cost. This uses
+    newickFormatReader to extract the host tree, parasite tree and tip mapping from the file and then calls 
     DP to return the DTL reconciliation graph of the provided newick file"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
