@@ -73,7 +73,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
-            print Score
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
             ep1 = parasiteTree[ep][2]
@@ -108,11 +107,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
                     Amin = [["C", (None, None), (None, None), 1]] # Contemporary event to be added to Dictionary
-                    
+                    Score[(vp, vh)] = 1
                 else: 
                     Score[(vp, vh)] = Infinity
                     A[(ep, eh)] = Infinity
-                    Amin = ["inf"]
+                    Amin = [Infinity]
             else: #vh is not a tip
                 # Compute S and create event list to add to Dictionary
                 if not vpIsATip:
@@ -127,7 +126,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
                 else:
                     COepeh = Infinity
-                    coMin = ["inf"]
+                    coMin = [Infinity]
                     Score[(vp, vh)] = Infinity
                 # Compute L and create event list to add to Dictionary
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
@@ -151,7 +150,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 dupList = ["D", (pChild1, vh), (pChild2, vh), (Score[(pChild1, vh)]*Score[(pChild2, vh)])]
             else:
                 DUPepeh = Infinity
-                dupList = ["inf"]
+                dupList = [Infinity]
             #   Next, Compute T and create event list to add to Dictionary using BestSwitchLocations
             if not vpIsATip:
                 switchList = []
@@ -159,10 +158,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)]) 
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
                     for item in BestSwitchLocations[(pChild2,vh)]:
-
+                        if item[1] == None:
+                            Score[(pChild1, item[1])] = Infinity
+                            Score[(pChild2, item[1])] = Infinity
                         switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
+                        if item[1] == None:
+                            Score[(pChild1, item[1])] = Infinity
+                            Score[(pChild2, item[1])] = Infinity
                         switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
@@ -178,7 +182,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
             else:
                 SWITCHepeh = Infinity
-                switchList = ["inf"]
+                switchList = [Infinity]
             # Compute C[(ep, eh)] and add it's source to the Dictionary
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
@@ -187,6 +191,13 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].extend(Amin)
+            for key in Dictionary.keys():
+                mapScore = 0
+                for item in Dictionary[key]:
+                    if type(item) == list:
+                        print item
+                        mapScore += item[-1]
+                Score[key] = mapScore
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
                 del Dictionary[(vp, vh)]
@@ -204,15 +215,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if omin == 2:
                     Obest[(vp,vh)].extend(Obest[(vp, hChild2)])
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
-            for key in Dictionary.keys():
-                mapScore = 0
-                for item in Dictionary[key]:
-                    if type(item) == list:
-                        mapScore += item[-1]
-                Score[key] = mapScore
+
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
-        BestSwitchLocations[(ep[1], hostTree["hTop"][1])] = [(None,None)]
+        BestSwitchLocations[(vp, hostTree["hTop"][1])] = [(None,None)]
         for eh in preorder(hostTree, "hTop"):
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
@@ -245,14 +251,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 BestSwitchLocations[(vp, hChild2)] = []
                 BestSwitch[(ep, eh1)] = min(BestSwitch[(ep, eh)], O[(ep, eh2)])
                 BestSwitch[(ep, eh2)] = min(BestSwitch[(ep, eh)], O[(ep, eh1)])
-                if BestSwitch[(ep, eh1)] == BestSwitch[(ep, eh)]:
+                if BestSwitch[(ep, eh1)] == BestSwitch[(ep, eh)] and BestSwitchLocations[(vp, vh)] != [(None, None)]:
                     BestSwitchLocations[(vp, hChild1)].extend(BestSwitchLocations[(vp, vh)])
-                if BestSwitch[(ep, eh1)] == O[(ep, eh2)]:
+                if BestSwitch[(ep, eh1)] == O[(ep, eh2)] and Obest[(vp, hChild2)]!= [(None, None)]:
                     BestSwitchLocations[(vp, hChild1)].extend(Obest[(vp, hChild2)])
-                if BestSwitch[(ep, eh2)] == BestSwitch[(ep, eh)]:
+                if BestSwitch[(ep, eh2)] == BestSwitch[(ep, eh)] and BestSwitchLocations[(vp, vh)] != [(None, None)]:
                     BestSwitchLocations[(vp, hChild2)].extend(BestSwitchLocations[(vp, vh)])
-                if BestSwitch[(ep, eh2)] == O[(ep, eh1)]:
+                if BestSwitch[(ep, eh2)] == O[(ep, eh1)] and Obest[(vp, hChild1)]!=[(None, None)]:
                     BestSwitchLocations[(vp, hChild2)].extend(Obest[(vp, hChild1)])
+
     for key in BestSwitchLocations.keys():
         if BestSwitchLocations[key][0] == (None, None):
             BestSwitchLocations[key] = BestSwitchLocations[key][1:]
