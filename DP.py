@@ -135,10 +135,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 # Determine which event occurs for A[(ep, eh)]
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
-                   Amin = coMin
+                   Amin = [coMin]
                 elif LOSSepeh<COepeh: 
-                    Amin = lossMin
-                else: Amin = lossMin + coMin
+                    Amin = [lossMin]
+                else: Amin = [lossMin] + [coMin]
 
             # Compute C(ep, eh)
             #   First, compute D
@@ -175,7 +175,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
-            if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].append(Amin)
+            if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].extend(Amin)
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
                 del Dictionary[(vp, vh)]
@@ -247,6 +247,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
+    print DTL
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
 
