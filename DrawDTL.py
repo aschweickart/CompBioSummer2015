@@ -98,14 +98,17 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 			turtle.pendown()
 			turtle.right(130)
 			turtle.write(treeMin[x], font = ("arial", 12, "normal"))
-		for y in eventDict[treeMin[x]]:
-			if type(y)== list:
-				eventList.append((y[0], treeMin[x]))
-				print eventList
-				if y[1] !=(None, None) and not y[1] in newtreeMin:
-					newtreeMin.append(y[1])
-				if y[2] !=(None, None) and not y[2] in newtreeMin:
-					newtreeMin.append(y[2])
+		# print treeMin[x]
+		# print eventDict[treeMin[x]]
+			for y in eventDict[treeMin[x]]:
+				if type(y)== list:
+					eventList.append((y[0], treeMin[x]))
+
+					if y[1] !=(None, None) and not y[1] in newtreeMin:
+						newtreeMin.append(y[1])
+					if y[2] !=(None, None) and not y[2] in newtreeMin:
+						newtreeMin.append(y[2])
+			print eventList
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
@@ -122,13 +125,13 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
 # <<<<<<< HEAD
 	for key in nodeDict.keys():
-		eventList = eventDict[key]
+		events = eventDict[key]
 		for n in range(len(nodeDict[key][1:])):
 			connectNodes(nodeDict[key][0], nodeDict[key][n+1])
-			if eventList[n][1] != (None, None):
-				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[eventList[n][1]][0][0],nodeDict[eventList[n][1]][0][1]+60))
-			if eventList[n][2] != (None, None):	
-				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[eventList[n][2]][0][0],nodeDict[eventList[n][2]][0][1]+60))
+			if events[n][1] != (None, None):
+				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[events[n][1]][0][0],nodeDict[events[n][1]][0][1]+60))
+			if events[n][2] != (None, None):	
+				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[events[n][2]][0][0],nodeDict[events[n][2]][0][1]+60))
 # =======
 # 	for key in nodeDict:
 # 		for item in nodeDict[key][:-1]:
