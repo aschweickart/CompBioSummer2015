@@ -145,8 +145,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             #   First, compute D
             if not vpIsATip:
                 DUPepeh = D + C[(ep1, eh)] + C[(ep2, eh)]
+                dupList = ["D", (pChild1, vh), (pChild2, vh), (Score[(pChild1, vh)]*Score[(pChild2, vh)])]
             else:
                 DUPepeh = Infinity
+                dupList = ["inf"]
             #   Next, Compute T and create event list to add to Dictionary using BestSwitchLocations
             if not vpIsATip:
                 switchList = []
@@ -172,7 +174,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
-                dupList = ["D", (pChild1, vh), (pChild2, vh), (Score[(pChild1, vh)]*Score[(pChild2, vh)])]
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
