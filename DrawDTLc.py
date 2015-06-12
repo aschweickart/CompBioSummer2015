@@ -69,7 +69,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		for key in nodeDict:
 			for item in range(len(nodeDict[key][1:])):
 				connect(turtle.Turtle(), nodeDict[key][0], nodeDict[key][item+1], radius)
-				for thing in eventDict[key][item][1:]:
+				for thing in eventDict[key][item][1:-1]:
 					if thing !=(None, None):
 						connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0], radius)
 		return

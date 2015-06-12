@@ -166,9 +166,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                         switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
-                        switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
+                        if item[1] != None:
+                            switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
+                        else:
+                            switchList.append(["T", (pChild1, vh), (pChild2, item[1]), Infinity])
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
+                        if item[1] != None:
+                            switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
+                        else:
+                            switchList.append(["T", (pChild1, vh), (pChild2, item[1]), Infinity])
 
             else:
                 SWITCHepeh = Infinity
