@@ -108,7 +108,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
-                    Amin = ["C", (None, None), (None, None), 1] # Contemporary event to be added to Dictionary
+                    Amin = [["C", (None, None), (None, None), 1]] # Contemporary event to be added to Dictionary
                     Score[(vp, vh)] = 1
                 else: 
                     Score[(vp, vh)] = Infinity
@@ -122,9 +122,9 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     coMin = []
                     if COepeh ==C[(ep2, eh1)]+ C[(ep1, eh2)]:
 
-                        coMin.append(["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])])
+                        coMin.append(["S", (pChild2, hChild1), (pChild1, hChild2), (1.0*Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])])
                     if COepeh == C[(ep1, eh1)] + C[(ep2, eh2)]:
-                        coMin.append(["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])])
+                        coMin.append(["S", (pChild1, hChild1), (pChild2, hChild2),(1.0*Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])])
                    
 
                 else:
@@ -149,7 +149,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             #   First, compute D
             if not vpIsATip:
                 DUPepeh = D + C[(ep1, eh)] + C[(ep2, eh)]
-                dupList = ["D", (pChild1, vh), (pChild2, vh), (Score[(pChild1, vh)]*Score[(pChild2, vh)])]
+                dupList = ["D", (pChild1, vh), (pChild2, vh), (1.0*Score[(pChild1, vh)]*Score[(pChild2, vh)])]
             else:
                 DUPepeh = Infinity
                 dupList = [Infinity]
@@ -163,22 +163,22 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                         if item[1] == None:
                             Score[(pChild1, item[1])] = Infinity
                             Score[(pChild2, item[1])] = Infinity
-                        switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
+                        switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (1.0*Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
                         if item[1] == None:
                             Score[(pChild1, item[1])] = Infinity
                             Score[(pChild2, item[1])] = Infinity
-                        switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
+                        switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (1.0*Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
                         if item[1] != None:
-                            switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
+                            switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (1.0*Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
                         else:
                             switchList.append(["T", (pChild1, vh), (pChild2, item[1]), Infinity])
                     for item in BestSwitchLocations[(pChild1,vh)]:
                         if item[1] != None:
-                            switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
+                            switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (1.0*Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
                         else:
                             switchList.append(["T", (pChild1, vh), (pChild2, item[1]), Infinity])
 
@@ -294,7 +294,7 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
             for item in DTLDict[root]:
                 if type(item) == list:
                     oldScore = item[3]
-                    item[3] = ParentsDict[root] *(oldScore/ScoreDict[root])
+                    item[3] = ParentsDict[root] *(1.0*oldScore/ScoreDict[root])
                     if item[1]!= (None, None):
                         if item[1] in ParentsDict:
                             ParentsDict[item[1]]+= item[3]
