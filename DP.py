@@ -131,7 +131,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
                 if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]]
                 elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]]
-                else: lossMin =["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]] + ["L", vp, hChild2), (None, None), Score[(vp, hChild2)]]
+                else: lossMin =["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]] + ["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]]
 
                 # Determine which event occurs for A[(ep, eh)]
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
@@ -251,6 +251,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     print DTL
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
+    for key in DTL.keys():
+        mapScore = 1
+        for item in DTL[key]:
+            if type(item) == list:
+                mapScore = mapScore * item[-1]
+        Score[key] = mapScore
 
     return DTL
 
