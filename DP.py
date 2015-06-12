@@ -69,7 +69,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     Minimums = {}
     Obest = {}
     BestSwitchLocations = {}
-    BestSwitchLocations
+    Score = {}
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
@@ -105,8 +105,9 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
+                    Score[(vp, vh)] = 1
                     A[(ep, eh)] = 0
-                    Amin = [["C", (None, None), (None, None)]] # Contemporary event to be added to Dictionary
+                    Amin = [["C", (None, None), (None, None), Score[(vp, vh)]]] # Contemporary event to be added to Dictionary
                 else: 
                     A[(ep, eh)] = Infinity
                     Amin = ["inf"]
@@ -117,10 +118,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
                     if COepeh == C[(ep2, eh1)]+ C[(ep1, eh2)]:
 
-                        coMin = ["S", (pChild2, hChild1), (pChild1, hChild2)]
+                        coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
-                        coMin = ["S", (pChild1, hChild1), (pChild2, hChild2)]
-                    else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2)]+["S", (pChild1, hChild1), (pChild2, hChild2)]
+                        coMin = ["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
+                    else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]+["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
 
                 else:
                     COepeh = Infinity
@@ -128,9 +129,9 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 # Compute L and create event list to add to Dictionary
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
 
-                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (ep[1], hChild1), (None, None)]
-                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (ep[1], hChild2), (None, None)]
-                else: lossMin =["L", (ep[1], hChild1), (None, None)] + ["L", (ep[1], hChild2), (None, None)]
+                if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]]
+                elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (vp, hChild2), (None, None), Score[(vp, hChild2)]]
+                else: lossMin =["L", (vp, hChild1), (None, None), Score[(vp, hChild1)]] + ["L", vp, hChild2), (None, None), Score[(vp, hChild2)]]
 
                 # Determine which event occurs for A[(ep, eh)]
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
@@ -154,15 +155,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
                     for item in BestSwitchLocations[(pChild2,vh)]:
 
-                        switchList.append(["T", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["T", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
-                        switchList.append(["T", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.append(["T", (pChild1, vh), (pChild2, item[1]), (Score[(pChild1, vh)]*Score[(pChild2, item[1])])])
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["T", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.append(["T", (pChild2, vh), (pChild1, item[1]), (Score[(pChild2, vh)]*Score[(pChild1, item[1])])])
 
             else:
                 SWITCHepeh = Infinity
@@ -171,7 +172,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
-                dupList = ["D", (pChild1, vh), (pChild2, vh)]
+                dupList = ["D", (pChild1, vh), (pChild2, vh), (Score[(pChild1, vh)]*Score[(pChild2, vh)])]
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
