@@ -106,7 +106,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
-                    Amin = ["C", (None, None), (None, None)] # Contemporary event to be added to Dictionary
+                    Amin = [["C", (None, None), (None, None)]] # Contemporary event to be added to Dictionary
                 else: 
                     A[(ep, eh)] = Infinity
                     Amin = ["inf"]
