@@ -101,15 +101,16 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 hChild2 = hostTree[eh][3][1]
                 
             # Compute A(ep, eh)
+
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
-                    Amin = ["C", (None, None), (None, None)]
+                    Amin = ["C", (None, None), (None, None)] # Contemporary event to be added to Dictionary
                 else: 
                     A[(ep, eh)] = Infinity
                     Amin = ["inf"]
             else: #vh is not a tip
-                # Compute CO
+                # Compute S and create event list to add to Dictionary
                 if not vpIsATip:
                     COepeh = min(C[(ep1, eh1)] + C[(ep2, eh2)], \
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
@@ -123,14 +124,14 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 else:
                     COepeh = Infinity
                     coMin = ["inf"]
-                # Compute LOSS
+                # Compute L and create event list to add to Dictionary
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
 
                 if LOSSepeh == L + C[(ep, eh1)]: lossMin = ["L", (ep[1], hChild1), (None, None)]
                 elif LOSSepeh == L + C[(ep, eh2)]: lossMin = ["L", (ep[1], hChild2), (None, None)]
                 else: lossMin =["L", (ep[1], hChild1), (None, None)] + ["L", (ep[1], hChild2), (None, None)]
 
-                
+                # Determine which event occurs for A[(ep, eh)]
                 A[(ep, eh)] = min(COepeh, LOSSepeh)
                 if COepeh<LOSSepeh:
                    Amin = coMin
@@ -139,12 +140,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 else: Amin = lossMin + coMin
 
             # Compute C(ep, eh)
-            #   First, compute DUP
+            #   First, compute D
             if not vpIsATip:
                 DUPepeh = D + C[(ep1, eh)] + C[(ep2, eh)]
             else:
                 DUPepeh = Infinity
-            #   Next, Compute SWITCH
+            #   Next, Compute T and create event list to add to Dictionary using BestSwitchLocations
             if not vpIsATip:
                 switchList = []
                 SWITCHepeh = T + min(C[(ep1, eh)] + BestSwitch[(ep2, eh)], \
@@ -165,12 +166,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
+            # Compute C[(ep, eh)] and add it's source to the Dictionary
             C[(ep, eh)] = min(A[(ep, eh)], DUPepeh, SWITCHepeh)
             Minimums[(vp, vh)] = C[(ep, eh)]
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == DUPepeh:
-
                 dupList = ["D", (pChild1, vh), (pChild2, vh)]
-
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
                 Dictionary[(vp, vh)].extend(switchList)
@@ -179,6 +179,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 del Minimums[(vp, vh)]
                 del Dictionary[(vp, vh)]
             # Compute O(ep, eh)
+            # Compute Obest[(vp, vh)], the source of O(ep, eh)
             if vhIsATip: 
                 O[(ep, eh)] = C[(ep, eh)]  
                 Obest[(vp, vh)] = [(vp, vh)]              
@@ -202,6 +203,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             ep2 = parasiteTree[ep][3]
             eh1 = hostTree[eh][2]
             eh2 = hostTree[eh][3]
+            #is vp a tip?
             if ep1 == None:
                 vpIsATip = True
                 pChild1 = None
@@ -220,9 +222,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 vhIsATip = False
                 hChild1 = hostTree[eh][2][1]
                 hChild2 = hostTree[eh][3][1]
-            # find best place for a switch to occur    
+            # find best place for a switch to occur, and the location to which the edge switches    
             if eh1 != None and eh2 != None:
-
                 BestSwitchLocations[(vp, hChild1)] = []
                 BestSwitchLocations[(vp, hChild2)] = []
                 BestSwitch[(ep, eh1)] = min(BestSwitch[(ep, eh)], O[(ep, eh2)])
@@ -238,7 +239,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in BestSwitchLocations.keys():
         if BestSwitchLocations[key][0] == (None, None):
             BestSwitchLocations[key] = BestSwitchLocations[key][1:]
-
+    #add the costs of each event to the corresponding Dictionary entry
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
     treeMin = findBest(parasiteTree, Minimums)
