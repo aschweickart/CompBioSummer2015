@@ -5,8 +5,6 @@ import math
 NodeLocations = {}
 
 
-DISPLACE = 500
-
 #tells a turtle to draw a line from start to end and returns to its position before the function call
 def connect(Turtle,Start,End,rad):
 	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End, 
@@ -64,7 +62,12 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		if eventDict[key][0][0] == "C":
 			numTips+=1
 	width = numTips * 200
-	difference = 500/numTips
+	DISPLACE = width/2
+	if numTips<15:
+		radius = 30
+	else:
+		radius = 20
+	difference = 900/numTips
 	print difference
 	numSols = len(treeMin)
 	turtle.speed(0)
@@ -73,14 +76,14 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	newtreeMin = []
 	for x in range(len(treeMin)):
 		if not treeMin[x] in nodeDict:
-			nodeDict[treeMin[x]] = [((x+1)*width/(numSols + 1)-DISPLACE, depth + 30)]
+			nodeDict[treeMin[x]] = [((x+1)*width/(numSols + 1)-DISPLACE, depth + radius)]
 			turtle.penup()
 			turtle.setpos((x+1)*width/(numSols+1)-DISPLACE, depth)
 			turtle.pendown()
-			turtle.circle(30)
+			turtle.circle(radius)
 			turtle.left(130)
 			turtle.penup()
-			turtle.forward(30)
+			turtle.forward(radius)
 			turtle.pendown()
 			turtle.right(130)
 			turtle.write(treeMin[x], font = ("arial", 12, "normal"))
@@ -94,13 +97,13 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
-		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth -(difference-30)))
+		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth -(difference-radius)))
 		turtle.setpos(((event+1)*width/(numEvents+1))-DISPLACE, depth - difference)
 		turtle.pendown()
-		turtle.circle(30)
+		turtle.circle(radius)
 		turtle.left(95)
 		turtle.penup()
-		turtle.forward(30)
+		turtle.forward(radius)
 		turtle.pendown()
 		turtle.right(95)
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
