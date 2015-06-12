@@ -66,7 +66,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		radius = 30
 	else:
 		radius = 10
-		dip = 12
+		dip = 5
 	if treeMin == []:
 		for key in nodeDict:
 			for item in range(len(nodeDict[key][1:])):
