@@ -195,7 +195,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 mapScore = 0
                 for item in Dictionary[key]:
                     if type(item) == list:
-                        print item
                         mapScore += item[-1]
                 Score[key] = mapScore
             if Minimums[(vp, vh)] == Infinity:
