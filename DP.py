@@ -58,7 +58,8 @@ def postorder(Tree, rootEdgeName):
 def DP(hostTree, parasiteTree, phi, D, T, L):
     """ Takes a hostTree, parasiteTree, tip mapping function phi, and
         duplication cost (D), transfer cost (T), and loss cost (L) and
-        returns the DP table C. Cospeciation is assumed to cost 0. """
+        returns the DTL graph in the form of a dictionary, as well as a
+        drawing of the DTL graph. Cospeciation is assumed to cost 0. """
 
     A = {}
     C = {}
@@ -245,18 +246,20 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
+    # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 200, {})
     return DTL
 
 
 
 def findBest(Parasite, MinimumDict):
-    """Takes Parasite Tree and a dictionary of Minimum resolution costs. 
-    returns Dictionary of the minimum cost reconciliation tree roots"""
+    """Takes Parasite Tree and a dictionary of minimum resolution costs and 
+    returns a list of the minimum cost reconciliation tree roots"""
     treeMin = {}
     for key in MinimumDict.keys():
         if key[0] == Parasite['pTop'][1]:
             treeMin[key] = MinimumDict[key]
+    
     minimum = treeMin[treeMin.keys()[0]]
     for key in treeMin.keys():
         if treeMin[key] < minimum:
@@ -267,8 +270,8 @@ def findBest(Parasite, MinimumDict):
     return treeMin.keys()
 
 def findPath(TupleList, eventDict, uniqueDict):
-    """Takes the list of minimum reconciliation cost roots, the Dictionary of Events and Children
-     for each Node, and the Dictionary of unique vertex mappings. Returns the completed DTL graph as a 
+    """Takes as input TupleList, a list of minimum reconciliation cost roots, eventDict, the dictionary of events and children
+     for each node, and uniqueDict, the dictionary of unique vertex mappings. This returns the completed DTL graph as a 
      Dictionary"""
     for Tuple in TupleList:
         if not Tuple in uniqueDict:
@@ -281,7 +284,7 @@ def findPath(TupleList, eventDict, uniqueDict):
     return uniqueDict
 
 def reconcile(fileName, D, T, L):
-    """Takes FileName, dupliction cost, transfer cost, and loss cost. Returns DTL reconciliation
-     graph of the provided newick file"""
+    """Takes as input a newick file, FileName, a dupliction cost, a transfer cost, and a loss cost. This then calls 
+    DP to return the DTL reconciliation graph of the provided newick file"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
