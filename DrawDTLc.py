@@ -61,12 +61,14 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 			numTips+=1
 	width = numTips * 200
 	DISPLACE = width/2
-	dip = 25
+	dip = 5
 	if numTips<15:
 		radius = 30
 	else:
 		radius = 10
-		dip = 5
+		dip = 10
+		width = width/2
+		DISPLACE = DISPLACE/2
 	if treeMin == []:
 		for key in nodeDict:
 			for item in range(len(nodeDict[key][1:])):
