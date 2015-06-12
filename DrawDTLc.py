@@ -56,14 +56,16 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	"""Takes as input treeMin, a list of the starting nodes of the best reconciliations, eventDict, 
 	   the DTL format dictionary, depth, a starting y-coordinate, and nodeDict, a dictionary of nodes and
 	   their coordinates. This function recursively draws the nodes of the DTL format dictionary, then 
-	   connects them using the connect function"""
+	   connects them using the connect function aboves"""
 	if treeMin == []:
 		return
+	numTips = 0
 	for key in eventDict.keys():
-		numTips = 0
 		if eventDict[key][0][0] == "C":
 			numTips+=1
-	width = numTips * 1000
+	width = numTips * 200
+	difference = 500/numTips
+	print difference
 	numSols = len(treeMin)
 	turtle.speed(0)
 	turtle.pen(pencolor = "black")
@@ -92,8 +94,8 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
-		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 70))
-		turtle.setpos(((event+1)*width/(numEvents+1))-DISPLACE, depth - 100)
+		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth -(difference-30)))
+		turtle.setpos(((event+1)*width/(numEvents+1))-DISPLACE, depth - difference)
 		turtle.pendown()
 		turtle.circle(30)
 		turtle.left(95)
@@ -103,7 +105,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.right(95)
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 		turtle.ht()
-	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
+	drawNodes(newtreeMin, eventDict, depth - 2*difference, nodeDict)
 	for key in nodeDict:
 		for item in range(len(nodeDict[key][1:])):
 			connect(turtle.Turtle(), nodeDict[key][0], nodeDict[key][item+1])
