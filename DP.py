@@ -244,10 +244,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    DrawDTLc.drawNodes(treeMin, DTL, 200, {})
+    DrawDTLc.drawNodes(treeMin, DTL, 10, {})
     return DTL
 
 def findBest(Parasite, MinimumDict):
+    """Takes Parasite Tree and a dictionary of Minimum resolution costs. 
+    returns Dictionary of the minimum cost reconciliation tree roots"""
     treeMin = {}
     for key in MinimumDict.keys():
         if key[0] == Parasite['pTop'][1]:
@@ -262,6 +264,9 @@ def findBest(Parasite, MinimumDict):
     return treeMin.keys()
 
 def findPath(TupleList, eventDict, uniqueDict):
+    """Takes the list of minimum reconciliation cost roots, the Dictionary of Events and Children
+     for each Node, and the Dictionary of unique vertex mappings. Returns the completed DTL graph as a 
+     Dictionary"""
     for Tuple in TupleList:
         if not Tuple in uniqueDict:
             uniqueDict[(Tuple)] = eventDict[(Tuple)]
@@ -273,7 +278,7 @@ def findPath(TupleList, eventDict, uniqueDict):
     return uniqueDict
 
 def reconcile(fileName, D, T, L):
-    """Takes Host, Parasite, and Phi mapping from provided file and calls DP with 
-        Those Values"""
+    """Takes FileName, dupliction cost, transfer cost, and loss cost. Returns DTL reconciliation
+     graph of the provided newick file"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
