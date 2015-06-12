@@ -101,13 +101,10 @@ def bookkeeping(DTL, ParasiteTree):
         mapNode = key[0]
 
         if DTL[mapNode][0][0] == 'C':                   #check if the key is a tip
-<<<<<<< HEAD
-           #BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), TIPSCORE]    #set BSFH of tip to some global variable
-           BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), DTL[mapNode][0][-1]]
-=======
+        
             #BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), TIPSCORE]    #set BSFH of tip to some global variable
             BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), DTL[mapNode][0][-1]]
->>>>>>> d077e1360566c49d379d5c2145136d336bbe93f0
+
 
         else:                                       #if key isn't a tip:
             maxScore = float("-inf")                             #initialize counter
