@@ -195,7 +195,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if omin == 2:
                     Obest[(vp,vh)].extend(Obest[(vp, hChild2)])
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
-
+            for key in Dictionary.keys():
+                mapScore = 1
+                for item in DTL[key]:
+                    if type(item) == list:
+                        mapScore = mapScore * item[-1]
+        Score[key] = mapScore
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
         BestSwitchLocations[(ep[1], hostTree["hTop"][1])] = [(None,None)]
@@ -245,6 +250,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # Add the costs of each event to the corresponding Dictionary entry
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
+
     # Use findPath and findBest to construct the DTL graph dictionary
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
@@ -252,12 +258,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     print DTL
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
-    for key in DTL.keys():
-        mapScore = 1
-        for item in DTL[key]:
-            if type(item) == list:
-                mapScore = mapScore * item[-1]
-        Score[key] = mapScore
 
     return DTL
 
