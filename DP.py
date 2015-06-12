@@ -240,9 +240,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for key in BestSwitchLocations.keys():
         if BestSwitchLocations[key][0] == (None, None):
             BestSwitchLocations[key] = BestSwitchLocations[key][1:]
-    #add the costs of each event to the corresponding Dictionary entry
+    # Add the costs of each event to the corresponding Dictionary entry
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
+    # Use findPath and findBest to construct the DTL graph dictionary
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
