@@ -71,7 +71,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	newtreeMin = []
 	for x in range(len(treeMin)):
 		if not treeMin[x] in nodeDict:
-			nodeDict[treeMin[x]] = [((x+1)*width/(numSols+1)-DISPLACE, depth + 30)]
+			nodeDict[treeMin[x]] = [((x+1)*width/(numSols + 1)-DISPLACE, depth + 30)]
 			turtle.penup()
 			turtle.setpos((x+1)*width/(numSols+1)-DISPLACE, depth)
 			turtle.pendown()
