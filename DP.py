@@ -196,7 +196,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             for key in Dictionary.keys():
                 mapScore = 0
                 for item in Dictionary[key]:
-                    print item
                     if type(item) == list:
                         mapScore += item[-1]
                 Score[key] = mapScore
@@ -306,7 +305,8 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
                             ParentsDict[item[2]]+= item[3]
                         else: ParentsDict[item[2]] = item[3]
                         if not item[2] in newTreeMin:
-                            newTreeMin.append(item[2])                    
+                            newTreeMin.append(item[2])
+    print ParentsDict                    
     return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict)
 
 def findBest(Parasite, MinimumDict):
