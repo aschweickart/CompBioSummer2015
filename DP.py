@@ -108,6 +108,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if vpIsATip and phi[vp] == vh:
                     A[(ep, eh)] = 0
                     Amin = [["C", (None, None), (None, None), 1]] # Contemporary event to be added to Dictionary
+                    
                 else: 
                     Score[(vp, vh)] = Infinity
                     A[(ep, eh)] = Infinity
@@ -121,12 +122,13 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
                         coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
-                        coMin = ["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
+                        coMin = ["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])]
                     else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]+["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
 
                 else:
                     COepeh = Infinity
                     coMin = ["inf"]
+                    Score[(vp, vh)] = Infinity
                 # Compute L and create event list to add to Dictionary
                 LOSSepeh = L + min(C[(ep, eh1)], C[(ep, eh2)])
 
@@ -256,7 +258,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    print DTL
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
 
