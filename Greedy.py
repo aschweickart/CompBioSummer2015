@@ -115,35 +115,54 @@ def bookkeeping(DTL, ParasiteTree):
 
             BSFHMap[mapNode] = [maxEvent, maxScore]      #set BSFH value of key
 
-    return BSFHMap, BSFHEvent
-
-        
+    return BSFHMap
 
 
-def greedy(DTL, ParasiteTree, k):
-    """This function takes DTL, ParasiteTree, and the desired number of reconciliation trees k as inputs and calls 
-    bookkeeping to find BSFHMap and BSFHEvent, which are both dictionaries. Greedy is also going to reset the BSFH 
-    scores to 0 and then call bookkeeping with the new DTL. We do this k times""" 
+def TraceChildren(GreedyOnce, BSFHMap, key):
+    """This function takes a dicitonary of a best reconciliation, a BSFHMap dicitonary, and a current key, and adds the 
+    children of that key to the dictionary, then recurses on the children."""
+    child1 = GreedyOnce[key][1]
+    child2 = GreedyOnce[key][2]
+    if child1 != (None, None):
+        GreedyOnce[child1] = BSFHMap[child1][0][0:3]
+        GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, child1))
+    if child2 != (None, None):
+        GreedyOnce[child2] = BSFHMap[child2][0][0:3]
+        GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, child2))
+    return GreedyOnce
 
 
-    BSFHMap, BSFHEvent = bookkeeping(DTL, ParasiteTree)
+def greedyOnce(DTL, ParasiteTree):
+    """This function takes DTL, ParasiteTree, as inputs and calls bookkeeping to find BSFHMap, which is a dictionary. 
+    It returns the reconciliation tree with the highest score in a dictionary called GreedyOnce, and also resets to 0 the scores 
+    of the mapping nodes in the best reconciliation. The return dictionary will have keys which are the mapping nodes in the best 
+    reconciliation, and values of the form (event, child1, child2)."""
 
-    for i in range(k):
-        """we find the max"""
 
-        bestKey = ''
-        bestScore = 0
-        for key in BSFH:
-            if BSFH[key][0] > bestScore:
-                bestKey = key
-                bestScore = BSFH[key][0]
+    BSFHMap = bookkeeping(DTL, ParasiteTree)
+    ParasiteRoot = findRoot(ParasiteTree)
+
+    GreedyOnce = {}                     #initialize dictionary we will return
+
+    bestKey = ()                        #variable to hold the key with the highers BSFH value
+    bestScore = 0                       #variable to hold the highest BSFH value seen so far
+    for key in BSFHMap:                                             #iterate trough all the keys (verteces) in BSFHMap
+        if BSFHMap[key][-1] > bestScore and key[0] == ParasiteRoot: #check if key has a score higher than bestScore and includes ParasiteRoot
+            bestKey = key
+            bestScore = BSFHMap[key][-1]
+    GreedyOnce[bestKey] = BSFHMap[bestKey][0][0:3]                  #set value in GreedyOnce of the best key we found
+    GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, bestKey))
+    return GreedyOnce
+
+
             
 
 
 
 
 
-
+def Greedy(things):
+    """Greedy is also going to reset the BSFH scores to 0 and then call bookkeeping with the new DTL. We do this k times"""
 
 
 
