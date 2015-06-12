@@ -70,6 +70,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     Obest = {}
     BestSwitchLocations = {}
     Score = {}
+    Frequency = {}
+    Parents = {}
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
@@ -268,14 +270,43 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     # Use findPath and findBest to construct the DTL graph dictionary
     treeMin = findBest(parasiteTree, Minimums)
+    for root in treeMin:
+        Parents[root] = Score[root]
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
+    for key in Score.keys():
+        if not key in DTL:
+            del Score[key]
+
+    DTL = addScores(treeMin, DTL, Parents, Score)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
-
+    print Score
     return DTL
 
-
+def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
+    if treeMin == []:
+        return DTLDict
+    newTreeMin = []
+    for root in treeMin:
+        if root != (None, None):
+            for item in DTLDict[root]:
+                if type(item) == list:
+                    oldScore = item[3]
+                    item[3] = ParentsDict[root] *(oldScore/ScoreDict[root])
+                    if item[1]!= (None, None):
+                        if item[1] in ParentsDict:
+                            ParentsDict[item[1]]+= item[3]
+                        else: ParentsDict[item[1]] = item[3]
+                        if not item[1] in newTreeMin:
+                            newTreeMin.append(item[1])
+                    if item[2]!=(None, None):
+                        if item[2] in ParentsDict:
+                            ParentsDict[item[2]]+= item[3]
+                        else: ParentsDict[item[2]] = item[3]
+                        if not item[2] in newTreeMin:
+                            newTreeMin.append(item[2])                    
+    return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict)
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of minimum resolution costs and 
