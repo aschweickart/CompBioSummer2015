@@ -74,9 +74,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 						connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0], radius)
 		return
 
-	difference = ((len(eventDict))*25)/numTips
-
-	print difference
+	difference = ((len(eventDict))*35)/numTips
 
 	numSols = len(treeMin)
 	turtle.speed(0)
@@ -118,4 +116,5 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 		turtle.ht()
 	drawNodes(newtreeMin, eventDict, depth - 2*difference, nodeDict)
+
 
