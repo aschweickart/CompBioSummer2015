@@ -73,6 +73,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
+            print Score
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
             ep1 = parasiteTree[ep][2]
@@ -105,10 +106,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
             if vhIsATip:
                 if vpIsATip and phi[vp] == vh:
-                    Score[(vp, vh)] = 1
                     A[(ep, eh)] = 0
-                    Amin = [["C", (None, None), (None, None), Score[(vp, vh)]]] # Contemporary event to be added to Dictionary
+                    Amin = [["C", (None, None), (None, None), 1]] # Contemporary event to be added to Dictionary
                 else: 
+                    Score[(vp, vh)] = Infinity
                     A[(ep, eh)] = Infinity
                     Amin = ["inf"]
             else: #vh is not a tip
@@ -118,7 +119,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
                     if COepeh == C[(ep2, eh1)]+ C[(ep1, eh2)]:
 
-                        coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]
+                        coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])]
                     elif COepeh == C[(ep1, eh1)]+ C[(ep2, eh2)]:
                         coMin = ["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
                     else: coMin = ["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, pChild2)])]+["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, pChild2)])]
@@ -196,11 +197,11 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     Obest[(vp,vh)].extend(Obest[(vp, hChild2)])
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
             for key in Dictionary.keys():
-                mapScore = 1
-                for item in DTL[key]:
+                mapScore = 0
+                for item in Dictionary[key]:
                     if type(item) == list:
-                        mapScore = mapScore * item[-1]
-        Score[key] = mapScore
+                        mapScore += item[-1]
+                Score[key] = mapScore
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
         BestSwitchLocations[(ep[1], hostTree["hTop"][1])] = [(None,None)]
