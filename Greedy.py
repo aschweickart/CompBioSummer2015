@@ -12,15 +12,19 @@ def findRoot(ParasiteTree):
 
 
 def orderDTLwrapper(DTL, ParasiteRoot):
-    """This wrapper function uses orderDTL and starts with a level of 0. Returns keysL."""
+    """This function takes in a DTL dictionary and a ParasiteRoot, and calls orderDTL with a level of 0. It returns a list, 
+    keysL, that contains tuples. Each tuple has two elements. The first is a mapping node of the form (p, h), where p is a 
+    parasite node and h is a host node. The second element is a level representing the depth of that mapping node within 
+    the tree. This function loops through the DTL graph and recruses on the two children of each DTL mapping node, adding 
+    the results to keysL."""
     return orderDTL(DTL, ParasiteRoot, 0)
 
 def orderDTL(DTL, ParasiteRoot, level):
     """This function takes in a DTL dictionary, a ParasiteRoot, and a level that represents the depth of 
-    the of a vertex pair. It returns a list, keysL, that includes tuples with the first 
-    elements being a mapping node of the form (p, h), and the second element being the depth of that node within 
-    the graph. This function loops through the DTL graph and recruses on the two children of each DTL 
-    mapping node, adding the results to keysL"""
+    the of a vertex pair. It returns a list, keysL, containing two-element tuples. The first element is a 
+    mapping node of the form (p, h), where p is a parasite node and h is a host node. The second element is a level 
+    representing the depth of that mapping node within the tree. This function loops through the DTL graph and recruses on the two children of each DTL 
+    mapping node, adding the results to keysL."""
 
     keysL = []
     for key in DTL:
@@ -71,16 +75,15 @@ def preorderDTLsort(DTL, ParasiteRoot):
      
 
 def bookkeeping(DTL, ParasiteTree):
-    """This function inputs the DTL graph and ParasiteTree, and then records what the max is at each mapping node and 
-    where the max came from. It outputs two dictionaries BSFHMap and BSFHEvent, by looping through the keys in orderedKeysL 
-    and finding the max score at each mapping node and event node"""
+    """This function takes as inputs a DTL graph and ParasiteTree, and then records what the max is at each mapping node and 
+    which event the max came from. It outputs two dictionaries BSFHMap and BSFHEvent, by looping through the keys in 
+    a sorted list of mapping nodes and finding the max score at each mapping node and event node. BSFHMap has keys of the 
+    form (p, h) which are the mapping nodes, and values which are lists where the first element is a list of events with 
+    the max score, and the last element is the max score. BSFHEvent is a dictionary with events as keys, and values which 
+    are one number which is the max score."""
 
-    """We are creating two dictionaries. BSFHMap has keys of the form (p, h) which are the mapping nodes, and values
-    which are lists where the first element is a list of events with the max score, and the last element is the max score.
-    BSFHEvent is a dictionary with events as keys, and values which are one number which is the max score."""
-
-    #BSFHMap = {(mapping node): [['event', (p, h), (p, h), score], maxScore]}
-    #BSFHEvent = {(event node): max}
+    #Example: BSFHMap = {(mapping node): [['event', (p, h), (p, h), score], maxScore]}
+    #Example: BSFHEvent = {(event node): max}
 
     TIPSCORE = 1 #this will change depending on how we define the score for tips
 
@@ -96,7 +99,7 @@ def bookkeeping(DTL, ParasiteTree):
         mapNode = key[0]
 
         if DTL[mapNode][0][0] == 'C':                   #check if the key is a tip
-           BSFHMap[mapNode] = [DTL[mapNode][0], TIPSCORE]    #set BSFH of tip to some global variable
+           BSFHMap[mapNode] = [tuple(DTL[mapNode][0]), TIPSCORE]    #set BSFH of tip to some global variable
 
         else:                                       #if key isn't a tip:
             maxScore = 0                             #initialize counter
@@ -118,18 +121,46 @@ def bookkeeping(DTL, ParasiteTree):
     return BSFHMap
 
 
-def TraceChildren(GreedyOnce, BSFHMap, key):
-    """This function takes a dicitonary of a best reconciliation, a BSFHMap dicitonary, and a current key, and adds the 
-    children of that key to the dictionary, then recurses on the children."""
+def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
+    """This function takes as input a DTL graph, a dicitonary of a best reconciliation, a BSFHMap dicitonary, and a 
+    current key, adds the children of that key to the dictionary, resets the scores of the associated events to 0, 
+    then recurses on the children. ADD STUFF HERE"""
+    resetDTL = {}
+    reset1DTL = {}
+    reset2DTL = {}
     child1 = GreedyOnce[key][1]
     child2 = GreedyOnce[key][2]
     if child1 != (None, None):
         GreedyOnce[child1] = BSFHMap[child1][0][0:3]
-        GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, child1))
+
+        for i in range(len(DTL[child1]) - 1):       #this loop resets all the scores of events that have been used to 0
+            if tuple(DTL[child1][i]) == BSFHMap[child1][0]:
+                newValue = DTL[child1]
+                newValue[i][-1] = 0
+                reset1DTL[child1] = newValue
+
+        newGreedyOnce, DTL1 = TraceChildren(DTL, GreedyOnce, BSFHMap, child1)
+        reset1DTL.update(DTL1)
+
+        GreedyOnce.update(newGreedyOnce)
     if child2 != (None, None):
         GreedyOnce[child2] = BSFHMap[child2][0][0:3]
-        GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, child2))
-    return GreedyOnce
+
+        for i in range(len(DTL[child2]) - 1):
+            if tuple(DTL[child2][i]) == BSFHMap[child2][0]:
+                newValue = DTL[child2]
+                newValue[i][-1] = 0
+                reset2DTL[child2] = newValue      
+
+        newGreedyOnce, DTL2 = TraceChildren(DTL, GreedyOnce, BSFHMap, child2)
+        reset2DTL.update(DTL2)
+        GreedyOnce.update(newGreedyOnce)
+
+    resetDTL.update(reset1DTL)
+    resetDTL.update(reset2DTL)
+
+    
+    return GreedyOnce, resetDTL
 
 
 def greedyOnce(DTL, ParasiteTree):
@@ -151,12 +182,19 @@ def greedyOnce(DTL, ParasiteTree):
             bestKey = key
             bestScore = BSFHMap[key][-1]
     GreedyOnce[bestKey] = BSFHMap[bestKey][0][0:3]                  #set value in GreedyOnce of the best key we found
-    GreedyOnce.update(TraceChildren(GreedyOnce, BSFHMap, bestKey))
-    return GreedyOnce
+    
+    #reset score of the mapping node we used to 0
+    for i in range(len(DTL[bestKey]) - 1):
+        if tuple(DTL[bestKey][i]) == BSFHMap[bestKey][0]:
+            DTL[bestKey][i][-1] = 0
 
+    newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
 
-            
+    GreedyOnce.update(newGreedyOnce)
 
+    DTL.update(resetDTL)
+
+    return GreedyOnce, DTL
 
 
 
