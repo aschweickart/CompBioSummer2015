@@ -8,7 +8,7 @@ NodeLocations = {}
 DISPLACE = 500
 
 #tells a turtle to draw a line from start to end and returns to its position before the function call
-def connect(Turtle,Start,End):
+def connect(Turtle,Start,End,rad):
 	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End, 
 	and connects the two locations with a line and arrow"""
 	Turtle.speed(0)
@@ -34,10 +34,10 @@ def connect(Turtle,Start,End):
 		theta = (math.pi/2)
 		if not movu:
 			theta += math.pi
-	Start = (Start[0] + (30 * math.cos(theta)), Start[1])
-	Start = (Start[0], Start[1] + (30 * math.sin(theta)))
-	End = (End[0] - (30 * math.cos(theta)), End[1])
-	End = (End[0], End[1] - (30 * math.sin(theta)))
+	Start = (Start[0] + (rad * math.cos(theta)), Start[1])
+	Start = (Start[0], Start[1] + (rad * math.sin(theta)))
+	End = (End[0] - (rad * math.cos(theta)), End[1])
+	End = (End[0], End[1] - (rad * math.sin(theta)))
 	Turtle.penup()
 	Turtle.radians()
 	Turtle.seth(theta)
