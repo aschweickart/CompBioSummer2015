@@ -53,8 +53,10 @@ def connect(Turtle,Start,End):
 	Turtle.ht()
 
 def drawNodes(treeMin, eventDict, depth, nodeDict):
-	"""Takes as input a list of the starting nodes of the best reconciliations, treeMin, the DTL format dictionary, eventDict, 
-	a starting y-coordinate, depth, and a dictionary nodeDict and draws the DTL graph of the DTL dictionary"""
+	"""Takes as input treeMin, a list of the starting nodes of the best reconciliations, eventDict, 
+	   the DTL format dictionary, depth, a starting y-coordinate, and nodeDict, a dictionary of nodes and
+	   their coordinates. This function recursively draws the nodes of the DTL format dictionary, then 
+	   connects them using the connect function"""
 	if treeMin == []:
 		return
 	for key in eventDict.keys():
