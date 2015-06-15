@@ -289,6 +289,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     return finalDTL
 
 
+
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
@@ -316,6 +317,7 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                     if not newDTL[root][n][2] in newTreeMin:
                         newTreeMin.append(newDTL[root][n][2])               
     return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict, newDTL)
+
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of minimum resolution costs and 
