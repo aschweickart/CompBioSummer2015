@@ -283,12 +283,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
-    return DTL
+    print Score
+    return finalDTL
+
 
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
+    print DTLDict
     if treeMin == []:
         return newDTL
     newTreeMin = []
@@ -296,8 +299,6 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
         for n in range(len(DTLDict[root])):
             if type(DTLDict[root][n]) == list:
                 oldScore = DTLDict[root][n][3]
-                if root == ('p30', 'h12'):
-                    print oldScore
                 newDTL[root][n][3] = ParentsDict[root] * (1.0 * oldScore / ScoreDict[root])
                 if DTLDict[root][n][1]!= (None, None):
                     if DTLDict[root][n][1] in ParentsDict:
