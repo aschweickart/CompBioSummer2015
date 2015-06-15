@@ -62,7 +62,7 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	width = numTips * 200
 	DISPLACE = width/2
 	dip = 30
-	if numTips<15:
+	if len(eventDict)<25:
 		radius = 30
 	else:
 		radius = 10
@@ -120,5 +120,3 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
 		turtle.ht()
 	drawNodes(newtreeMin, eventDict, depth - 2*difference, nodeDict)
-
-
