@@ -275,39 +275,45 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
     for key in Score.keys():
+        Score[key] = Score[key]*1.0
         if not key in DTL:
             del Score[key]
-
-    DTL = addScores(treeMin, DTL, Parents, Score)
+    newDTL = {}
+    for key in DTL.keys():
+        newDTL[key] = DTL[key]
+    DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
     return DTL
 
-def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
+
+def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
     if treeMin == []:
-        return DTLDict
+        return newDTL
     newTreeMin = []
     for root in treeMin:
-        if root != (None, None):
-            for item in DTLDict[root]:
-                if type(item) == list:
-                    oldScore = item[3]
-                    item[3] = ParentsDict[root] *(1.0*oldScore/ScoreDict[root])
-                    if item[1]!= (None, None):
-                        if item[1] in ParentsDict:
-                            ParentsDict[item[1]]+= item[3]
-                        else: ParentsDict[item[1]] = item[3]
-                        if not item[1] in newTreeMin:
-                            newTreeMin.append(item[1])
-                    if item[2]!=(None, None):
-                        if item[2] in ParentsDict:
-                            ParentsDict[item[2]]+= item[3]
-                        else: ParentsDict[item[2]] = item[3]
-                        if not item[2] in newTreeMin:
-                            newTreeMin.append(item[2])                  
-    return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict)
+        for n in range(len(DTLDict[root])):
+            if type(DTLDict[root][n]) == list:
+                oldScore = DTLDict[root][n][3]
+                if root == ('p30', 'h12'):
+                    print oldScore
+                newDTL[root][n][3] = ParentsDict[root] *(1.0*oldScore/ScoreDict[root])
+                if DTLDict[root][n][1]!= (None, None):
+                    if DTLDict[root][n][1] in ParentsDict:
+                        ParentsDict[DTLDict[root][n][1]]+= newDTL[root][n][3]
+                    else: ParentsDict[DTLDict[root][n][1]] = newDTL[root][n][3]
+                    if not DTLDict[root][n][1] in newTreeMin:
+                        newTreeMin.append(DTLDict[root][n][1])
+                if DTLDict[root][n][2]!=(None, None):
+                    if DTLDict[root][n][2] in ParentsDict:
+                        ParentsDict[DTLDict[root][n][2]]+= newDTL[root][n][3]
+                    else: ParentsDict[DTLDict[root][n][2]] = newDTL[root][n][3]
+                    if not DTLDict[root][n][2] in newTreeMin:
+                        newTreeMin.append(DTLDict[root][n][2])               
+    return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict, newDTL)
+
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of minimum resolution costs and 
