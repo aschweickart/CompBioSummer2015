@@ -281,7 +281,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = addScores(treeMin, DTL, Parents, Score)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
-    print Score
     return DTL
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
@@ -307,8 +306,7 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
                             ParentsDict[item[2]]+= item[3]
                         else: ParentsDict[item[2]] = item[3]
                         if not item[2] in newTreeMin:
-                            newTreeMin.append(item[2])
-    print ParentsDict                    
+                            newTreeMin.append(item[2])                  
     return addScores(newTreeMin, DTLDict, ParentsDict, ScoreDict)
 
 def findBest(Parasite, MinimumDict):
