@@ -286,6 +286,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     return DTL
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict):
+    """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
+    a dictionary of score values, and returns the DTL with scores calculated for team greed."""
     if treeMin == []:
         return DTLDict
     newTreeMin = []
