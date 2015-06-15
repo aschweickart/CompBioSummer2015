@@ -21,7 +21,15 @@ def orderDTLwrapper(DTL, ParasiteRoot):
     the results to keysL."""
     return orderDTL(DTL, ParasiteRoot, 0)
 
-def orderDTL(DTL, ParasiteRoot, level):
+def initializeMarkingDict(DTL):
+    """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
+    markingDict = {}
+    for key in DTL:
+        markingDict[key] = False
+    markingDict[(None, None)] = False
+    return markingDict
+
+def orderDTL(DTL, ParasiteRoot, level, markingDict):
     """This function takes in a DTL dictionary, a ParasiteRoot, and a level that represents the depth of 
     the of a vertex pair. It returns a list, keysL, containing two-element tuples. The first element is a 
     mapping node of the form (p, h), where p is a parasite node and h is a host node. The second element is a level 
@@ -30,19 +38,21 @@ def orderDTL(DTL, ParasiteRoot, level):
 
     keysL = []
     for key in DTL:
-        if key[0] == ParasiteRoot:
-            for i in range(len(DTL[key]) - 1):          #loop through each event associated with key in DTL
-                event = DTL[key][i]
-                child1 = event[1]
-                child2 = event[2]
-                if child1[0] == None and child2[0] == None:    #base case: mapping node (key) is a tip
-                    keysL = keysL + [(key, level)]
-                elif child2[0] == None:                        #loss case: there is only one child (child1)
-                    keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1)
-                elif child1[0] == None:                        #loss case: there is only one child (child2)
-                    keysL = keysL + [(key, level)] + orderDTL(DTL, child2[0], level + 1)
-                else:
-                    keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1) + orderDTL(DTL, child2[0], level + 1)
+        if markingDict[key] == False:
+            if key[0] == ParasiteRoot:
+                for i in range(len(DTL[key]) - 1):          #loop through each event associated with key in DTL
+                    event = DTL[key][i]
+                    child1 = event[1]
+                    child2 = event[2]
+                    if child1[0] == None and child2[0] == None:    #base case: mapping node (key) is a tip
+                        keysL = keysL + [(key, level)]
+                    elif child2[0] == None:                        #loss case: there is only one child (child1)
+                        keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1, markingDict)
+                    elif child1[0] == None:                        #loss case: there is only one child (child2)
+                        keysL = keysL + [(key, level)] + orderDTL(DTL, child2[0], level + 1, markingDict)
+                    else:
+                        keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1, markingDict) + orderDTL(DTL, child2[0], level + 1, markingDict)
+                markingDict[key] = True
     return keysL
 
 
