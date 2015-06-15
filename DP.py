@@ -279,19 +279,19 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         Score[key] = Score[key]*1.0
         if not key in DTL:
             del Score[key]
+
     newDTL = copy.deepcopy(DTL)
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
+
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
-    print Score
-    return finalDTL
+    return DTL
 
 
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
-    print DTLDict
     if treeMin == []:
         return newDTL
     newTreeMin = []
