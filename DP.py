@@ -11,6 +11,7 @@
 
 import newickFormatReader
 import DrawDTLc
+import copy
 
 H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): \
 ('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': \
@@ -278,9 +279,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         Score[key] = Score[key]*1.0
         if not key in DTL:
             del Score[key]
-    newDTL = {}
-    for key in DTL.keys():
-        newDTL[key] = DTL[key]
+    newDTL = copy.deepcopy(DTL)
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
     DrawDTLc.drawNodes(treeMin, DTL, 400, {})
@@ -299,7 +298,7 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                 oldScore = DTLDict[root][n][3]
                 if root == ('p30', 'h12'):
                     print oldScore
-                newDTL[root][n][3] = ParentsDict[root] *(1.0*oldScore/ScoreDict[root])
+                newDTL[root][n][3] = ParentsDict[root] * (1.0 * oldScore / ScoreDict[root])
                 if DTLDict[root][n][1]!= (None, None):
                     if DTLDict[root][n][1] in ParentsDict:
                         ParentsDict[DTLDict[root][n][1]]+= newDTL[root][n][3]
