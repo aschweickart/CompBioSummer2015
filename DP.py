@@ -122,12 +122,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                  C[(ep1, eh2)] + C[(ep2, eh1)])
                     coMin = []
                     if COepeh ==C[(ep2, eh1)]+ C[(ep1, eh2)]:
-
                         coMin.append(["S", (pChild2, hChild1), (pChild1, hChild2), (Score[(pChild2, hChild1)]*Score[(pChild1, hChild2)])])
                     if COepeh == C[(ep1, eh1)] + C[(ep2, eh2)]:
                         coMin.append(["S", (pChild1, hChild1), (pChild2, hChild2),(Score[(pChild1, hChild1)]*Score[(pChild2, hChild2)])])
                    
-
                 else:
                     COepeh = Infinity
                     coMin = [Infinity]
