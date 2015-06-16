@@ -277,9 +277,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     newDTL = copy.deepcopy(DTL)
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
-
     # Draw the DTL reconciliation of this DTL Graph
-    #DrawDTLc.drawNodes(treeMin, DTL, 450, {})
+    DrawDTLc.drawNodes(treeMin, DTL, 400, {})
     return DTL
 
 def orderDTL(DTL, ParasiteRoot):
@@ -326,7 +325,6 @@ def preorderDTLsort(DTL, ParasiteRoot):
             if mapping[-1] == levelCounter:
                 orderedKeysL = orderedKeysL + [mapping]
         levelCounter += 1
-    print orderedKeysL
     
     lastLevel = orderedKeysL[-1][1]
     for n in range(len(orderedKeysL)):
@@ -360,7 +358,6 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
     preOrder = preorderDTLsort(DTLDict, treeMin[0][0])
-    print ScoreDict
     preOrderCheck = preorderCheck(preOrder)
     for root in preOrderCheck:
         if root != (None, None):
