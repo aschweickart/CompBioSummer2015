@@ -136,7 +136,7 @@ def bookkeeping(DTL, ParasiteTree):
     BSFHEvent = {}
     ParasiteRoot = findRoot(ParasiteTree)   
     orderedKeysL = postorderDTLsort(DTL, ParasiteRoot)
-    #BSFHMap[(None, None)] = [0]
+    #BSFHMap[(None, None)] = [0] 
     for key in orderedKeysL:
         mapNode = key[0]
         if DTL[mapNode][0][0] == 'C':                   #check if the key is a tip
@@ -146,7 +146,12 @@ def bookkeeping(DTL, ParasiteTree):
             maxEvent = []                           #initialize variable to keep track of where max came from
             for i in range(len(DTL[mapNode]) - 1):   #iterate through the events associated with the key node
                 event = tuple(DTL[mapNode][i])
-                BSFHEvent[event] = BSFHMap[event[1]][-1] + BSFHMap[event[2]][-1] + event[-1]
+                BSFHEvent[event] = event[-1]
+                if event[1] != (None, None):
+                    BSFHEvent[event] = BSFHEvent[event] + BSFHMap[event[1]][-1]
+                if event[2] != (None, None):
+                    BSFHEvent[event] = BSFHEvent[event] + BSFHMap[event[2]][-1]
+                    #BSFHEvent[event] = BSFHMap[event[1]][-1] + BSFHMap[event[2]][-1] + event[-1]
                 if BSFHEvent[event] > maxScore:  #check if current event has a higher score than current max
                     maxScore = BSFHEvent[event]  #if so, set new max score
                     maxEvent = list(event)                #record where new max came from
