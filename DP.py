@@ -71,7 +71,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     Obest = {}
     BestSwitchLocations = {}
     Score = {}
-    Frequency = {}
     Parents = {}
 
     for ep in postorder(parasiteTree, "pTop"):
@@ -342,12 +341,20 @@ def preorderDTLsort(DTL, ParasiteRoot):
         levelCounter += 1
     return orderedKeysL
 
+def preorderCheck(preOrderList):
+    newList = []
+    for root in preOrderList:
+        if not root in newList:
+            newList.append(root)
+    return newList
+
+
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
     preOrder = preorderDTLsort(DTLDict, treeMin[1][0])
-
-    for root in preOrder:
+    preOrderCheck = preorderCheck(preOrder)
+    for root in preOrderCheck:
         vertices = root[0]
         if root[1] == 0:
             ParentsDict[vertices] = ScoreDict[vertices]
@@ -357,12 +364,18 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                 newDTL[vertices][n][3] = ParentsDict[vertices] * (1.0 * oldScore / ScoreDict[vertices])
                 if DTLDict[vertices][n][1]!= (None, None):
                     if DTLDict[vertices][n][1] in ParentsDict:
+                        print vertices, DTLDict[vertices][n]
                         ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][3]
-                    else: ParentsDict[DTLDict[vertices][n][1]] = newDTL[vertices][n][3]
+                    else: 
+                        print vertices, DTLDict[vertices][n]
+                        ParentsDict[DTLDict[vertices][n][1]] = newDTL[vertices][n][3]
                 if DTLDict[vertices][n][2]!=(None, None):
                     if DTLDict[vertices][n][2] in ParentsDict:
+                        print vertices, DTLDict[vertices][n]
                         ParentsDict[DTLDict[vertices][n][2]]+= newDTL[vertices][n][3]
-                    else: ParentsDict[DTLDict[vertices][n][2]] = newDTL[vertices][n][3]               
+                    else: 
+                        print vertices, DTLDict[vertices][n]
+                        ParentsDict[DTLDict[vertices][n][2]] = newDTL[vertices][n][3]               
     return newDTL
 
 
