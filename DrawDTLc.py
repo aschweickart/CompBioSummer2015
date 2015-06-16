@@ -65,8 +65,8 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	if len(eventDict)<25:
 		radius = 30
 	else:
-		radius = 10
-		dip = 10
+		radius = 13
+		dip = 15
 		width = width/2
 		DISPLACE = DISPLACE/2
 	if treeMin == []:

@@ -279,52 +279,39 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
 
     # Draw the DTL reconciliation of this DTL Graph
-    #DrawDTLc.drawNodes(treeMin, DTL, 400, {})
+    #DrawDTLc.drawNodes(treeMin, DTL, 450, {})
     return DTL
-
-def initializeMarkingDict(DTL):
-    """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
-
-    markingDict = {}
-    for key in DTL:
-        markingDict[key] = False
-    markingDict[(None, None)] = False
-    return markingDict
-
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a list, keysL, that contains tuples. Each tuple 
     has two elements. The first is a mapping node of the form (p, h), where p is a parasite node and h is a host node. The 
     second element is a level representing the depth of that mapping node within the tree."""
 
-    markingDict = initializeMarkingDict(DTL)
     keysL = []
     topNodes = []
     for key in DTL:
         if key[0] == ParasiteRoot:
             topNodes.append(key)
     for vertex in topNodes:
-        keysL.extend(orderDTLRoots(DTL, vertex, 0, markingDict))
+        keysL.extend(orderDTLRoots(DTL, vertex, 0))
     return keysL
 
-def orderDTLRoots(DTL, vertex, level, markingDict):
+def orderDTLRoots(DTL, vertex, level):
     """this function takes a DTL graph, one node, vertex, of the DTL graph, a level, and a dictionary markingDict, and 
     returns a list, keysL, that contains tuples. Each tuple has two elements. The first is a mapping node of the form 
     (p, h), where p is a parasite node and h is a host node. The second element is a level representing the depth of 
     that mapping node within the tree. This function adds the input vertex to keysL and recurses on its children."""
 
     keysL = []
-    if markingDict[vertex] == False:
-        for i in range(len(DTL[vertex]) - 1):          #loop through each event associated with key in DTL
-            event = DTL[vertex][i]
-            child1 = event[1]
-            child2 = event[2]
-            keysL = keysL + [(vertex, level)]
-            if child1[0] != None:
-                keysL.extend(orderDTLRoots(DTL, child1, level + 1, markingDict))
-            if child2[0] != None:
-                keysL.extend(orderDTLRoots(DTL, child2, level + 1, markingDict)) 
-        markingDict[vertex] = True
+    for i in range(len(DTL[vertex]) - 1):          #loop through each event associated with key in DTL
+        event = DTL[vertex][i]
+        child1 = event[1]
+        child2 = event[2]
+        keysL = keysL + [(vertex, level)]
+        if child1[0] != None:
+            keysL.extend(orderDTLRoots(DTL, child1, level + 1))
+        if child2[0] != None:
+            keysL.extend(orderDTLRoots(DTL, child2, level + 1)) 
     return keysL
 
 def preorderDTLsort(DTL, ParasiteRoot):
@@ -339,43 +326,70 @@ def preorderDTLsort(DTL, ParasiteRoot):
             if mapping[-1] == levelCounter:
                 orderedKeysL = orderedKeysL + [mapping]
         levelCounter += 1
+    print orderedKeysL
+    
+    lastLevel = orderedKeysL[-1][1]
+    for n in range(len(orderedKeysL)):
+        if DTL[orderedKeysL[n][0]][0][0] == "C":
+            orderedKeysL.append((orderedKeysL[n][0], lastLevel))
+            del orderedKeysL[n]
     return orderedKeysL
 
 def preorderCheck(preOrderList):
+    """This takes a list from preorderDTLsort and removes the duplicate tuples"""
     newList = []
+    preDict = {}
     for root in preOrderList:
         if not root in newList:
             newList.append(root)
+    for x in range(len(newList)):
+        currentRoot = newList[x][0]
+        currentLevel = newList[x][1]
+        if currentRoot in preDict:
+            if preDict[currentRoot][0]> currentLevel:
+                newList[x] = (None, None)
+            else:
+                location = preDict[currentRoot][1]
+                newList[location] = (None, None)
+        else:
+            preDict[currentRoot] = (currentLevel,x)
     return newList
 
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with scores calculated for team greed."""
-    preOrder = preorderDTLsort(DTLDict, treeMin[1][0])
+    preOrder = preorderDTLsort(DTLDict, treeMin[0][0])
+    print ScoreDict
     preOrderCheck = preorderCheck(preOrder)
     for root in preOrderCheck:
-        vertices = root[0]
-        if root[1] == 0:
-            ParentsDict[vertices] = ScoreDict[vertices]
-        for n in range(len(DTLDict[vertices])):
-            if type(DTLDict[vertices][n]) == list:
-                oldScore = DTLDict[vertices][n][3]
-                newDTL[vertices][n][3] = ParentsDict[vertices] * (1.0 * oldScore / ScoreDict[vertices])
-                if DTLDict[vertices][n][1]!= (None, None):
-                    if DTLDict[vertices][n][1] in ParentsDict:
-                        print vertices, DTLDict[vertices][n]
-                        ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][3]
-                    else: 
-                        print vertices, DTLDict[vertices][n]
-                        ParentsDict[DTLDict[vertices][n][1]] = newDTL[vertices][n][3]
-                if DTLDict[vertices][n][2]!=(None, None):
-                    if DTLDict[vertices][n][2] in ParentsDict:
-                        print vertices, DTLDict[vertices][n]
-                        ParentsDict[DTLDict[vertices][n][2]]+= newDTL[vertices][n][3]
-                    else: 
-                        print vertices, DTLDict[vertices][n]
-                        ParentsDict[DTLDict[vertices][n][2]] = newDTL[vertices][n][3]               
+        if root != (None, None):
+            vertices = root[0]
+            if root[1] == 0:
+                ParentsDict[vertices] = ScoreDict[vertices]
+            for n in range(len(DTLDict[vertices])):
+                if type(DTLDict[vertices][n]) == list:
+                    child1 = DTLDict[vertices][n][1]
+                    child2 = DTLDict[vertices][n][2]
+                    oldScore = DTLDict[vertices][n][3]
+                    newDTL[vertices][n][3] = ParentsDict[vertices] * (1.0 * oldScore / ScoreDict[vertices])
+                    if child1!= (None, None):
+                        if child1 in ParentsDict:
+                            ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][3]
+                        else: 
+                            ParentsDict[child1] = newDTL[vertices][n][3]
+                        for x in range(len(DTLDict[child1])):
+                            if type(DTLDict[child1][x])==list:
+                                newDTL[child1][x][3] = ParentsDict[child1] * (1.0 * DTLDict[child1][x][3]/ ScoreDict[child1])  
+                    if child2!=(None, None):
+                        if child2 in ParentsDict:
+                            ParentsDict[child2]+= newDTL[vertices][n][3]
+                        else: 
+                            ParentsDict[child2] = newDTL[vertices][n][3]  
+                        for x in range(len(DTLDict[child2])):
+                            if type(DTLDict[child2][x])==list:
+                                newDTL[child2][x][3] = ParentsDict[child2] * (1.0 * DTLDict[child2][x][3]/ ScoreDict[child2])  
+         
     return newDTL
 
 
