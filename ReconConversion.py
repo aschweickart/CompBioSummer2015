@@ -15,6 +15,6 @@ def convert(reconciliation, outputFile):
 			event = "loss"
 		else:
 			event = "gene"
-		f.write(key[0] + '\t' + key[1] + '\t' + "event" + '\n')
+		f.write(key[0] + '\t' + key[1] + '\t' + event + '\n')
 	f.close()
 
