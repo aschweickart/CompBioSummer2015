@@ -279,7 +279,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
 
     # Draw the DTL reconciliation of this DTL Graph
-    #DrawDTLc.drawNodes(treeMin, DTL, 450, {})
+    DrawDTLc.drawNodes(treeMin, DTL, 450, {})
     return DTL
 
 def orderDTL(DTL, ParasiteRoot):
@@ -326,13 +326,8 @@ def preorderDTLsort(DTL, ParasiteRoot):
             if mapping[-1] == levelCounter:
                 orderedKeysL = orderedKeysL + [mapping]
         levelCounter += 1
-    print orderedKeysL
     
     lastLevel = orderedKeysL[-1][1]
-    for n in range(len(orderedKeysL)):
-        if DTL[orderedKeysL[n][0]][0][0] == "C":
-            orderedKeysL.append((orderedKeysL[n][0], lastLevel))
-            del orderedKeysL[n]
     return orderedKeysL
 
 def preorderCheck(preOrderList):
@@ -358,9 +353,8 @@ def preorderCheck(preOrderList):
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
-    a dictionary of score values, and returns the DTL with scores calculated for team greed."""
+    a dictionary of score values, and returns the DTL with the normalized frequency scores calculated."""
     preOrder = preorderDTLsort(DTLDict, treeMin[0][0])
-    print ScoreDict
     preOrderCheck = preorderCheck(preOrder)
     for root in preOrderCheck:
         if root != (None, None):
@@ -377,19 +371,16 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                         if child1 in ParentsDict:
                             ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][3]
                         else: 
-                            ParentsDict[child1] = newDTL[vertices][n][3]
-                        for x in range(len(DTLDict[child1])):
-                            if type(DTLDict[child1][x])==list:
-                                newDTL[child1][x][3] = ParentsDict[child1] * (1.0 * DTLDict[child1][x][3]/ ScoreDict[child1])  
+                            ParentsDict[child1] = newDTL[vertices][n][3] 
                     if child2!=(None, None):
                         if child2 in ParentsDict:
                             ParentsDict[child2]+= newDTL[vertices][n][3]
                         else: 
-                            ParentsDict[child2] = newDTL[vertices][n][3]  
-                        for x in range(len(DTLDict[child2])):
-                            if type(DTLDict[child2][x])==list:
-                                newDTL[child2][x][3] = ParentsDict[child2] * (1.0 * DTLDict[child2][x][3]/ ScoreDict[child2])  
-         
+                            ParentsDict[child2] = newDTL[vertices][n][3]   
+    normalize = newDTL[preOrderCheck[-1][0]][0][-1]
+    for key in newDTL.keys():
+        for n in range(len(newDTL[key])-1):
+            newDTL[key][n][-1] = newDTL[key][n][-1]/normalize
     return newDTL
 
 
