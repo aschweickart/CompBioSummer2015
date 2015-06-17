@@ -267,7 +267,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
 
-    DrawDTLc.drawNodes(treeMin, DTL, 450, {})
+    DrawDTLc.drawNodes(treeMin, DTL, 400, {})
 
     return DTL
 
