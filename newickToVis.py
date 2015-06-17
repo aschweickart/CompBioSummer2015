@@ -9,7 +9,7 @@ def convert(fileName):
     print phi
     f = open('tree and smap files/' + fileName[:-7] + '.smap', 'w')
     for item in phi:
-        item = item.replace(":","_* ")
+        item = item.replace(":"," ")
         f.write(item)
     f.close()
     f = open('tree and smap files/' + fileName[:-7] + '.tree', 'w')

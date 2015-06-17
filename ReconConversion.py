@@ -4,7 +4,7 @@ def convert(reconciliation, outputFile):
 	where it will put the output. The function outputs the same tree converted to brecon (gene node, species node, 
 	event) format."""
 
-	f = open(outputFile + ".mowgli.brecon", 'w')
+	f = open("tree and smap files/" + outputFile + ".mowgli.brecon", 'w')
 	event = ""
 	for key in reconciliation:
 		if reconciliation[key][0] == 'T':
@@ -17,4 +17,3 @@ def convert(reconciliation, outputFile):
 			event = "gene"
 		f.write(key[0] + '\t' + key[1] + '\t' + "event" + '\n')
 	f.close()
-
