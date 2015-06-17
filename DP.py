@@ -2,7 +2,6 @@
 # Ran Libeskind-Hadas, June 2015
 # The basic DP algorithm for reconciling pairs of trees
 
-
 # A tree is represented as a dictionary of key-value pairs where a key is an
 # edge name and the value is a tuple of the form
 # (start vertex, end vertex, left child edge name, right child edge name)
@@ -12,18 +11,7 @@
 import newickFormatReader
 import DrawDTLc
 import copy
-
-H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): \
-('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': \
-('Top', 'h6', ('h6', 'h7'), ('h6', 'h8')), ('h7', 'h2'): ('h7', 'h2', None, None), ('h8', 'h4'): \
-('h8', 'h4', None, None), ('h7', 'h1'): ('h7', 'h1', None, None)}
-P = {('p6', 'p8'): ('p6', 'p8', ('p8', 'p3'), ('p8', 'p4')), ('p7', 'p2'): ('p7', 'p2', None, None), \
-('p6', 'p7'): ('p6', 'p7', ('p7', 'p1'), ('p7', 'p2')), ('p8', 'p4'): ('p8', 'p4', None, None), \
-('p8', 'p3'): ('p8', 'p3', None, None), 'pTop': ('Top', 'p6', ('p6', 'p7'), ('p6', 'p8')), ('p7', 'p1'): \
-('p7', 'p1', None, None)}
-phi =  {'p2': 'h3', 'p3': 'h2', 'p1': 'h1', 'p4': 'h4'} 
   
-
 Infinity = float('inf')
 
 def preorder(Tree, rootEdgeName):
@@ -277,9 +265,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     newDTL = copy.deepcopy(DTL)
     DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
-
     # Draw the DTL reconciliation of this DTL Graph
+
     DrawDTLc.drawNodes(treeMin, DTL, 450, {})
+
     return DTL
 
 def orderDTL(DTL, ParasiteRoot):
@@ -350,7 +339,6 @@ def preorderCheck(preOrderList):
             preDict[currentRoot] = (currentLevel,x)
     return newList
 
-
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with the normalized frequency scores calculated."""
@@ -376,13 +364,14 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                         if child2 in ParentsDict:
                             ParentsDict[child2]+= newDTL[vertices][n][3]
                         else: 
+
                             ParentsDict[child2] = newDTL[vertices][n][3]   
     normalize = newDTL[preOrderCheck[-1][0]][0][-1]
     for key in newDTL.keys():
         for n in range(len(newDTL[key])-1):
             newDTL[key][n][-1] = newDTL[key][n][-1]/normalize
-    return newDTL
 
+    return newDTL
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of minimum resolution costs and 
