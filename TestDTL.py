@@ -8,23 +8,6 @@ P = {('p8', 'p3'): ('p8', 'p3', None, None), ('p6', 'p8'):
 
 'p2', None, None)}
 
-[(('p1', 'h1'), 2), 
-(('p8', 'h2'), 1), 
-(('p7', 'h1'), 1), 
-(('p6', 'h8'), 0), 
-(('p6', 'h7'), 0)]
-
-markingDict = {('p8', 'h2'): False, 
-(None, None): False,
-('p7', 'h1'): False, 
-('p1', 'h1'): False, 
-('p6', 'h7'): False, 
-('p3', 'h2'): False, 
-('p8', 'h4'): False, 
-('p2', 'h3'): False, 
-('p6', 'h8'): False, 
-('p7', 'h3'): False, 
-('p4', 'h4'): False}
 
 fDTL = {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 1], 1], 
 ('p7', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h3'), 1], 1], 
@@ -40,17 +23,6 @@ fDTL = {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 1], 1],
 
 
 newDTL = 
-{('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 0], 1], 
-('p6', 'h7'): [['S', ('p7', 'h1'), ('p8', 'h2'), 0], 2], 
-('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
-('p8', 'h4'): [['T', ('p4', 'h4'), ('p3', 'h2'), 1], 1], 
-('p2', 'h3'): [['C', (None, None), (None, None), 0], 0], 
-('p7', 'h3'): [['T', ('p2', 'h3'), ('p1', 'h1'), 1], 1], 
-('p7', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h3'), 0], 1], 
-('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
-('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 2], 
-('p4', 'h4'): [['C', (None, None), (None, None), 0], 0]}
-
 #from June16:
 {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 0], 1], 
 ('p6', 'h7'): [['S', ('p7', 'h1'), ('p8', 'h2'), 1], 2], 
@@ -63,39 +35,10 @@ newDTL =
 ('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 2], 
 ('p4', 'h4'): [['C', (None, None), (None, None), 0], 0]}
 
-booking: newDTL output
-{('p8', 'h2'): [[('T', ('p3', 'h2'), ('p4', 'h4'), 0)], 0], 
-('p7', 'h1'): [[('T', ('p1', 'h1'), ('p2', 'h3'), 0)], 0], 
-('p1', 'h1'): [('C', (None, None), (None, None), 0), 0], 
-('p6', 'h7'): [[('S', ('p7', 'h1'), ('p8', 'h2'), 0)], 0], 
-('p3', 'h2'): [('C', (None, None), (None, None), 0), 0], 
-('p8', 'h4'): [[('T', ('p4', 'h4'), ('p3', 'h2'), 1)], 0], 
-('p2', 'h3'): [('C', (None, None), (None, None), 0), 0], 
-('p6', 'h8'): [[('S', ('p7', 'h3'), ('p8', 'h4'), 1)], 0], 
-('p7', 'h3'): [[('T', ('p2', 'h3'), ('p1', 'h1'), 1)], 0], 
-('p4', 'h4'): [('C', (None, None), (None, None), 0), 0]}
 
-
-DTL = {('p2', 'h2'): [['C', (None, None), (None, None), 1], 0], 
-('p6', 'h6'): [['CO', ('p1', 'h1'), ('p8', 'h8'), 1], 0], 
-('p3', 'h3'): [['C', (None, None), (None, None), 1], 0], 
-('p1', 'h1'): [['C', (None, None), (None, None), 1], 0], 
-('p8', 'h8'): [['CO', ('p2', 'h2'), ('p3', 'h3'), 1], 0]}
 
 bookkeeping output
 'BSFHMap:'
-{('p8', 'h2'): [('T', ('p3', 'h2'), ('p4', 'h4'), 1), 2], 
-('p7', 'h3'): [('T', ('p2', 'h3'), ('p1', 'h1'), 1), 2], 
-('p7', 'h1'): [('T', ('p1', 'h1'), ('p2', 'h3'), 1), 2], 
-('p1', 'h1'): [('C', (None, None), (None, None), 1), 1], 
-('p6', 'h7'): [('S', ('p7', 'h1'), ('p8', 'h2'), 1), 4], 
-('p3', 'h2'): [('C', (None, None), (None, None), 1), 1], 
-('p8', 'h4'): [('T', ('p4', 'h4'), ('p3', 'h2'), 1), 2], 
-('p2', 'h3'): [('C', (None, None), (None, None), 1), 1], 
-('p6', 'h8'): [('S', ('p7', 'h3'), ('p8', 'h4'), 1), 4], 
-('p4', 'h4'): [('C', (None, None), (None, None), 1), 1]}
-
-
 
 {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 1], 3], 
 ('p7', 'h3'): [['T', ('p2', 'h3'), ('p1', 'h1'), 1], 3], 
@@ -107,105 +50,6 @@ bookkeeping output
 ('p2', 'h3'): [['C', (None, None), (None, None), 1], 1], 
 ('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 7], 
 ('p4', 'h4'): [['C', (None, None), (None, None), 1], 1]}
-
-
- 'BSFHEvent:'
-  {('T', ('p4', 'h4'), ('p3', 'h2'), 1): 2, 
-  ('T', ('p3', 'h2'), ('p4', 'h4'), 1): 2, 
-  ('T', ('p2', 'h3'), ('p1', 'h1'), 1): 2, 
-  ('S', ('p7', 'h3'), ('p8', 'h4'), 1): 4, 
-  ('T', ('p1', 'h1'), ('p2', 'h3'), 1): 2, 
-  'S', ('p7', 'h1'), ('p8', 'h2'), 1): 4})
-
-
-({('p8', 'h2'): ('T', ('p3', 'h2'), ('p4', 'h4')), 
-	('p7', 'h1'): ('T', ('p1', 'h1'), ('p2', 'h3')), 
-	('p1', 'h1'): ['C', (None, None), (None, None)], 
-	('p6', 'h7'): ('S', ('p7', 'h1'), ('p8', 'h2')), 
-	('p3', 'h2'): ['C', (None, None), (None, None)], 
-	('p2', 'h3'): ['C', (None, None), (None, None)], 
-	('p4', 'h4'): ['C', (None, None), (None, None)]}, 
-
-
-{('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 0], 1], 
-('p6', 'h7'): [['S', ('p7', 'h1'), ('p8', 'h2'), 0], 2], 
-('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
-('p8', 'h4'): [['T', ('p4', 'h4'), ('p3', 'h2'), 1], 1], 
-('p2', 'h3'): [['C', (None, None), (None, None), 0], 0], 
-('p7', 'h3'): [['T', ('p2', 'h3'), ('p1', 'h1'), 1], 1], 
-('p7', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h3'), 0], 1], 
-('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
-('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 2], 
-('p4', 'h4'): [['C', (None, None), (None, None), 0], 0]}
-
-Greedy output:
-
-currentDTL:  {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 0], 1], 
-('p6', 'h7'): [['S', ('p7', 'h1'), ('p8', 'h2'), 0], 2], 
-('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
-('p8', 'h4'): [['T', ('p4', 'h4'), ('p3', 'h2'), 1], 1], 
-('p2', 'h3'): [['C', (None, None), (None, None), 0], 0], 
-('p7', 'h3'): [['T', ('p2', 'h3'), ('p1', 'h1'), 1], 1], 
-('p7', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h3'), 0], 1], 
-('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
-('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 2], 
-('p4', 'h4'): [['C', (None, None), (None, None), 0], 0]}
-
-
-currentDTL:  {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 0], 1], 
-('p6', 'h7'): [['S', ('p7', 'h1'), ('p8', 'h2'), 0], 2], 
-('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
-('p8', 'h4'): [['T', ('p4', 'h4'), ('p3', 'h2'), 1], 1], 
-('p2', 'h3'): [['C', (None, None), (None, None), 0], 0], 
-('p7', 'h3'): [['T', ('p2', 'h3'), ('p1', 'h1'), 1], 1], 
-('p7', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h3'), 0], 1], 
-('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
-('p6', 'h8'): [['S', ('p7', 'h3'), ('p8', 'h4'), 1], 2], 
-('p4', 'h4'): [['C', (None, None), (None, None), 0], 0]}
-
-new BSFHMap:  {('p8', 'h2'): [('T', ('p3', 'h2'), ('p4', 'h4'), 1), 2], 
-('p7', 'h3'): [('T', ('p2', 'h3'), ('p1', 'h1'), 1), 2], 
-('p7', 'h1'): [('T', ('p1', 'h1'), ('p2', 'h3'), 1), 2], 
-('p1', 'h1'): [('C', (None, None), (None, None), 1), 1], 
-('p6', 'h7'): [('S', ('p7', 'h1'), ('p8', 'h2'), 1), 4], 
-('p3', 'h2'): [('C', (None, None), (None, None), 1), 1], 
-('p8', 'h4'): [('T', ('p4', 'h4'), ('p3', 'h2'), 1), 2], 
-('p2', 'h3'): [('C', (None, None), (None, None), 1), 1], 
-('p6', 'h8'): [('S', ('p7', 'h3'), ('p8', 'h4'), 1), 4], 
-('p4', 'h4'): [('C', (None, None), (None, None), 1), 1]}
-new BSFHMap:  {('p8', 'h2'): [('T', ('p3', 'h2'), ('p4', 'h4'), 0), 2], 
-('p7', 'h1'): [('T', ('p1', 'h1'), ('p2', 'h3'), 0), 2], 
-('p1', 'h1'): [('C', (None, None), (None, None), 0), 1], 
-('p6', 'h7'): [('S', ('p7', 'h1'), ('p8', 'h2'), 0), 4], 
-('p3', 'h2'): [('C', (None, None), (None, None), 0), 1], 
-('p8', 'h4'): [('T', ('p4', 'h4'), ('p3', 'h2'), 1), 2], 
-('p2', 'h3'): [('C', (None, None), (None, None), 0), 1], 
-('p6', 'h8'): [('S', ('p7', 'h3'), ('p8', 'h4'), 1), 4], 
-('p7', 'h3'): [('T', ('p2', 'h3'), ('p1', 'h1'), 1), 2], 
-('p4', 'h4'): [('C', (None, None), (None, None), 0), 1]}
-
-
-
-
-
-
-
-[{('p8', 'h2'): ('T', ('p3', 'h2'), ('p4', 'h4')), 
-('p7', 'h1'): ('T', ('p1', 'h1'), ('p2', 'h3')), 
-('p1', 'h1'): ('C', (None, None), (None, None)), 
-('p6', 'h7'): ('S', ('p7', 'h1'), ('p8', 'h2')), 
-('p3', 'h2'): ('C', (None, None), (None, None)), 
-('p2', 'h3'): ('C', (None, None), (None, None)), 
-('p4', 'h4'): ('C', (None, None), (None, None))}, 
-
-{('p8', 'h2'): ('T', ('p3', 'h2'), ('p4', 'h4')), 
-('p7', 'h1'): ('T', ('p1', 'h1'), ('p2', 'h3')), 
-('p1', 'h1'): ('C', (None, None), (None, None)), 
-('p6', 'h7'): ('S', ('p7', 'h1'), ('p8', 'h2')), 
-('p3', 'h2'): ('C', (None, None), (None, None)), 
-('p2', 'h3'): ('C', (None, None), (None, None)), 
-('p4', 'h4'): ('C', (None, None), (None, None))}]
-
 
 
 
@@ -264,7 +108,8 @@ H = {('m5', 'ecuadoriensis_EastE'): ('m5', 'ecuadoriensis_EastE', None, None),
 ('m1', 'm2'): ('m1', 'm2', ('m2', 'm3'), ('m2', 'm6')), 
 ('m4', 'amaryllis_EastPE'): ('m4', 'amaryllis_EastPE', None, None), 
 ('m6', 'melpomene_EastT'): ('m6', 'melpomene_EastT', None, None), 
-('m8', 'm11'): ('m8', 'm11', ('m11', 'melpomene_EastC'), ('m11', 'cythera_WestE'))} 
+('m8', 'm11'): ('m8', 'm11', ('m11', 'melpomene_EastC'), ('m11', 'cythera_WestE'))}
+
 P = {('n10', 'hydara_WestPA'): ('n10', 'hydara_WestPA', None, None), 
 ('n6', 'erato_EastFG'): ('n6', 'erato_EastFG', None, None), 
 ('n5', 'etylus_EastE'): ('n5', 'etylus_EastE', None, None), 
@@ -288,6 +133,7 @@ P = {('n10', 'hydara_WestPA'): ('n10', 'hydara_WestPA', None, None),
 ('n11', 'cyrbia_WestE'): ('n11', 'cyrbia_WestE', None, None), 
 ('n5', 'favorinus_EastPE'): ('n5', 'favorinus_EastPE', None, None), 
 ('n3', 'n4'): ('n3', 'n4', ('n4', 'emma_EastPE'), ('n4', 'n5'))}
+
 phi = {'cyrbia_WestE': 'cythera_WestE', 
 'erato_EastFG': 'thelxiopeia_EastFG', 
 'hydara_EastFG': 'melpomene_EastFG', 
@@ -302,6 +148,7 @@ phi = {'cyrbia_WestE': 'cythera_WestE',
 'hydara_WestPA': 'melpomene_WestPA'}
 
 DPJune12: 
+Heliconius:
 DTL = {('petiverana_WestCR', 'rosina_WestCR'): [['C', (None, None), (None, None), 1], 0], 
 ('n2', 'm2'): [['S', ('n3', 'm3'), ('n6', 'm6'), 1], 3], 
 ('n8', 'm9'): [['S', ('n9', 'm10'), ('petiverana_WestPA', 'rosina_WestPA'), 1], 1], 
@@ -523,36 +370,3 @@ DTL = {('V._fischeri', 'G._ianthinogaster'): [['C', (None, None), (None, None), 
 ('p3', 'h64'): [['T', ('p4', 'h64'), ('p5', 'h51'), 4.0], ['T', ('p4', 'h64'), ('p5', 'h76'), 2.0], 15], 
 ('p4', 'h105'): [['T', ('p7', 'h105'), ('p6', 'h64'), 8.0], 9], 
 ('p12', 'L._sanguinodorsalis'): [['T', ('p15', 'L._sanguinodorsalis'), ('p118', 'h1'), 34.0], 4]}
-
-
-orderedKeysL of Vidua:
-[(('V._camerunensis', 'L._rara'), 8), (('V._maryae', 'L._sanguinodorsalis'), 8), 
-(('p120', 'L._rara'), 7), (('V._larvaticola', 'C._monteiri'), 7), (('p120', 'L._sanguinodorsalis'), 7), 
-(('V._chalybeata_S.', 'L._senegala_rendalii'), 7), (('V._codringtoni', 'H._niveoguttatus'), 7), 
-(('p116', 'L._rara'), 6), (('p116', 'C._monteiri'), 6), (('V._raricola', 'A._subflava'), 6), (('V._nigeriae', 'O._atricolis'), 6), 
-(('V._wilsoni', 'L._rufopicta'), 6), (('p116', 'L._sanguinodorsalis'), 6), (('p107', 'L._senegala_rendalii'), 6), 
-(('p107', 'H._niveoguttatus'), 6), (('V._purpurascens', 'L._rhodopareia'), 6), (('V._togoensis', 'P._hypogrammica'), 6), 
-(('V._interjecta', 'P._phoenicoptera'), 6), (('p15', 'L._rufopicta'), 5), (('p15', 'L._rufopicta'), 5), (('p15', 'L._rara'), 5), 
-(('p15', 'C._monteiri'), 5), (('p21', 'L._senegala_rendalii'), 5), (('p118', 'h1'), 5), (('p15', 'L._sanguinodorsalis'), 5), 
-(('V._funera', 'L._r._rubricata'), 5), (('p21', 'L._rhodopareia'), 5), (('p21', 'L._rhodopareia'), 5), (('p37', 'h83'), 5), 
-(('V._orientalis', 'P._melba_citerior'), 5), (('V._obtusa', 'P._afra'), 5), (('V._paradisaea', 'P._melba_grotei'), 5), 
-(('V._macroura_W.', 'E._melpoda'), 5), (('V._macroura_S', 'E._astrild'), 5), (('p12', 'L._rufopicta'), 4), (('p12', 'L._rara'), 4), 
-(('p12', 'C._monteiri'), 4), (('p12', 'h1'), 4), (('p13', 'L._senegala_rendalii'), 4), (('p12', 'L._sanguinodorsalis'), 4), 
-(('p13', 'L._rhodopareia'), 4), (('p33', 'P._melba_citerior'), 4), (('p32', 'P._melba_grotei'), 4), (('p29', 'E._astrild'), 4), 
-(('p10', 'L._senegala_rendalii'), 3), (('p10', 'L._senegala_rendalii'), 3), (('p10', 'L._senegala_rendalii'), 3), 
-(('p10', 'L._senegala_rendalii'), 3), (('p29', 'E._melpoda'), 3), (('V._chalybeata_W.', 'L._senegala_rhodopsis'), 3), 
-(('p10', 'h105'), 3), (('V._regia', 'G._granatia'), 3), (('V._fischeri', 'G._ianthinogaster'), 3), (('p26', 'E._astrild'), 3), 
-(('p28', 'h76'), 3), (('p29', 'h54'), 3), (('p7', 'L._senegala_rhodopsis'), 2), (('p7', 'h91'), 2), (('p26', 'h76'), 2), 
-(('p26', 'E._melpoda'), 2), (('p7', 'h105'), 2), (('p6', 'h64'), 2), (('V._hypocherina', 'E._erythronotos'), 2), (('p26', 'h54'), 2), 
-(('p26', 'h54'), 2), (('p4', 'L._senegala_rhodopsis'), 1), (('p5', 'E._erythronotos'), 1), (('p5', 'E._erythronotos'), 1), 
-(('p4', 'h91'), 1), (('p5', 'h76'), 1), (('p4', 'h105'), 1), (('p5', 'E._astrild'), 1), (('p5', 'E._melpoda'), 1), 
-(('p4', 'h64'), 1), (('p5', 'h51'), 1), (('p3', 'h64'), 0), (('p3', 'h64'), 0), (('p3', 'L._senegala_rhodopsis'), 0), 
-(('p3', 'L._senegala_rhodopsis'), 0), (('p3', 'h76'), 0), (('p3', 'h76'), 0), (('p3', 'E._erythronotos'), 0), (('p3', 'h91'), 0), 
-(('p3', 'h91'), 0), (('p3', 'h105'), 0), (('p3', 'h105'), 0), (('p3', 'E._astrild'), 0), (('p3', 'E._melpoda'), 0), (('p3', 'h51'), 0)]
-
-
-[(('p3', 'h2'), 3), (('p4', 'h4'), 2), (('p1', 'h1'), 2), (('p2', 'h3'), 2), (('p4', 'h4'), 2), (('p3', 'h2'), 2), (('p2', 'h3'), 2), (('p1', 'h1'), 2), 
-(('p8', 'h4'), 1), (('p7', 'h3'), 1), (('p8', 'h2'), 1), (('p7', 'h1'), 1), 
-(('p6', 'h8'), 0), (('p6', 'h7'), 0)]
-
-
