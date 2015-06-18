@@ -8,6 +8,6 @@ def convert(reconciliation, outputFile):
 	event = ""
 	for key in reconciliation:
 		if reconciliation[key][0] != 'L':
-		event = reconciliation[key][0]
-		f.write(key[0] + '\t' + key[1] + '\t' + D[event] + '\n')
+			event = reconciliation[key][0]
+			f.write(key[0] + '\t' + key[1] + '\t' + D[event] + '\n')
 	f.close()

@@ -11,7 +11,7 @@
 import newickFormatReader
 #import DrawDTLc
 import copy
-  
+
 Infinity = float('inf')
 
 def preorder(Tree, rootEdgeName):
