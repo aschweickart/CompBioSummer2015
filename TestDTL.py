@@ -1,12 +1,10 @@
-P = {('p8', 'p3'): ('p8', 'p3', None, None), ('p6', 'p8'):
-
-('p6', 'p8', ('p8', 'p2'), ('p8', 'p3')), 'pTop': 
-
-('Top', 'p6', ('p6', 'p1'), ('p6', 'p8')), ('p6', 
-
-'p1'): ('p6', 'p1', None, None), ('p8', 'p2'): ('p8', 
-
-'p2', None, None)}
+P = {('p6', 'p8'): ('p6', 'p8', ('p8', 'p3'), ('p8', 'p4')), 
+('p7', 'p2'): ('p7', 'p2', None, None), 
+('p6', 'p7'): ('p6', 'p7', ('p7', 'p1'), ('p7', 'p2')), 
+('p8', 'p4'): ('p8', 'p4', None, None), 
+('p8', 'p3'): ('p8', 'p3', None, None), 
+'pTop': ('Top', 'p6', ('p6', 'p7'), ('p6', 'p8')), 
+('p7', 'p1'): ('p7', 'p1', None, None)}
 
 
 fDTL = {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 1], 1], 
@@ -371,6 +369,50 @@ DTL = {('V._fischeri', 'G._ianthinogaster'): [['C', (None, None), (None, None), 
 ('p4', 'h105'): [['T', ('p7', 'h105'), ('p6', 'h64'), 8.0], 9], 
 ('p12', 'L._sanguinodorsalis'): [['T', ('p15', 'L._sanguinodorsalis'), ('p118', 'h1'), 34.0], 4]}
 
+Greedy output of vidua:
+{('p33', 'P._melba_citerior'): ['T', ('V._orientalis', 'P._melba_citerior'), ('p37', 'h83')], 
+('p4', 'h64'): ['T', ('p6', 'h64'), ('p7', 'h105')], 
+('V._hypocherina', 'E._erythronotos'): ['C', (None, None), (None, None)], 
+('V._funera', 'L._r._rubricata'): ['C', (None, None), (None, None)], 
+('p13', 'L._rhodopareia'): ['T', ('p21', 'L._rhodopareia'), ('V._funera', 'L._r._rubricata')], 
+('V._chalybeata_W.', 'L._senegala_rhodopsis'): ['C', (None, None), (None, None)], 
+('p107', 'L._senegala_rendalii'): ['T', ('V._chalybeata_S.', 'L._senegala_rendalii'), ('V._codringtoni', 'H._niveoguttatus')], 
+('p116', 'L._sanguinodorsalis'): ['T', ('p120', 'L._sanguinodorsalis'), ('V._larvaticola', 'C._monteiri')], 
+('p21', 'L._rhodopareia'): ['T', ('V._purpurascens', 'L._rhodopareia'), ('p107', 'L._senegala_rendalii')], 
+('V._raricola', 'A._subflava'): ['C', (None, None), (None, None)], 
+('V._togoensis', 'P._hypogrammica'): ['C', (None, None), (None, None)], 
+('p3', 'h51'): ['T', ('p5', 'h51'), ('p4', 'h64')], 
+('V._interjecta', 'P._phoenicoptera'): ['C', (None, None), (None, None)], 
+('p5', 'h51'): ['S', ('p26', 'h54'), ('V._hypocherina', 'E._erythronotos')], 
+('V._camerunensis', 'L._rara'): ['C', (None, None), (None, None)], 
+('p26', 'h54'): ['L', ('p26', 'E._astrild'), (None, None)], 
+('V._wilsoni', 'L._rufopicta'): ['C', (None, None), (None, None)], 
+('p32', 'P._melba_grotei'): ['T', ('V._paradisaea', 'P._melba_grotei'), ('V._obtusa', 'P._afra')], 
+('p28', 'h76'): ['S', ('p32', 'P._melba_grotei'), ('p33', 'P._melba_citerior')], 
+('p29', 'E._astrild'): ['T', ('V._macroura_S', 'E._astrild'), ('V._macroura_W.', 'E._melpoda')], 
+('V._codringtoni', 'H._niveoguttatus'): ['C', (None, None), (None, None)], 
+('p6', 'h64'): ['S', ('V._fischeri', 'G._ianthinogaster'), ('V._regia', 'G._granatia')], 
+('V._chalybeata_S.', 'L._senegala_rendalii'): ['C', (None, None), (None, None)], 
+('p118', 'h1'): ['S', ('V._nigeriae', 'O._atricolis'), ('V._raricola', 'A._subflava')], 
+('V._macroura_S', 'E._astrild'): ['C', (None, None), (None, None)], 
+('V._paradisaea', 'P._melba_grotei'): ['C', (None, None), (None, None)], 
+('p15', 'L._sanguinodorsalis'): ['T', ('p116', 'L._sanguinodorsalis'), ('V._wilsoni', 'L._rufopicta')], 
+('V._maryae', 'L._sanguinodorsalis'): ['C', (None, None), (None, None)], 
+('p10', 'h105'): ['S', ('p13', 'L._rhodopareia'), ('p12', 'L._sanguinodorsalis')], 
+('p26', 'E._astrild'): ['T', ('p29', 'E._astrild'), ('p28', 'h76')], 
+('V._nigeriae', 'O._atricolis'): ['C', (None, None), (None, None)], 
+('V._orientalis', 'P._melba_citerior'): ['C', (None, None), (None, None)], 
+('V._macroura_W.', 'E._melpoda'): ['C', (None, None), (None, None)], 
+('p7', 'h105'): ['T', ('p10', 'h105'), ('V._chalybeata_W.', 'L._senegala_rhodopsis')], 
+('p120', 'L._sanguinodorsalis'): ['T', ('V._maryae', 'L._sanguinodorsalis'), ('V._camerunensis', 'L._rara')], 
+('V._larvaticola', 'C._monteiri'): ['C', (None, None), (None, None)], 
+('V._obtusa', 'P._afra'): ['C', (None, None), (None, None)], 
+('V._regia', 'G._granatia'): ['C', (None, None), (None, None)], 
+('V._purpurascens', 'L._rhodopareia'): ['C', (None, None), (None, None)], 
+('p12', 'L._sanguinodorsalis'): ['T', ('p15', 'L._sanguinodorsalis'), ('p118', 'h1')], 
+('V._fischeri', 'G._ianthinogaster'): ['C', (None, None), (None, None)], 
+('p37', 'h83'): ['S', ('V._interjecta', 'P._phoenicoptera'), ('V._togoensis', 'P._hypogrammica')]}
+
 
 H = {('h9', 'h8'): ('h9', 'h8', ('h8', 'h5'), ('h8', 'h7')), 
 ('h9', 'h6'): ('h9', 'h6', ('h6', 'h1'), ('h6', 'h2')), 
@@ -431,6 +473,18 @@ Greedy output:
 ('p3', 'h2'): ['C', (None, None), (None, None)], 
 ('p8', 'h3'): ['T', ('p7', 'h3'), ('p5', 'h5')], 
 ('p9', 'h7'): ['S', ('p8', 'h3'), ('p6', 'h4')]}
+
+
+convert output:
+p8 	h2 	trans
+p4 	h3 	gene
+p5 	h5 	gene
+p9 	h6 	spec
+p7 	h2 	trans
+p2 	h4 	gene
+p3 	h2 	gene
+p1 	h1 	gene
+p6 	h1 	trans
 
 
 
