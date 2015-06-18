@@ -1,13 +1,16 @@
+H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'):
+('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop':
+('Top', 'h6', ('h6', 'h7'), ('h6', 'h8')), ('h7', 'h2'): ('h7', 'h2', None, None), ('h8', 'h4'):
+('h8', 'h4', None, None), ('h7', 'h1'): ('h7', 'h1', None, None)}
 
 
-
-tree = {('p8', 'p3'): ('p8', 'p3', None, None), 
+P = {('p8', 'p3'): ('p8', 'p3', None, None), 
 ('p6', 'p8'): ('p6', 'p8', ('p8', 'p2'), ('p8', 'p3')), 
 'pTop': ('Top', 'p6', ('p6', 'p1'), ('p6', 'p8')), 
 ('p6', 'p1'): ('p6', 'p1', None, None), 
 ('p8', 'p2'): ('p8', 'p2', None, None)}
 
-{('p8', 'h2'): ['T', ('p7', 'h2'), ('p5', 'h5')], 
+greedy = {('p8', 'h2'): ['T', ('p7', 'h2'), ('p5', 'h5')], 
 ('p4', 'h3'): ['C', (None, None), (None, None)], 
 ('p5', 'h5'): ['C', (None, None), (None, None)], 
 ('p2', 'h4'): ['C', (None, None), (None, None)], 
@@ -77,26 +80,27 @@ def parentsDict(H, P):
 def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	""" """
 
-	parentsDict = parentsDict(HostTree, ParasiteTree)
+	parents = parentsDict(HostTree, ParasiteTree)
 	H = treeFormat(HostTree)
-	P = treeFormat(ParaisteTree)
-	reconGraph = H + P 
+	P = treeFormat(ParasiteTree)
+	reconGraph = H
+	reconGraph.update(P) 
 	for key in reconciliation:
 		if reconciliation[key][0] == 'T':
 			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], reconciliation[key][2][1]]
-			parent1 = parentsDict[reconciliation[key][1][1]]
-			parent2 = parentsDict[reconciliation[key][2][1]]
+			parent1 = parents[reconciliation[key][1][1]]
+			parent2 = parents[reconciliation[key][2][1]]
 			reconGraph[parent1] = reconGraph[parent1] + [reconciliation[key][1][1]]
 			reconGraph[parent2] = reconGraph[parent2] + [reconciliation[key][2][1]]
 
 		elif reconciliation[key][0] == 'S':
-			parent = parentsDict(key[0])
+			parent = parents(key[0])
 			reconGraph[parent] = reconGraph[parent] + [key[1]]
 			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
 			del reconGraph[key[0]]
 
 		elif reconciliation[key][0] == 'D':
-			parent = parentsDict[key[1]]
+			parent = parents[key[1]]
 			reconGraph[parent] = reconGraph[parent] + [key[0]]
 			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
 
