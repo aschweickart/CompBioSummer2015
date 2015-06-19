@@ -370,7 +370,8 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     for key in newDTL.keys():
         for n in range(len(newDTL[key])-1):
             newDTL[key][n][-1] = newDTL[key][n][-1]/normalize
-
+    newDTL["numRecon"] = normalize
+    
     return newDTL
 
 def findBest(Parasite, MinimumDict):
