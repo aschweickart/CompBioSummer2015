@@ -39,9 +39,9 @@ def InitDicts(tree):
 	treeDict = {}
 	for key in tree:
 		if key == 'pTop':
-			treeDict[P[key][1]] = [] 
+			treeDict[tree[key][1]] = [] 
 		elif key == 'hTop':
-			treeDict[H[key][1]] = []
+			treeDict[tree[key][1]] = []
 		else:
 			treeDict[key[1]] = []
 	return treeDict
@@ -65,9 +65,6 @@ def treeFormat(tree):
 			if tree[key][-2] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
 			else:
-				print "key:", key
-				print "key[1]:", key[1]
-				print "tree[key][-2][1]:", tree[key][-2][1]
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
 			if tree[key][-1] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]
