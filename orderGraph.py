@@ -24,6 +24,8 @@ def date(recon):
 				LonerList.append(key)
 	while LonerList:
 		print LonerList
+		for thing in LonerList:
+			order[thing] = place
 		x = LonerList[0]
 		print x
 		order[x] = place
@@ -40,3 +42,31 @@ def date(recon):
 		print recopy
 		return None
 	return order
+
+def findnth(order, n):
+	for key in order:
+		if order[key] == n:
+			print "afdsafdsf"
+			return key
+	return None
+
+def layer(order,recon):
+	layers = {}
+	dicto = {}
+	x = findnth(order, 0)
+	layers[x] = 0
+	n = 0
+	try:
+		while True:
+			x = findnth(order,n)
+			print "fdsfafdsfsafdsfsafds"
+			for child in recon[x]:
+				if child != None:
+					layers[child] = layers[x] + 1
+			n += 1
+	except:
+		print layers
+		return layers
+
+
+

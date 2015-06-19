@@ -9,7 +9,7 @@ def Reconcile(fileName, D, T, L, k):
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
-	hostBranchs = branch(hostv,hostOrder)
+	hostBranchs = branch(hostv, orderGraph.layer(hostOrder,hostv))
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
 	ReconConversion.convert(rec[0], fileName[:-7])
