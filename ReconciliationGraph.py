@@ -24,11 +24,11 @@ R = {('p8', 'h2'): ['T', ('p3', 'h2'), ('p4', 'h4')],
 ('p4', 'h4'): ['C', (None, None), (None, None)]}
 
 def findRoot(Tree):
-    """This function takes in a tree and returns a string with the name of the root vertex of the tree"""
+	"""This function takes in a tree and returns a string with the name of the root vertex of the tree"""
 
-    if 'pTop' in Tree:
-    	return Tree['pTop'][1]
-    return Tree['hTop'][1]
+	if 'pTop' in Tree:
+		return Tree['pTop'][1]
+	return Tree['hTop'][1]
 
 def InitDicts(tree):
 	"""This function takes as input a tree dictionary and returns a dictionary with all of the bottom nodes 
@@ -93,10 +93,10 @@ def uniquify(list):
 	"""Takes as input a list and returns a list containing only the unique elements of 
 	the input list."""
 
-   	keys = {}
-   	for e in list:
-    	keys[e] = 1
-   	return keys.keys()
+	keys = {}
+	for e in list:
+		keys[e] = 1
+	return keys.keys()
 
 def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	"""Takes as input a host tree, a parasite tree, and a reconciliation, and returns a graph where the
