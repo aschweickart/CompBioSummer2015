@@ -11,3 +11,9 @@ def Reconcile(fileName, D, T, L, k):
 	ReconConversion.convert(rec[0], fileName[:-7])
 	newickToVis.convert(fileName)
 	return DTL, rec
+
+
+
+
+
+
