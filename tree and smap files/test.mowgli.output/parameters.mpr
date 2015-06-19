@@ -1,0 +1,27 @@
+species	= stree
+gene	= intree
+extension	= 
+outputDir	= /broad/compbio/yjw/tmp/vistrans/test.mowgli.output
+
+dup	= 2
+tran	= 3
+loss	= 1
+cospec	= 0
+threshold	= 0
+
+model	= 1
+nni	= 0
+
+ForceRootMapping:
+	F
+OutputParam:
+	F
+CountMPR:
+	T
+Verbose:
+	F
+OutputSpeciesTreeXML:
+	F
+AllowTransfer:
+	T
+

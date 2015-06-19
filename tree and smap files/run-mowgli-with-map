@@ -1,0 +1,453 @@
+#!/usr/bin/env python
+# run Notung with standard command-line interface
+
+import sys, os, shutil, time
+import optparse
+import subprocess
+import random
+
+from rasmus import util, treelib
+from compbio import phylo, fasta
+from compbio import phylorun as phy
+
+##from yjw.bio import phyloDTL
+
+from rasmus.common import *
+
+path = os.path.dirname(__file__)
+
+o = optparse.OptionParser()
+o.add_option("--reroot", dest="reroot",
+             action="store_true", default=False)
+o.add_option("-S", "--smap", dest="smap",
+             metavar="<gene2species map>")
+o.add_option("-s", "--stree", dest="stree",
+             metavar="<species tree>")
+o.add_option("--no-map", dest="nomap",
+             default=False, action="store_true",
+	     help="set to use leaf names without remapping")
+phy.add_common_options(o, align=False)
+o.remove_option("--seqtype")
+o.remove_option("--boot")
+o.remove_option("--no-opttree")
+conf, files = phy.parse_common_options(o)
+
+
+#=============================================================================
+# input/output helper functions
+# note: could be rewritten to use Mowgli internal node names as node names
+
+def parse_mowgli_output(outdir, tree, stree, oldnames):
+    # read full gene tree (with losses), then write to file (after removing lost lineages)
+    gtree, gtree_map = read_genetree(outdir + "/FullGeneTree.mpr", oldnames)
+    treelib.remove_exposed_internal_nodes(gtree,
+                                          leaves=filter(lambda node: node.name.rsplit('_',1)[0] != '*',
+                                                        gtree.leaves()))
+    treelib.remove_single_children(gtree)
+
+    # read species tree
+    stree_map = read_speciestree(outdir + "/outputSpeciesTree.mpr", stree)
+
+    # read mapping (reconciliation), then write to file
+    brecon = read_brecon(outdir + "/mapping.mpr",
+                         gtree_map, stree_map)
+
+##    recon, events, trans = read_recon(outdir + "/Fullmapping.mpr",
+##                                      tree_map, stree_map)
+##    phyloDTL.subset_recon(tree, recon, events, trans)
+
+    return gtree, brecon
+
+def write_gtree_data(node, writeDist=False,
+                     namefunc=lambda name: name):
+    """Writes only bootstraps"""    
+    string = ""
+    if ("boot" in node.data) and (not node.is_leaf()) and (node.parent):
+        # bootstraps are out of 100
+        boot = node.data["boot"] * 100
+        
+        if int(boot) == boot:
+            return "%d" % int(boot)
+        else:
+            return "%f" % boot        
+    return ""
+
+def write_stree_data(node, writeDist=False,
+                     namefunc=lambda name: name):
+    """Writes only branch lengths"""
+    return ":%f" % node.dist
+
+def read_mowgli_stree_data(node, data, namefunc=lambda name: name):
+    """Reads internal node names as <node name>:<branch length>"""
+    if ":" in data:
+        name, dist = data.split(":")
+        node.dist = float(dist)
+
+        if len(name) > 0:
+            node.name = namefunc(name)
+    else:
+        if len(data) > 0:
+	    node.name = namefunc(data)
+
+def read_genetree(filename, oldnames):
+    """Read full gene tree from Mowgli"""
+    tree = None
+    fin = util.open_stream(filename)
+    for line in fin:
+        line = line.rstrip()
+        if line == "Rec #1":
+            line = fin.next().rstrip()
+            tree = treelib.parse_newick(line)
+            break
+    if not tree:
+        raise Exception("no gene tree found")
+
+    # mapping from Mowgli node name to gene tree node
+    tree_map = {}
+    for node in tree.nodes.values():
+        if node.is_leaf():
+            leafname, branchname = node.name.rsplit('_', 1)
+            tree_map[branchname] = node
+            if leafname == "*":
+                continue
+            elif leafname in oldnames:
+                tree.rename(node.name, oldnames[leafname])
+            else:
+                raise Exception("gene not found: %s" % leafname)
+        else:
+            tree_map[node.name] = node
+            tree.rename(node.name, "n" + str(node.name))            
+
+    return tree, tree_map
+            
+def read_speciestree(filename, stree):
+    """Read species tree from Mowgli and map to original species tree
+    Currently skips added outgroup species"""
+    nstree = treelib.read_tree(filename, read_data=read_mowgli_stree_data)
+    nstree_map = {}
+    
+    # mapping from Mowgli node name to original species tree node
+    # (inefficient method using LCA for internal nodes)
+    for node in nstree.postorder():
+        if node.is_leaf():
+            leafname, branchname = node.name.rsplit('_', 1)
+            if leafname == "OUTGROUP":
+	        #nstree_map[branchname] = None
+		pass
+	    else:
+                nstree_map[branchname] = stree.nodes[leafname]
+                nstree.rename(node.name, leafname)
+        else:
+	    if not node.parent:
+	        # new root due to addition of outgroup species
+	        nstree_map[node.name] = None
+	    else:
+	        snode = treelib.lca([stree.nodes[name] for name in node.leaf_names()])
+	        nstree_map[node.name] = snode
+
+    assert sorted(nstree_map.values()) == sorted(stree.nodes.values() + [None])
+
+    return nstree_map
+
+def read_recon(filename, tree_map, stree_map):
+    """Read reconciliation from Mowgli"""
+    recon = {}
+    events = {}
+    trans = {}
+    
+    fin = util.open_stream(filename)
+    for line in fin:
+        line = line.rstrip()
+        
+        if line == "Rec #1":
+            while True:
+                try:
+                    line = fin.next().rstrip()
+                    if len(line) == 0:
+                        continue
+                    toks = line.split('\t\t')
+
+                    branch = toks[0]
+                    if branch[0] == "(":
+                        # gene tree root
+                        a,b = branch[1:-1].split(',')
+                        assert a == " ", line
+                        node = tree_map[b]
+                        assert node.parent is None
+                        
+                    elif branch[0] == "{":
+                        a,b = branch[1:-1].split(',')
+                        node = tree_map[b]
+                        assert node.parent == tree_map[a]
+                    
+                    else:
+                        raise Exception("invalid branch: %s\n%s" % (branch, line))
+
+                    for tok in toks[1:]:
+                        sbranch, event = tok.split(' ')
+                        if event == "Tran0" or event == "Tran1":
+                            # species branch is parsed differently for transfer events
+			    n,d,r = sbranch[1:-1].split(';')
+
+			    # donor species edge
+			    da, db = d[1:-1].split(',')
+			    assert stree_map[db].parent == stree_map[da]
+			    snode = stree_map[db]
+			    
+			    # received species edge
+			    ra, rb = r[1:-1].split(',')
+			    assert stree_map[rb].parent == stree_map[ra]
+			    
+			    # transfer edge (mowgli outputs child that is transferred)
+			    tnode = tree_map[n]
+			    assert tnode.parent == node
+
+                        else:
+                            a,b = sbranch[1:-1].split(',')
+                            snode = stree_map[b]
+                            assert snode.parent == stree_map[a]
+
+                        # get reconciliation and event
+                        if event == "NoEvent":
+                            continue
+                        elif event == "Extant":
+                            assert (node not in recon) and (node not in events)
+                            recon[node] = snode
+                            events[node] = "gene"
+                        elif event == "Spec0" or event == "Spec1":
+                            assert (node not in recon) and (node not in events)
+                            recon[node] = snode
+                            events[node] = "spec"
+                        elif event == "Dup":
+                            assert (node not in recon) and (node not in events)
+                            recon[node] = snode
+                            events[node] = "dup"
+                        elif event == "Tran0" or event == "Tran1":
+                            assert (node not in recon) and (node not in events)
+			    recon[node] = snode
+			    events[node] = "trans"
+			    trans[node] = tnode
+                        elif event == "Loss":
+                            # do not retain
+                            continue
+                        else:
+                            raise Exception("invalid event: %s\t%s\n%s" % (sbranch, event, line))
+                        
+                except StopIteration:
+                    break
+                    
+    return recon, events, trans
+
+def read_brecon(filename, tree_map, stree_map):
+    """Read reconciliation from Mowgli"""
+    brecon = {}
+    
+    fin = util.open_stream(filename)
+    for line in fin:
+        line = line.rstrip()
+        
+        if line == "Rec #1":
+            while True:
+                try:
+                    line = fin.next().rstrip()
+                    if len(line) == 0:
+                        continue
+                    toks = line.split('\t\t')
+
+                    branch = toks[0]
+                    branch_path = []
+                    if branch[0] == "(":
+                        # gene tree root
+                        a,b = branch[1:-1].split(',')
+                        assert a == " ", branch
+                        node = tree_map[b]
+                        assert node.parent is None, branch
+                        
+                    elif branch[0] == "{":
+                        a,b = branch[1:-1].split(',')
+                        node = tree_map[b]
+                        assert node.parent == tree_map[a], branch
+                    
+                    else:
+                        raise Exception("invalid branch: %s\n%s" % (branch, line))
+
+                    for tok in toks[1:]:
+                        # parse species reconciliation
+                        sbranch, event = tok.split(' ')
+                        if event == "Tran0" or event == "Tran1" or event == "TranLoss":
+                            # species branch is parsed differently for transfer events
+                            if event != "TranLoss":
+                                n,d,r = sbranch[1:-1].split(';')
+                            else:
+                                d,r = sbranch[1:-1].split(';')
+
+			    # donor species edge
+			    da, db = d[1:-1].split(',')
+			    assert stree_map[db].parent == stree_map[da]
+			    snode = stree_map[db]
+			    
+			    # received species edge
+			    ra, rb = r[1:-1].split(',')
+			    assert stree_map[rb].parent == stree_map[ra]
+
+			    if event != "TranLoss":
+                                # transfer edge (mowgli outputs child that is transferred)
+                                tnode = tree_map[n]
+                                assert tnode.parent == node
+
+                        else:
+                            a,b = sbranch[1:-1].split(',')
+                            snode = stree_map[b]
+                            assert snode.parent == stree_map[a]
+
+                        # get reconciliation and event
+                        if event == "NoEvent":
+                            continue
+                        elif event == "Extant":
+                            branch_path.append((snode, "gene"))
+                        elif event == "Spec0" or event == "Spec1":
+                            branch_path.append((snode, "spec"))
+                        elif event == "Dup":
+                            branch_path.append((snode, "dup"))
+                        elif event == "Tran0" or event == "Tran1":
+                            branch_path.append((snode, "trans"))
+                        elif event == "SpecLoss0" or event == "SpecLoss1":
+                            branch_path.append((snode, "specloss"))
+                        elif event == "TranLoss":
+                            branch_path.append((snode, "transloss"))
+                        elif event == "Loss":
+                            raise Exception("invalid loss event: %s\t%s\n%s" % (sbranch, line, tok))
+                        else:
+                            raise Exception("invalid event: %s\t%s\n%s" % (sbranch, line, tok))
+                        
+                    brecon[node] = branch_path
+                        
+                except StopIteration:
+                    break
+                
+    return brecon
+   
+#=============================================================================
+
+def run(args, outdir):
+    """Run a program in a subprocess within a new directory"""
+    curdir = os.getcwd()
+    os.chdir(outdir)
+    ret = subprocess.call(args)
+    os.chdir(curdir)
+    return ret 
+
+#=============================================================================
+
+gene2species = phylo.read_gene2species(conf.smap)
+stree = treelib.read_tree(conf.stree)
+
+result = 0
+for fn in files:
+    basename = phy.get_basename(fn, conf)
+
+    outdir = basename + conf.outputext
+    phy.make_output_dir(outdir)
+
+    # make compatible gene tree
+    if conf.nomap:
+        tree = treelib.read_tree(basename + conf.usertreeext)
+    else:
+        oldnames = {}
+	genecopy = {}
+        def namefunc(name):
+            try:
+	        sp = gene2species(name)
+	    except:
+	        return name
+
+	    assert "_" not in sp
+
+	    if sp not in genecopy:
+	        genecopy[sp] = 0
+	    newname = sp + "_" + str(genecopy[sp])
+	    genecopy[sp] += 1
+	    oldnames[newname] = name
+	    return newname
+
+        tree = treelib.read_tree(basename + conf.usertreeext,
+                                 namefunc=namefunc)
+	out = util.open_stream(outdir + "/map", "w")
+	for newname, oldname in oldnames.iteritems():
+	    print >>out, "%s\t%s" % (newname, oldname)
+	out.close()
+
+    tree.write(outdir + "/intree", oneline=True, writeData=write_gtree_data)
+
+    # make compatible species tree (no internal node names)
+    stree.write(outdir + "/stree", oneline=True, writeData=write_stree_data)
+    
+    # require minimium size of tree
+    if len(tree.leaves()) <= 2:
+        continue
+    
+    # basic arguments
+    args = ["Mowgli",
+            "-s", "stree",
+            "-g", "intree",
+            "-o", os.path.abspath(outdir)]
+    
+    if conf.extra:
+        args.extend(conf.extra)
+
+    # record command
+    cmd = " ".join(args)
+    print cmd
+    out = open(outdir + "/cmd", "w")
+    out.write(cmd)
+    out.close()
+
+    # run program
+    if conf.reroot:
+        rootnodes = list(tree)
+        random.shuffle(rootnodes)   # shuffle to randomly pick an optimum root
+        failed = False
+        mincost = util.INF
+
+        for rootnode in rootnodes:
+            treelib.reroot(tree, rootnode.name, newCopy=False, keepName=True)
+            tree.write(outdir + "/intree", oneline=True, writeData=write_gtree_data)
+
+            if run(args, outdir) != 0:
+                open(outdir + "/error", "w").close()
+                result = 1
+                failed = True
+                break
+            else:
+                # determine cost
+                fin = util.open_stream(outdir + "/costs.mpr")
+                for line in fin:
+                    line = line.rstrip()
+                    if len(line) == 0:
+                        continue
+                    toks = line.split()
+                    if toks[0] == "Costs:":
+                        cost_tmp = float(toks[1])
+                        break
+
+                # only update if cost is lower
+                if cost_tmp < mincost:
+                    mincost = cost_tmp
+                    gtree, brecon = parse_mowgli_output(outdir, tree, stree, oldnames)
+
+    else:
+        failed = False
+        if run(args, outdir) != 0:
+            open(outdir + "/error", "w").close()
+            result = 1
+            failed = True
+        else:
+            gtree, brecon = parse_mowgli_output(outdir, tree, stree, oldnames)
+
+    # output
+    if not failed:
+        gtree.write(basename + conf.treeext, rootData=True)
+        outrecon = util.replace_ext(basename + conf.treeext, ".tree", ".brecon")
+        phylo.write_brecon(outrecon, brecon)
+
+sys.exit(result)

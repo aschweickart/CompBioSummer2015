@@ -1,0 +1,40 @@
+species	= stree
+gene	= intree
+extension	= 
+outputDir	= /broad/compbio/yjw/tmp/vistrans/test.mowgli.output
+
+dup	= 2
+tran	= 3
+loss	= 1
+cospec	= 0
+threshold	= 0
+
+model	= 1
+nni	= 0
+
+ForceRootMapping:
+	F
+OutputParam:
+	F
+CountMPR:
+	T
+Verbose:
+	F
+OutputSpeciesTreeXML:
+	F
+AllowTransfer:
+	T
+
+
+------------------------
+Rec #1
+( ,4)		(4,2) Spec0
+
+{4,3}		(2;(2,1);(4,3)) Tran0
+
+{3,2}		(4,3) Extant
+
+{3,1}		(2,1) Extant
+
+{4,0}		(2,0) Extant
+

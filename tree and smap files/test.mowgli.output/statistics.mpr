@@ -1,0 +1,13 @@
+
+Running time used to compute the dynamic programming cost matrix:	0 sec
+
+ final Cost :3
+ first cost:2.35197e-310
+ number of Climbs :0
+ number of bad NNI :0
+ number of tried NNI :0
+ run-time:	0.01 sec
+
+ Mowgli (version 1.0.0) with parameters: 
+ nni : 0
+ threshold : 0
