@@ -190,16 +190,41 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
     TreeList = []
     currentDTL = DTL
     counter = 0
-    if k = 'all'
+
+    if k == 'all':
         while counter < numRecon:
-            oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
-        TreeList.append(oneTree)
-        counter += 1
-    else:
-        while counter < numRecon and counter < k:
             oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
             TreeList.append(oneTree)
             counter += 1
+    else:
+        for i in range(k):
+            oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
+            TreeList.append(oneTree)
     return TreeList
+
+
+DTL = {('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0.5], 2], 
+('p4', 'h3'): [['C', (None, None), (None, None), 1.0], 0], 
+('p5', 'h5'): [['C', (None, None), (None, None), 1.0], 0], 
+('p7', 'h3'): [['T', ('p4', 'h3'), ('p3', 'h2'), 0.5], 1], 
+('p7', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h3'), 0.5], 1], 
+('p2', 'h4'): [['C', (None, None), (None, None), 1.0], 0], 
+('p1', 'h1'): [['C', (None, None), (None, None), 1.0], 0], 
+('p6', 'h4'): [['T', ('p2', 'h4'), ('p1', 'h1'), 0.5], 1], 
+('p3', 'h2'): [['C', (None, None), (None, None), 1.0], 0], 
+('p6', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h4'), 0.5], 1], 
+('p9', 'h6'): [['S', ('p6', 'h1'), ('p8', 'h2'), 0.5], 3], 
+('p8', 'h3'): [['T', ('p7', 'h3'), ('p5', 'h5'), 0.5], 2], 
+('p9', 'h7'): [['S', ('p8', 'h3'), ('p6', 'h4'), 0.5], 3]}
+
+P = {('p8', 'p7'): ('p8', 'p7', ('p7', 'p3'), ('p7', 'p4')), 
+('p9', 'p6'): ('p9', 'p6', ('p6', 'p1'), ('p6', 'p2')), 
+('p8', 'p5'): ('p8', 'p5', None, None), 
+('p9', 'p8'): ('p9', 'p8', ('p8', 'p5'), ('p8', 'p7')), 
+('p7', 'p4'): ('p7', 'p4', None, None), 
+('p6', 'p1'): ('p6', 'p1', None, None), 
+('p7', 'p3'): ('p7', 'p3', None, None), 
+'pTop': ('Top', 'p9', ('p9', 'p8'), ('p9', 'p6')), 
+('p6', 'p2'): ('p6', 'p2', None, None)}
 
 
