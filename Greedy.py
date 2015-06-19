@@ -184,13 +184,22 @@ def greedyOnce(DTL, ParasiteTree):
     return GreedyOnce, DTL
 
 
-def Greedy(DTL, ParasiteTree, k):
+def Greedy(DTL, numRecon, ParasiteTree, k):
     """This function takes as input a DTL graph, a ParasiteTree, and k, the desired number of best reconciliation trees. 
     It returns TreeList, a list of k dictionaries, each of which represent one of the best trees."""
     TreeList = []
     currentDTL = DTL
-    for i in range(k):
-        oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
+    counter = 0
+    if k = 'all'
+        while counter < numRecon:
+            oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
         TreeList.append(oneTree)
+        counter += 1
+    else:
+        while counter < numRecon and counter < k:
+            oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
+            TreeList.append(oneTree)
+            counter += 1
     return TreeList
+
 
