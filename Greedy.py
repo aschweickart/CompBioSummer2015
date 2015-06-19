@@ -96,7 +96,8 @@ def bookkeeping(DTL, ParasiteTree):
 
     BSFHMap = {}
     BSFHEvent = {}
-    ParasiteRoot = findRoot(ParasiteTree)   
+    ParasiteRoot = findRoot(ParasiteTree)
+    orderedKeysL = postorderDTLsort(DTL, ParasiteRoot)   
     for key in orderedKeysL:
         mapNode = key[0]
         if DTL[mapNode][0][0] == 'C':                   #check if the key is a tip
