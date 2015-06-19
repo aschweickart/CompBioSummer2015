@@ -264,12 +264,12 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
             del Score[key]
 
     newDTL = copy.deepcopy(DTL)
-    DTL = addScores(treeMin, DTL, Parents, Score, newDTL)
+    DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
 
     #DrawDTLc.drawNodes(treeMin, DTL, 450, {})
 
-    return DTL
+    return DTL, numRecon
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a list, keysL, that contains tuples. Each tuple 
@@ -370,9 +370,8 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     for key in newDTL.keys():
         for n in range(len(newDTL[key])-1):
             newDTL[key][n][-1] = newDTL[key][n][-1]/normalize
-    newDTL["numRecon"] = normalize
     
-    return newDTL
+    return newDTL, normalize
 
 def findBest(Parasite, MinimumDict):
     """Takes Parasite Tree and a dictionary of minimum resolution costs and 
