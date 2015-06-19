@@ -45,7 +45,7 @@ def draw_tree(tree, brecon, stree,
               rmargin=10, lmargin=10, tmargin=0, bmargin=0,
               tree_color=(0, 0, 0),
               tree_trans_color=(0, 0, 0),
-              stree_color=(1, 0, .5),
+              stree_color=(.6, .3, .8),
               snode_color=(.2, .2, .7),
               dup_color=(1, 0, 0),
               dup_color_border=(.5, 0, 0),
@@ -97,9 +97,6 @@ def draw_tree(tree, brecon, stree,
         if event == "spec" or event == "gene":
             yorders[node] = len(ylists[snode])
             ylists[snode].append(node)
-#	if event == "spec":
-#	    print frequency, slayout[snode][0], slayout[snode][1]
-#	    canvas.text("Freq = "+frequency, slayout[snode][0], slayout[snode][1], font_size, fillColor = (0,0,0))
     # layout dups and transfers (y)
     for node in tree.postorder():
         snode, event, frequency = brecon[node][-1]
@@ -268,20 +265,22 @@ def draw_tree(tree, brecon, stree,
         x, y = layout[node]
         o = event_size / 2.0
 
+	if event == "loss":
+            canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-1.5*font_size, font_size, fillColor = (1,1,1))
+	
         if event == "spec":
-            print frequency, slayout[snode][0], slayout[snode][1]
-            canvas.text("Freq = "+frequency, slayout[snode][0], slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
+            canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
 
         if event == "dup":
             canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=dup_color,
                         strokeColor=dup_color_border)
-            canvas.text("Freq. = "+frequency, x, y-font_size, font_size, fillColor=(0,0,0))
+            canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=dup_color)
         elif event == "trans":
             canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
-            canvas.text("Freq. = "+frequency, x, y-font_size, font_size, fillColor=(0,0,0))
+            canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=trans_color)
 
     # draw tree leaves
     for node in tree:
