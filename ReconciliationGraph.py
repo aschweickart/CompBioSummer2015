@@ -24,8 +24,7 @@ R = {('p8', 'h2'): ['T', ('p3', 'h2'), ('p4', 'h4')],
 ('p4', 'h4'): ['C', (None, None), (None, None)]}
 
 def findRoot(Tree):
-    """This function takes in a parasiteTree and returns a string with the name of
-    the root vertex of the tree"""
+    """This function takes in a tree and returns a string with the name of the root vertex of the tree"""
 
     if 'pTop' in Tree:
     	return Tree['pTop'][1]
@@ -34,12 +33,13 @@ def findRoot(Tree):
 def InitDicts(tree):
 	"""This function takes as input a tree dictionary and returns a dictionary with all of the bottom nodes 
 	of the edges as keys and empty lists as values."""
+
 	treeDict = {}
 	for key in tree:
 		if key == 'pTop':
-			treeDict[P[key][1]] = [] 
+			treeDict[tree[key][1]] = [] 
 		elif key == 'hTop':
-			treeDict[H[key][1]] = []
+			treeDict[tree[key][1]] = []
 		else:
 			treeDict[key[1]] = []
 	return treeDict
@@ -47,6 +47,7 @@ def InitDicts(tree):
 def treeFormat(tree):
 	"""Takes a tree in the format that it comes out of newickFormatReader and converts it into a dictionary
 	with keys which are the bottom nodes of the edge and values which are the children."""
+
 	treeDict = InitDicts(tree)
 	treeRoot = findRoot(tree)
 	for key in tree:
@@ -63,9 +64,6 @@ def treeFormat(tree):
 			if tree[key][-2] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
 			else:
-				print "key:", key
-				print "key[1]:", key[1]
-				print "tree[key][-2][1]:", tree[key][-2][1]
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
 			if tree[key][-1] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]
@@ -77,6 +75,7 @@ def parentsDict(H, P):
 	"""Takes a host and a parasite tree with edges as keys and returns a dictionary with 
 	keys which are the bottom nodes of those edges and values which are the top nodes of 
 	those edges."""
+
 	parentsDict = {}
 	for key in H:
 		if key == 'hTop':
@@ -90,8 +89,19 @@ def parentsDict(H, P):
 			parentsDict[key[1]] = P[key][0]
 	return parentsDict
 
-def build(HostTree, ParasiteTree, reconciliation):
-	""" """
+def uniquify(list):
+	"""Takes as input a list and returns a list containing only the unique elements of 
+	the input list."""
+
+   	keys = {}
+   	for e in list:
+    	keys[e] = 1
+   	return keys.keys()
+
+def buildReconstruction(HostTree, ParasiteTree, reconciliation):
+	"""Takes as input a host tree, a parasite tree, and a reconciliation, and returns a graph where the
+	keys are host or parasite nodes, and the values are a list of the children of a particular node. The
+	graph represents temporal relationships between events."""
 
 	parents = parentsDict(HostTree, ParasiteTree)
 	H = treeFormat(HostTree)
@@ -99,20 +109,18 @@ def build(HostTree, ParasiteTree, reconciliation):
 	reconGraph = H
 	reconGraph.update(P) 
 	for key in reconciliation:
+		print "key:", key
 		if reconciliation[key][0] == 'T':
 			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], reconciliation[key][2][1]]
 			parent1 = parents[reconciliation[key][1][1]]
 			parent2 = parents[reconciliation[key][2][1]]
-			reconGraph[parent1] = reconGraph[parent1] + [reconciliation[key][1][1]]
-			reconGraph[parent2] = reconGraph[parent2] + [reconciliation[key][2][1]]
+			reconGraph[parent1] = reconGraph[parent1] + [key[0]]
+			reconGraph[parent2] = reconGraph[parent2] + [key[0]]
 
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
 			if parent != 'Top':
 				reconGraph[parent] = reconGraph[parent] + [key[1]]
-			print "key[1]:", key[1]
-			print "key[0]:", key[0]
-			print reconGraph
 			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
 			del reconGraph[key[0]]
 
@@ -122,12 +130,13 @@ def build(HostTree, ParasiteTree, reconciliation):
 			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
 
 		elif reconciliation[key][0] == 'C':
-			reconGraph[key[1]] = ['tip']
+			reconGraph[key[1]] = ['Tip']
+			reconGraph[key[0]] = ['Tip']
+
+	for key in reconGraph:
+		reconGraph[key] = uniquify(reconGraph[key])
+
 	return reconGraph
-
-
-
-
 
 
 
