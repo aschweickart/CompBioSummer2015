@@ -33,7 +33,18 @@ def findRoot(Tree):
     	return Tree['pTop'][1]
     return Tree['hTop'][1]
 
-
+def InitDicts(tree):
+	"""This function takes as input a tree dictionary and returns a dictionary with all of the bottom nodes 
+	of the edges as keys and empty lists as values."""
+	treeDict = {}
+	for key in tree:
+		if key == 'pTop':
+			treeDict[P[key][1]] = [] 
+		elif key == 'hTop':
+			treeDict[H[key][1]] = []
+		else:
+			treeDict[key[1]] = []
+	return treeDict
 
 def treeFormat(tree):
 	"""Takes a tree in the format that it comes out of newickFormatReader and converts it into a dictionary
