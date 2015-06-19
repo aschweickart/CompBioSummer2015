@@ -1,5 +1,6 @@
 # PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
 def convert(reconciliation, DTL, ParasiteTree, outputFile):
+	print reconciliation, DTL
 	"""Takes as input a dictionary of a reconciliation between host and parasite trees, a DTL graph, and a string containing the name of a 
 	file where it will put the output. The function outputs the same tree converted to brecon format. 
 	Note that for losses, the parasite node in the brecon representation is the parent of the given parasite node. 

@@ -4,14 +4,20 @@ import newickToVis
 import ReconConversion
 import orderGraph
 import newickFormatReader
+import ReconciliationGraph
 
 def Reconcile(fileName, D, T, L, k):
+	orderedGraphs = []
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, orderGraph.layer(hostOrder,hostv))
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
+	for item in range(len(rec)):
+		rec[item] = ReconciliationGraph.buildReconstruction(host, paras, rec[item])
+	for item in range(len(rec)):
+		orderedGraphs += orderGraph.date(rec[item]) 
 	ReconConversion.convert(rec[0], DTL, paras, fileName[:-7])
 	newickToVis.convert(fileName,hostBranchs)
 	return DTL, rec
