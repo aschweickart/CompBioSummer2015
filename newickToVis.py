@@ -8,7 +8,7 @@ def convert(fileName, HostOrder):
     P = P.strip()
     H = H.strip()
     for key in HostOrder:
-        H = H.replace(str(key), str(key) + ':' + HostOrder[key])
+        H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
     f = open('tree and smap files/' + fileName[:-7] + '.stree', 'w')
     f.write(H)
     f.close()

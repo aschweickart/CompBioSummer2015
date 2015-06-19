@@ -3,10 +3,10 @@ import Greedy
 import newickToVis
 import ReconConversion
 import orderGraph
-import math
+import newickFormatReader
 
 def Reconcile(fileName, D, T, L, k):
-	host, paras, phi = DP.newickFormatReader.getInput(fileName)
+	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv,hostOrder)
@@ -17,11 +17,12 @@ def Reconcile(fileName, D, T, L, k):
 	return DTL, rec
 
 def branch(tree, treeOrder):
-	braches = {}
+	branches = {}
 	for key in tree:
-		for child in tree[key]:
-			if child != None:
-				branches[child] = math.abs(treeOrder[child] - treeOrder[key])
+		if key != None:
+			for child in tree[key]:
+				if child != None:
+					branches[child] = abs(treeOrder[child] - treeOrder[key])
 	return branches
 
 
