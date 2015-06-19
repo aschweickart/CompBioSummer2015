@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?> 
             <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 
             'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-<svg width='2069' height='999' 
+<svg width='1895' height='3299' 
             xmlns='http://www.w3.org/2000/svg' version='1.1'>
 <g><g style='font-family: "Sans";'>
 <g transform='translate(10.000000, 0.000000) ' >
-<<<<<<< HEAD
 <polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='830.000000,2196.500000 930.000000,2109.000000 930.000000,2189.000000 830.000000,2276.500000 ' stroke-width='1.000000'/>
 <polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='430.000000,2782.437500 530.000000,2559.000000 530.000000,2639.000000 430.000000,2862.437500 ' stroke-width='1.000000'/>
 <polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='230.000000,883.926758 330.000000,1708.853516 330.000000,1788.853516 230.000000,963.926758 ' stroke-width='1.000000'/>
@@ -232,80 +231,6 @@
 <g transform='translate(1140.000000,1555.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>V._wilsoni</text></g>
 <g transform='translate(940.000000,2155.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>V._obtusa</text></g>
 <g transform='translate(840.000000,755.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>V._larvaticola</text></g>
-=======
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1780.000000,459.000000 1880.000000,409.000000 1880.000000,489.000000 1780.000000,539.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='0.000000,527.554688 180.000000,527.554688 180.000000,607.554688 0.000000,607.554688 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='780.000000,457.437500 880.000000,209.000000 880.000000,289.000000 780.000000,537.437500 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='780.000000,457.437500 980.000000,705.875000 980.000000,785.875000 780.000000,537.437500 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1780.000000,459.000000 1980.000000,509.000000 1980.000000,589.000000 1780.000000,539.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='180.000000,527.554688 280.000000,146.109375 280.000000,226.109375 180.000000,607.554688 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1280.000000,496.500000 1480.000000,384.000000 1480.000000,464.000000 1280.000000,576.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1080.000000,602.750000 1280.000000,496.500000 1280.000000,576.500000 1080.000000,682.750000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1080.000000,602.750000 1380.000000,709.000000 1380.000000,789.000000 1080.000000,682.750000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='580.000000,283.218750 680.000000,109.000000 680.000000,189.000000 580.000000,363.218750 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='580.000000,283.218750 780.000000,457.437500 780.000000,537.437500 580.000000,363.218750 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='280.000000,146.109375 480.000000,9.000000 480.000000,89.000000 280.000000,226.109375 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='280.000000,146.109375 580.000000,283.218750 580.000000,363.218750 280.000000,226.109375 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='980.000000,705.875000 1080.000000,602.750000 1080.000000,682.750000 980.000000,785.875000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1480.000000,384.000000 1680.000000,309.000000 1680.000000,389.000000 1480.000000,464.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1280.000000,496.500000 1580.000000,609.000000 1580.000000,689.000000 1280.000000,576.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='180.000000,527.554688 380.000000,909.000000 380.000000,989.000000 180.000000,607.554688 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='1480.000000,384.000000 1780.000000,459.000000 1780.000000,539.000000 1480.000000,464.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(102,102,255)'  points='980.000000,705.875000 1180.000000,809.000000 1180.000000,889.000000 980.000000,785.875000 ' stroke-width='1.000000'/>
-<line x1='180.000000' y1='527.554688' x2='180.000000' y2='607.554688' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='980.000000' y1='705.875000' x2='980.000000' y2='785.875000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='280.000000' y1='146.109375' x2='280.000000' y2='226.109375' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1480.000000' y1='384.000000' x2='1480.000000' y2='464.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1280.000000' y1='496.500000' x2='1280.000000' y2='576.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='780.000000' y1='457.437500' x2='780.000000' y2='537.437500' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='580.000000' y1='283.218750' x2='580.000000' y2='363.218750' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1080.000000' y1='602.750000' x2='1080.000000' y2='682.750000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1780.000000' y1='459.000000' x2='1780.000000' y2='539.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<g transform='translate(1916.181818,459.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h18</text></g>
-<g transform='translate(916.181818,259.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h8</text></g>
-<g transform='translate(2016.181818,559.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h19</text></g>
-<g transform='translate(1416.181818,759.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h13</text></g>
-<g transform='translate(716.181818,159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h6</text></g>
-<g transform='translate(516.181818,59.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h4</text></g>
-<g transform='translate(1716.181818,359.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h16</text></g>
-<g transform='translate(1616.181818,659.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h15</text></g>
-<g transform='translate(416.181818,959.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h3</text></g>
-<g transform='translate(1216.181818,859.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h11</text></g>
-<line x1='480.000000' y1='49.000000' x2='280.000000' y2='186.109375' stroke='rgb(0,0,0)'  />
-<line x1='580.000000' y1='323.218750' x2='280.000000' y2='186.109375' stroke='rgb(0,0,0)'  />
-<line x1='280.000000' y1='186.109375' x2='180.000000' y2='567.554688' stroke='rgb(0,0,0)'  />
-<line x1='880.000000' y1='249.000000' x2='830.000000' y2='373.218750' stroke='rgb(0,0,0)'  />
-<path d='M1480.000000 424.000000 C1135.000000 398.609375 1135.000000 398.609375 830.000000 373.218750'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='680.000000' y1='149.000000' x2='580.000000' y2='323.218750' stroke='rgb(0,0,0)'  />
-<line x1='830.000000' y1='373.218750' x2='580.000000' y2='323.218750' stroke='rgb(0,0,0)'  />
-<line x1='1680.000000' y1='349.000000' x2='1480.000000' y2='424.000000' stroke='rgb(0,0,0)'  />
-<line x1='1780.000000' y1='499.000000' x2='1480.000000' y2='424.000000' stroke='rgb(0,0,0)'  />
-<line x1='1880.000000' y1='449.000000' x2='1780.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
-<line x1='1880.000000' y1='524.000000' x2='1780.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
-<line x1='1980.000000' y1='549.000000' x2='1880.000000' y2='524.000000' stroke='rgb(0,0,0)'  />
-<path d='M1430.000000 592.750000 C1635.000000 558.375000 1635.000000 558.375000 1880.000000 524.000000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='1580.000000' y1='649.000000' x2='1430.000000' y2='592.750000' stroke='rgb(0,0,0)'  />
-<path d='M1230.000000 695.875000 C1310.000000 644.312500 1310.000000 644.312500 1430.000000 592.750000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='1380.000000' y1='749.000000' x2='1230.000000' y2='695.875000' stroke='rgb(0,0,0)'  />
-<path d='M280.000000 758.277344 C735.000000 727.076172 735.000000 727.076172 1230.000000 695.875000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <path d='M1180.000000 849.000000 C710.000000 803.638672 710.000000 803.638672 280.000000 758.277344'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='380.000000' y1='949.000000' x2='280.000000' y2='758.277344' stroke='rgb(0,0,0)'  />
-<rect x='825.000000' y='368.218750' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<rect x='1875.000000' y='519.000000' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<rect x='1425.000000' y='587.750000' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<rect x='1225.000000' y='690.875000' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<rect x='275.000000' y='753.277344' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<g transform='translate(490.000000,55.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p2</text></g>
-<g transform='translate(890.000000,255.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p6</text></g>
-<g transform='translate(690.000000,155.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p4</text></g>
-<g transform='translate(1690.000000,355.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p8</text></g>
-<g transform='translate(1890.000000,455.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p10</text></g>
-<g transform='translate(1990.000000,555.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p12</text></g>
-<g transform='translate(1590.000000,655.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p14</text></g>
-<g transform='translate(1390.000000,755.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p16</text></g>
-<g transform='translate(1190.000000,855.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p18</text></g>
-<g transform='translate(390.000000,955.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p19</text></g>
->>>>>>> origin/master
 </g>
 </g>
 </g></svg>

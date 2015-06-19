@@ -3,10 +3,10 @@ import Greedy
 import newickToVis
 import ReconConversion
 import orderGraph
-import math
+import newickFormatReader
 
 def Reconcile(fileName, D, T, L, k):
-	host, paras, phi = DP.newickFormatReader.getInput(fileName)
+	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv,hostOrder)
@@ -17,11 +17,12 @@ def Reconcile(fileName, D, T, L, k):
 	return DTL, rec
 
 def branch(tree, treeOrder):
-	braches = {}
+	branches = {}
 	for key in tree:
-		for child in tree[key]:
-			if child != None:
-				branches[child] = math.abs(treeOrder[child] - treeOrder[key])
+		if key != None:
+			for child in tree[key]:
+				if child != None:
+					branches[child] = abs(treeOrder[child] - treeOrder[key])
 	return branches
 
 
@@ -39,9 +40,9 @@ def InitDicts(tree):
 	treeDict = {}
 	for key in tree:
 		if key == 'pTop':
-			treeDict[P[key][1]] = [] 
+			treeDict[tree[key][1]] = [] 
 		elif key == 'hTop':
-			treeDict[H[key][1]] = []
+			treeDict[tree[key][1]] = []
 		else:
 			treeDict[key[1]] = []
 	return treeDict
@@ -65,9 +66,6 @@ def treeFormat(tree):
 			if tree[key][-2] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
 			else:
-				print "key:", key
-				print "key[1]:", key[1]
-				print "tree[key][-2][1]:", tree[key][-2][1]
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
 			if tree[key][-1] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]

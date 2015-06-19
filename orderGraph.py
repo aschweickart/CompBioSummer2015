@@ -5,6 +5,7 @@ def date(recon):
 	dicto = {}
 	LonerList = []
 	recopy = copy.deepcopy(recon)
+	print recopy
 	for key in recopy:
 		if  key != None:
 			dicto[key] = 0
@@ -13,25 +14,29 @@ def date(recon):
 				dicto[child] = 0
 	for key in recopy:
 		for child in recopy[key]:
-			print child
 			if child != None:
 				dicto[child] += 1
+	print dicto
 	place = 0
 	for key in recopy:
 		if key != None:
 			if dicto[key] == 0:
-				LonerList += key
-	while recopy and LonerList:
+				LonerList.append(key)
+	while LonerList:
+		print LonerList
 		x = LonerList[0]
+		print x
 		order[x] = place
 		place += 1
 		for child in recopy[x]:
 			if child != None:
 				dicto[child] = dicto[child] - 1
 				if dicto[child] == 0:
-					LonerList += child
-			del LonerList[0]
-			del recopy[x]
-	if recopy:
+					LonerList.append(child)
+			if x in LonerList and x in dicto:
+				del LonerList[0]
+				del dicto[x]
+	if len(dicto) >= 1:
+		print recopy
 		return None
 	return order
