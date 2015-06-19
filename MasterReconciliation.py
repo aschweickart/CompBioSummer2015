@@ -14,10 +14,11 @@ def Reconcile(fileName, D, T, L, k):
 	hostBranchs = branch(hostv, orderGraph.layer(hostOrder,hostv))
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
-	for item in range(len(rec)):
-		rec[item] = ReconciliationGraph.buildReconstruction(host, paras, rec[item])
-	for item in range(len(rec)):
-		orderedGraphs += orderGraph.date(rec[item]) 
+	graph = []
+	for item in range(len(graph)):
+		graph[item] = ReconciliationGraph.buildReconstruction(host, paras, rec[item])
+	for item in range(len(graph)):
+		orderedGraphs += orderGraph.date(rec[graph]) 
 	ReconConversion.convert(rec[0], DTL, paras, fileName[:-7])
 	newickToVis.convert(fileName,hostBranchs)
 	return DTL, rec
