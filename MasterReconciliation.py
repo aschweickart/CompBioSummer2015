@@ -12,7 +12,7 @@ def Reconcile(fileName, D, T, L, k):
 	hostBranchs = branch(hostv, orderGraph.layer(hostOrder,hostv))
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
-	ReconConversion.convert(rec[0], fileName[:-7])
+	ReconConversion.convert(rec[0], DTL, paras, fileName[:-7])
 	newickToVis.convert(fileName,hostBranchs)
 	return DTL, rec
 
