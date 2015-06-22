@@ -8,6 +8,8 @@ import ReconciliationGraph
 from sys import argv
 
 def Reconcile(argList):
+	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
+	the host, parasite, and reconciliations"""
 	fileName = argList[1]
 	D = int(argList[2])
 	T = int(argList[3])
@@ -28,9 +30,9 @@ def Reconcile(argList):
 			orderedGraphs += orderGraph.date(graph[item])
 			ReconConversion.convert(rec[item], DTL, paras, fileName[:-7], item)
 	newickToVis.convert(fileName,hostBranchs)
-	#return DTL, rec
 
 def branch(tree, treeOrder):
+	"""Computes Ultra-metric Branchlength from a tree dating"""
 	branches = {}
 	for key in tree:
 		if key != None:
