@@ -22,7 +22,7 @@ def Reconcile(argList):
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
-	DTL, numRecons = DP.DP(host, paras, phi, D, T, L)
+	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
