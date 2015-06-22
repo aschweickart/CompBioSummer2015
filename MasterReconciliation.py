@@ -24,10 +24,10 @@ def Reconcile(argList):
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
-			orderedGraphs += orderGraph.date(graph[item])		
+			orderedGraphs += orderGraph.date(graph[item])
 			ReconConversion.convert(rec[item], DTL, paras, fileName[:-7], item)
 	newickToVis.convert(fileName,hostBranchs)
-	return DTL, rec
+	#return DTL, rec
 
 def branch(tree, treeOrder):
 	branches = {}
@@ -36,6 +36,9 @@ def branch(tree, treeOrder):
 			for child in tree[key]:
 				if child != None:
 					branches[child] = abs(treeOrder[child] - treeOrder[key])
+	for key in treeOrder:
+		if not key in branches:
+			branches[key] = 0
 	return branches
 
 def findRoot(Tree):

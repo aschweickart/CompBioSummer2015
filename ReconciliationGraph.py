@@ -87,7 +87,6 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	reconGraph = H
 	reconGraph.update(P) 
 	for key in reconciliation:
-		print "key:", key
 		if reconciliation[key][0] == 'T':
 			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], reconciliation[key][2][1]]
 			parent1 = parents[reconciliation[key][1][1]]

@@ -27,6 +27,7 @@ def date(recon):
 				LonerList.append(key)
 	while LonerList:
 		x = LonerList[0]
+		print x
 		order[x] = place
 		for child in recon[x]:
 			if child != None and child[0] != None and not child in Leaves:
