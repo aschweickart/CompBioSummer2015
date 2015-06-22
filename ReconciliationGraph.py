@@ -103,7 +103,8 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]
-			reconGraph[parent] = reconGraph[parent] + [key[0]]
+			if parent != 'Top':
+				reconGraph[parent] = reconGraph[parent] + [key[0]]
 			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
 
 		elif reconciliation[key][0] == 'C':
