@@ -1160,6 +1160,7 @@ def read_brecon(filename, tree, stree):
 
         if snode_name.isdigit():
            snode_name = int(snode_name)
+        print snode_name
         snode = stree[snode_name]
 
 #        events.append([snode, event])
