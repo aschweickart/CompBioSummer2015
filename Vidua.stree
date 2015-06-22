@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (
  (
   O._atricolis:32.000000,
@@ -95,3 +96,6 @@
   )h49:2.000000
  )h2:2.000000
 );
+=======
+((O._atricolis:32, A._subflava:32) h1:1, (((G._ianthinogaster:28, G._granatia:28) h64:2, ((E._dybowskii:24, (H._niveoguttatus:21, H._margaritatus:21) h71:3) h68:3, ((C._monteiri:20, ((L._larvata:13, (L._rara:9, ((L._r_cingica:4, L._r._rubricata:4) h1:100, (L._virata:3, (L._rhodopareia:2, L._sanguinodorsalis:2) h1:105) h1:101) h99:4) h97:4) h88:4, ((L._rufopicta:8, L._nitidula:8) h90:4, (L._senegala_rendalii:7, L._senegala_rhodopsis:7) h91:5) h89:5) h87:3) h74:3, ((P._melba_grotei:16, P._melba_citerior:16) h76:3, (P._afra:15, (P._lineata:11, (P._phoenicoptera:6, P._hypogrammica:6) h83:5) h81:4) h77:4) h75:4) h69:4) h65:3) h48:1, ((C._quartinia:26, C._melanotis:26) h50:3, ((E._astrild:22, (E._paludicola:18, (E._rhodophyga:14, (E._troglodytes:10, E._melpoda:10) h61:4) h59:4) h57:4) h54:3, E._erythronotos:25) h51:4) h49:2) h2:2) h0;
+>>>>>>> origin/master
