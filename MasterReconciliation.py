@@ -22,12 +22,8 @@ def Reconcile(argList):
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
-<<<<<<< Updated upstream
-	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-=======
-	DTL, numRecons = DPJune17.DP(host, paras, phi, D, T, L)
+	DTL, numRecons = DP.DP(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
->>>>>>> Stashed changes
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
 	for item in rec:
