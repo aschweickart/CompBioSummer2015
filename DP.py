@@ -9,7 +9,7 @@
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
 
 import newickFormatReader
-#import DrawDTLc
+#import DrawDTL
 import copy
 
 Infinity = float('inf')
@@ -267,7 +267,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
 
-    #DrawDTLc.drawNodes(treeMin, DTL, 450, {})
+    #DrawDTL.drawNodes(treeMin, DTL, 450, {})
 
     return DTL, numRecon
 

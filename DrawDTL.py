@@ -5,10 +5,10 @@ import math
 NodeLocations = {}
 
 
-DISPLACE = 500
-
 #tells a turtle to draw a line from start to end and returns to its position before the function call
-def connect(Turtle,Start,End):
+def connect(Turtle,Start,End,rad):
+	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End, 
+	and connects the two locations with a line and arrow"""
 	Turtle.speed(0)
 	Turtle.pen(pencolor  = "black")
 	loc = Turtle.pos()
@@ -32,54 +32,54 @@ def connect(Turtle,Start,End):
 		theta = (math.pi/2)
 		if not movu:
 			theta += math.pi
-	Start = (Start[0] + (30 * math.cos(theta)), Start[1])
-	Start = (Start[0], Start[1] + (30 * math.sin(theta)))
-	End = (End[0] - (30 * math.cos(theta)), End[1])
-	End = (End[0], End[1] - (30 * math.sin(theta)))
+	Start = (Start[0] + (rad * math.cos(theta)), Start[1])
+	Start = (Start[0], Start[1] + (rad * math.sin(theta)))
+	End = (End[0] - (rad * math.cos(theta)), End[1])
+	End = (End[0], End[1] - (rad * math.sin(theta)))
 	Turtle.penup()
 	Turtle.radians()
 	Turtle.seth(theta)
 	Turtle.setpos(Start,None)
 	Turtle.pendown()
 	Turtle.goto(End,None)
-	Turtle.stamp()
 	Turtle.degrees(360)
+	Turtle.stamp()
 	Turtle.penup()
 	Turtle.goto(loc,None)
 	Turtle.setheading(hed)
 	Turtle.pendown()
-def connectNodes(start, end):
-	turtle.penup()
-	turtle.setpos(start)
-	turtle.pendown()
-	turtle.setpos(end)
-	turtle.left(135)
-	turtle.forward(10)
-	turtle.right(180)
-	turtle.forward(10)
-	turtle.left(90)
-	turtle.forward(10)
-	turtle.right(180)
-	turtle.forward(10)
-	turtle.left(135)
-	# a = start[0]
-	# b = start[1]
-	# c = end[0]
-	# d = end[1]
-	# x = (a-c)/(b-d)
-	# rads = math.atan(x)
-	# angle = rads * (180/math.pi)
-	# turtle.penup()
-	# turtle.right(angle)
-	# turt
+	Turtle.ht()
+
 def drawNodes(treeMin, eventDict, depth, nodeDict):
-	if treeMin == []:
-		return
+	"""Takes as input treeMin, a list of the starting nodes of the best reconciliations, eventDict, 
+	   the DTL format dictionary, depth, a starting y-coordinate, and nodeDict, a dictionary of nodes and
+	   their coordinates. This function recursively draws the nodes of the DTL format dictionary, then 
+	   connects them using the connect function aboves"""
+	numTips = 0
 	for key in eventDict.keys():
-		numTips = 0
 		if eventDict[key][0][0] == "C":
 			numTips+=1
-	width = numTips * 1000
+	width = numTips * 200
+	DISPLACE = width/2
+	dip = 30
+	if len(eventDict)<25:
+		radius = 30
+	else:
+		radius = 13
+		dip = 15
+		width = width/2
+		DISPLACE = DISPLACE/2
+	if treeMin == []:
+		for key in nodeDict:
+			for item in range(len(nodeDict[key][1:])):
+				connect(turtle.Turtle(), nodeDict[key][0], nodeDict[key][item+1], radius)
+				for thing in eventDict[key][item][1:-1]:
+					if thing !=(None, None):
+						connect(turtle.Turtle(), nodeDict[key][item+1], nodeDict[thing][0], radius)
+		return
+
+	difference = ((len(eventDict))*dip)/numTips
+
 	numSols = len(treeMin)
 	turtle.speed(0)
 	turtle.pen(pencolor = "black")
@@ -87,56 +87,36 @@ def drawNodes(treeMin, eventDict, depth, nodeDict):
 	newtreeMin = []
 	for x in range(len(treeMin)):
 		if not treeMin[x] in nodeDict:
-			nodeDict[treeMin[x]] = [((x+1)*width/(numSols+1)-DISPLACE, depth)]
+			nodeDict[treeMin[x]] = [((x+1)*width/(numSols + 1)-DISPLACE, depth + radius)]
 			turtle.penup()
 			turtle.setpos((x+1)*width/(numSols+1)-DISPLACE, depth)
 			turtle.pendown()
-			turtle.circle(30)
+			turtle.circle(radius)
 			turtle.left(130)
 			turtle.penup()
-			turtle.forward(30)
+			turtle.forward(radius)
 			turtle.pendown()
 			turtle.right(130)
 			turtle.write(treeMin[x], font = ("arial", 12, "normal"))
-		# print treeMin[x]
-		# print eventDict[treeMin[x]]
 			for y in eventDict[treeMin[x]]:
 				if type(y)== list:
 					eventList.append((y[0], treeMin[x]))
-
 					if y[1] !=(None, None) and not y[1] in newtreeMin:
 						newtreeMin.append(y[1])
 					if y[2] !=(None, None) and not y[2] in newtreeMin:
 						newtreeMin.append(y[2])
-			print eventList
 	numEvents = len(eventList)
 	for event in range(len(eventList)):
 		turtle.penup()
-		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth - 40))
-		turtle.setpos((event+1)*width/(numEvents+1)-DISPLACE, depth - 100)
+		nodeDict[eventList[event][1]].append(((event+1)*width/(numEvents+1)-DISPLACE, depth -(difference-radius)))
+		turtle.setpos(((event+1)*width/(numEvents+1))-DISPLACE, depth - difference)
 		turtle.pendown()
-		turtle.circle(30)
+		turtle.circle(radius)
 		turtle.left(95)
 		turtle.penup()
-		turtle.forward(30)
+		turtle.forward(radius)
 		turtle.pendown()
 		turtle.right(95)
 		turtle.write(eventList[event][0], font = ("arial", 12, "normal"))
-	drawNodes(newtreeMin, eventDict, depth - 200, nodeDict)
-# <<<<<<< HEAD
-	for key in nodeDict.keys():
-		events = eventDict[key]
-		for n in range(len(nodeDict[key][1:])):
-			connectNodes(nodeDict[key][0], nodeDict[key][n+1])
-			if events[n][1] != (None, None):
-				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[events[n][1]][0][0],nodeDict[events[n][1]][0][1]+60))
-			if events[n][2] != (None, None):	
-				connectNodes((nodeDict[key][n+1][0], nodeDict[key][n+1][1]-60), (nodeDict[events[n][2]][0][0],nodeDict[events[n][2]][0][1]+60))
-# =======
-# 	for key in nodeDict:
-# 		for item in nodeDict[key][:-1]:
-# 			connect(turtle.Turtle(), nodeDict[key], nodeDict[key][item + 1] )
-# >>>>>>> origin/Team_DP-Branch
-
-def DrawDTL(treeMin,DTL):
-	Bob = turtle.Turtle()
+		turtle.ht()
+	drawNodes(newtreeMin, eventDict, depth - 2*difference, nodeDict)
