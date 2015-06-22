@@ -1,5 +1,6 @@
 import copy
 def date(recon):
+	"""takes a Tree and returns a dictionary representation of the ordering of the tree"""
 	order = {}
 	dicto = {}
 	Leaves = []
@@ -27,7 +28,6 @@ def date(recon):
 				LonerList.append(key)
 	while LonerList:
 		x = LonerList[0]
-		print x
 		order[x] = place
 		for child in recon[x]:
 			if child != None and child[0] != None and not child in Leaves:
