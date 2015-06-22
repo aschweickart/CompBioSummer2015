@@ -15,6 +15,7 @@ def Reconcile(argList):
 	k = int(argList[5])
 	orderedGraphs = []
 	host, paras, phi = newickFormatReader.getInput(fileName)
+	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
