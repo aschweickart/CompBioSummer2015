@@ -21,8 +21,8 @@ def Reconcile(argList):
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
-	for item in range(len(rec)):
-		graph[item] = ReconciliationGraph.buildReconstruction(host, paras, rec[item])
+	for item in rec:
+		graph += ReconciliationGraph.buildReconstruction(host, paras, item)
 	for item in range(len(graph)):
 		try:
 			orderedGraphs += orderGraph.date(rec[graph])		
