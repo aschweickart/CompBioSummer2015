@@ -10,7 +10,7 @@ def convert(fileName, HostOrder):
     for key in HostOrder:
         H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
     f = open(fileName[:-7] + '.stree', 'w')
-    f.write(H + ':1;')
+    f.write(H + ';')
     f.close()
     f = open(fileName[:-7] + '.tree', 'w')
     f.write(P + ";")

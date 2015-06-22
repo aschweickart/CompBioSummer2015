@@ -43,5 +43,4 @@ def date(recon):
 		return None
 	for item in Leaves:
 		order[item] = len(Leaves)
-	print order
 	return order
