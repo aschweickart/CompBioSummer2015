@@ -1,7 +1,5 @@
 import copy
-
 def date(recon):
-	print recon
 	order = {}
 	dicto = {}
 	Leaves = []
@@ -29,7 +27,6 @@ def date(recon):
 		for thing in LonerList:
 			order[thing] = place
 		x = LonerList[0]
-		print x
 		order[x] = place
 		place += 1
 		for child in recopy[x]:
@@ -46,4 +43,3 @@ def date(recon):
 	for item in Leaves:
 		order[item] = len(Leaves)
 	return order
-
