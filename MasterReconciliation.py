@@ -1,4 +1,4 @@
-import DPJune17
+import DP
 import Greedy
 import newickToVis
 import ReconConversion
@@ -21,7 +21,7 @@ def Reconcile(argList):
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
-	DTL = DPJune17.DP(host, paras, phi, D, T, L)
+	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
 	for item in rec:
