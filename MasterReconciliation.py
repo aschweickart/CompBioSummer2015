@@ -6,6 +6,7 @@ import orderGraph
 import newickFormatReader
 import ReconciliationGraph
 from sys import argv
+import copy
 
 def Reconcile(argList):
 	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
@@ -21,14 +22,19 @@ def Reconcile(argList):
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
+<<<<<<< Updated upstream
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
+=======
+	DTL, numRecons = DPJune17.DP(host, paras, phi, D, T, L)
+	DTLGraph = copy.deepcopy(DTL)
+>>>>>>> Stashed changes
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
 			orderedGraphs += orderGraph.date(graph[item])
-			ReconConversion.convert(rec[item], DTL, paras, fileName[:-7], item)
+			ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	newickToVis.convert(fileName,hostBranchs)
 
 def branch(tree, treeOrder):
