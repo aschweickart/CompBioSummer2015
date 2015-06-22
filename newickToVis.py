@@ -9,9 +9,9 @@ def convert(fileName, HostOrder):
     H = H.strip()
     for key in HostOrder:
         H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
-    f = open('tree and smap files/' + fileName[:-7] + '.stree', 'w')
+    f = open(fileName[:-7] + '.stree', 'w')
     f.write(H + ':1;')
     f.close()
-    f = open('tree and smap files/' + fileName[:-7] + '.tree', 'w')
+    f = open(fileName[:-7] + '.tree', 'w')
     f.write(P + ";")
     f.close

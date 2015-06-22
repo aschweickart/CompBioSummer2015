@@ -5,8 +5,14 @@ import ReconConversion
 import orderGraph
 import newickFormatReader
 import ReconciliationGraph
+from sys import argv
 
-def Reconcile(fileName, D, T, L, k):
+def Reconcile(argList):
+	fileName = argList[1]
+	D = int(argList[2])
+	T = int(argList[3])
+	L = int(argList[4])
+	k = int(argList[5])
 	orderedGraphs = []
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostv = treeFormat(host)
@@ -82,3 +88,8 @@ def treeFormat(tree):
 			else:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
 	return treeDict
+
+def main():
+	Reconcile(argv)
+
+if __name__ == "__main__": main()
