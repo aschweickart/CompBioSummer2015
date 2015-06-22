@@ -1,1 +1,46 @@
-((((F_variegata:10, ((((F._botryoides:2, F._sycomorus:2) h30:1, F._sur:3) h2:26, F._racemosa:6) h2:24, (F._robusta:5, F._nodosa:5) h2:25) h2:23) h1:14, (F._botryocarpa:9, (F._septica:7, (F._hispidioides:4, F._bernaysii:4) h1:19) h1:17) h1:15) h1:10, (F._itoana:12, F._microdictya:12) h1:11) h1:1, (F._subcuneata:14, (F._ochrochlora:11, F._adenosperma:11) h7:3) h2:2) h0;
+(
+ (
+  (
+   (
+    F_variegata:10.000000,
+    (
+     (
+      (
+       (
+        F._botryoides:2.000000,
+        F._sycomorus:2.000000
+       )h30:1.000000,
+       F._sur:3.000000
+      )h26:3.000000,
+      F._racemosa:6.000000
+     )h24:2.000000,
+     (
+      F._robusta:5.000000,
+      F._nodosa:5.000000
+     )h25:3.000000
+    )h23:2.000000
+   )h14:3.000000,
+   (
+    F._botryocarpa:9.000000,
+    (
+     F._septica:7.000000,
+     (
+      F._hispidioides:4.000000,
+      F._bernaysii:4.000000
+     )h19:3.000000
+    )h17:2.000000
+   )h15:4.000000
+  )h10:2.000000,
+  (
+   F._itoana:12.000000,
+   F._microdictya:12.000000
+  )h11:3.000000
+ )h1:1.000000,
+ (
+  F._subcuneata:14.000000,
+  (
+   F._ochrochlora:11.000000,
+   F._adenosperma:11.000000
+  )h7:3.000000
+ )h2:2.000000
+);
