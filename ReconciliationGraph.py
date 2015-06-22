@@ -130,8 +130,8 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
 
 		elif reconciliation[key][0] == 'C':
-			reconGraph[key[1]] = ['Tip']
-			reconGraph[key[0]] = ['Tip']
+			reconGraph[key[1]] = [None]
+			reconGraph[key[0]] = [None]
 
 	for key in reconGraph:
 		reconGraph[key] = uniquify(reconGraph[key])

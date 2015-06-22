@@ -486,6 +486,21 @@ p3 	h2 	gene
 p1 	h1 	gene
 p6 	h1 	trans
 
+reconGraph output:
+{'p2': [None, None], 
+'p3': [None, None], 
+'h8': ['h3', 'h4', 'h4', 'h3'], 
+'p1': [None, None], 
+'p7': ['p1', 'p2', 'h1', 'h3'], 
+'p4': [None, None], 
+'h2': ['tip'], 
+'h3': ['tip'], 
+'p8': ['p3', 'p4', 'h2', 'h4'], 
+'h1': ['tip'], 
+'h6': ['h7', 'h8'], 
+'h7': ['h1', 'h2', 'h2', 'h1', 'p7', 'p8'], 
+ 'h4': ['tip']}
+
 
 
 
