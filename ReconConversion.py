@@ -20,7 +20,8 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile):
 	f.close()
 
 def frequencyDict(DTL, reconciliation):
-	""" """
+	"""Takes as input a DTL graph and a reconciliation graph and ouputs a dictionary with DTL verteces as keys
+	and their frequencies as values."""
 
 	freqDict = {}
 	for key in reconciliation:
