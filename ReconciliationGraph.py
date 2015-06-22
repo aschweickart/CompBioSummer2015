@@ -100,7 +100,7 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 			if parent != 'Top':
 				reconGraph[parent] = reconGraph[parent] + [key[1]]
 			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
-			del reconGraph[key[0]]
+			#del reconGraph[key[0]]
 
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]

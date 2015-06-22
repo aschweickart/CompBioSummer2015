@@ -21,16 +21,11 @@ def Reconcile(argList):
 	DTL = DP.DP(host, paras, phi, D, T, L)
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
-
 	for item in rec:
-		graph += ReconciliationGraph.buildReconstruction(host, paras, item)
-		
+		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
-		try:
-			orderedGraphs += orderGraph.date(rec[graph])		
+			orderedGraphs += orderGraph.date(graph[item])		
 			ReconConversion.convert(rec[item], DTL, paras, fileName[:-7], item)
-		except:
-			print "Invalid Reconciliation Found"
 	newickToVis.convert(fileName,hostBranchs)
 	return DTL, rec
 
