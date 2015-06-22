@@ -26,7 +26,6 @@ def frequencyDict(DTL, reconciliation):
 	for key in reconciliation:
 		events = DTL[key][:-1]
 		for event in events:
-			print event
 			if event[0] == reconciliation[key][0] and event[1] == reconciliation[key][1] and event[2] == reconciliation[key][2]:
 				freqDict[key] = event[-1]
 	return freqDict

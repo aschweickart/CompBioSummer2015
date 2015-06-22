@@ -40,7 +40,6 @@ def date(recon):
 			del LonerList[0]
 			del dicto[x]
 	if dicto:
-		print"Invalid Reconciliation"
 		return None
 	for item in Leaves:
 		order[item] = len(Leaves)
