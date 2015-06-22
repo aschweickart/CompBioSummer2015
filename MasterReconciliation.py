@@ -24,6 +24,7 @@ def Reconcile(argList):
 
 	for item in rec:
 		graph += ReconciliationGraph.buildReconstruction(host, paras, item)
+		
 	for item in range(len(graph)):
 		try:
 			orderedGraphs += orderGraph.date(rec[graph])		
@@ -41,7 +42,6 @@ def branch(tree, treeOrder):
 				if child != None:
 					branches[child] = abs(treeOrder[child] - treeOrder[key])
 	return branches
-
 
 def findRoot(Tree):
     """This function takes in a parasiteTree and returns a string with the name of
