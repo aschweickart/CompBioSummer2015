@@ -24,22 +24,24 @@ def date(recon):
 			if dicto[key] == 0:
 				LonerList.append(key)
 	while LonerList:
-		for thing in LonerList:
-			order[thing] = place
+		print LonerList
 		x = LonerList[0]
 		order[x] = place
-		place += 1
 		for child in recopy[x]:
-			if child != None:
+			if child != None and child[0] != None:
 				if recopy[child] != None:
 					dicto[child] = dicto[child] - 1
 					if dicto[child] == 0:
 						LonerList.append(child)
 			if x in LonerList and x in dicto:
+				place += 1
 				del LonerList[0]
 				del dicto[x]
 	if len(dicto) >= 1:
+		print"Invalid Reconciliation"
 		return None
+	print Leaves
 	for item in Leaves:
 		order[item] = len(Leaves)
+	print order
 	return order

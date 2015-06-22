@@ -1,5 +1,5 @@
 # PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
-def convert(reconciliation, DTL, ParasiteTree, outputFile):
+def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	print reconciliation, DTL
 	"""Takes as input a dictionary of a reconciliation between host and parasite trees, a DTL graph, and a string containing the name of a 
 	file where it will put the output. The function outputs the same tree converted to brecon format. 
@@ -7,7 +7,7 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile):
 	This accounts for the brecon format's inability to handle losses"""
 	
 	D = {'T': 'trans', 'S': 'spec', 'D': 'dup', 'C': 'gene', 'L': 'loss'}
-	f = open("tree and smap files/" + outputFile + ".mowgli.brecon", 'w')
+	f = open("tree and smap files/" + outputFile + str(n) + ".mowgli.brecon", 'w')
 	event = ""
 	pParent = parasiteParentsDict(ParasiteTree)
 	freqDict = frequencyDict(DTL, reconciliation)

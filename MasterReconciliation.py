@@ -18,8 +18,11 @@ def Reconcile(fileName, D, T, L, k):
 	for item in range(len(graph)):
 		graph[item] = ReconciliationGraph.buildReconstruction(host, paras, rec[item])
 	for item in range(len(graph)):
-		orderedGraphs += orderGraph.date(rec[graph]) 
-	ReconConversion.convert(rec[0], DTL, paras, fileName[:-7])
+		try:
+			orderedGraphs += orderGraph.date(rec[graph])		
+			ReconConversion.convert(rec[item], DTL, paras, fileName[:-7], item)
+		except:
+			print "Invalid Reconciliation Found"
 	newickToVis.convert(fileName,hostBranchs)
 	return DTL, rec
 
