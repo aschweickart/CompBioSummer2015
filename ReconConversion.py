@@ -6,7 +6,7 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile):
 	This accounts for the brecon format's inability to handle losses"""
 	
 	D = {'T': 'trans', 'S': 'spec', 'D': 'dup', 'C': 'gene', 'L': 'loss'}
-	f = open(outputFile + ".mowgli.brecon", 'w')
+	f = open(outputFile + ".mowgli.brecon", 'w') 
 	event = ""
 	pParent = parasiteParentsDict(ParasiteTree)
 	freqDict = frequencyDict(DTL, reconciliation)
@@ -20,7 +20,8 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile):
 	f.close()
 
 def frequencyDict(DTL, reconciliation):
-	""" """
+	"""Takes as input a DTL graph and a reconciliation graph and ouputs a dictionary with DTL verteces as keys
+	and their frequencies as values."""
 
 	freqDict = {}
 	for key in reconciliation:
