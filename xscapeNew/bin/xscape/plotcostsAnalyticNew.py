@@ -14,7 +14,7 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
         the y-axis represents switch cost (relative to unit cost for
         duplication).  The x-range is from lossMin to lossMax and the
         y-range is from switchMin to switchMax.'''
-    print log
+    #print log
     coordList = []
     if log==True:
         plt.xscale('log')
@@ -45,7 +45,7 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
             plt.gca().add_patch(plt.Polygon(coords,
                                             color = color, label = label, fill=False, hatch=pattern))
             
-            coordList.append((coords, region.area))
+            coordList.append(coords)
             #print "  Polygon vertices: ", coords
             #print "  Polygon area: ", region.area
         elif isinstance(region, LineString):  # degenerate
@@ -73,7 +73,7 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
                                                         color = color, label = label, fill = False, hatch = pattern))
                         #print "  Polygon vertices: ", coords
                         #print "  Polygon area: ", r.area
-                        coordList.append((coords, r.area))
+                        coordList.append(coords)
                     elif isinstance(r, LineString):    # degenerate
                         coords = list(r.coords)
                         plt.plot([coords[0][0], coords[1][0]],
