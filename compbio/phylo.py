@@ -1151,7 +1151,7 @@ def read_brecon(filename, tree, stree):
         if node_name.isdigit():
             node_name = int(node_name)
         node = tree[node_name]
-        if tokens[2] != "loss":
+        if not node in brecon:
             events = []
             snode_name = tokens[1]
             event = tokens[2]
