@@ -88,11 +88,9 @@ else:
     snames = None
 
 if conf.brecon:
-<<<<<<< HEAD
+
     brecon, losses = phylo.read_brecon(conf.brecon, tree, stree)
-=======
-    brecon = phylo.read_brecon(conf.brecon, tree, stree)
->>>>>>> origin/master
+
 
 elif conf.recon:
     recon, events = phylo.read_recon_events(conf.recon, tree, stree)
