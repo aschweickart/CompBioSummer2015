@@ -24,7 +24,6 @@ def draw_stree(canvas, stree, slayout,
                         px, py+w], strokeColor=(0, 0, 0, 0),
                        fillColor=stree_color)
 
-
     # draw stree nodes
     for node in stree:
         if not node.is_leaf():
@@ -32,9 +31,7 @@ def draw_stree(canvas, stree, slayout,
             canvas.line(x, y-w, x, y+w, color=snode_color,
                         style="stroke-dasharray: 1, 1")
     
-
-
-def draw_tree(tree, brecon, stree,
+def draw_tree(tree, brecon, stree, losses,
               xscale=100, yscale=100,
               leaf_padding=10, 
               label_size=None,
@@ -49,6 +46,8 @@ def draw_tree(tree, brecon, stree,
               snode_color=(.2, .2, .7),
               dup_color=(1, 0, 0),
               dup_color_border=(.5, 0, 0),
+              loss_color=(1, 1, 1),
+              loss_color_border=(.5, .5, .5),
               trans_color=(0, 1, 0),
               trans_color_border=(0, .5, 0),
               event_size=10,
@@ -57,7 +56,6 @@ def draw_tree(tree, brecon, stree,
               stree_width=.8,
               filename="tree.svg"
               ):
-
     # set defaults
     font_ratio = 8. / 11.
 
@@ -93,14 +91,20 @@ def draw_tree(tree, brecon, stree,
 
     # layout speciations and genes (y)
     for node in tree.preorder():
-        snode, event, frequency = brecon[node][-1]
-        if event == "spec" or event == "gene":
+        if node in losses:
+            snode, event, frequency = losses[node]
+        else:
+            snode, event, frequency = brecon[node][-1]
+        if event == "spec" or event == "gene" or event == "loss":
             yorders[node] = len(ylists[snode])
             ylists[snode].append(node)
     # layout dups and transfers (y)
     for node in tree.postorder():
-        snode, event, frequency = brecon[node][-1]
-        if event != "spec" and event != "gene":
+        if node in losses:
+            snode, event, frequency = losses[node]
+        else:
+            snode, event, frequency = brecon[node][-1]
+        if event != "spec" and event != "gene" and event != "loss":
             v = [yorders[child]
                  for child in node.children
                  if brecon[child][-1][0] == snode]
@@ -113,8 +117,11 @@ def draw_tree(tree, brecon, stree,
     xorders = {}
     xmax = defaultdict(lambda: 0)
     for node in tree.postorder():
-        snode, event, frequency = brecon[node][-1]
-        if event == "spec" or event == "gene":
+        if node in losses:
+            snode, event, frequency = losses[node]
+        else:
+            snode, event, frequency = brecon[node][-1]
+        if event == "spec" or event == "gene" or event == "loss":
             xorders[node] = 0
         else:
             v = [xorders[child] for child in node.children
@@ -128,7 +135,10 @@ def draw_tree(tree, brecon, stree,
     # setup layout
     layout = {None: slayout[brecon[tree.root][-1][0].parent]}
     for node in tree:
-        snode = brecon[node][-1][0]
+        if node in losses:
+            snode = losses[node][0]
+        else:
+            snode = brecon[node][-1][0]
         nx, ny = slayout[snode]
         px, py = slayout[snode.parent]
 
@@ -150,13 +160,13 @@ def draw_tree(tree, brecon, stree,
         
         layout[node] = (x, y)
 
-        if y > max(l[1] for l in slayout.values()) + 50:
-            print nx, ny
-            print px, py
-            print offset, frac
-            print ylists[snode], yorders[node]
-            print brecon[node]
-            print node, snode, layout[node]
+        """if y > max(l[1] for l in slayout.values()) + 50:
+                                    print nx, ny
+                                    print px, py
+                                    print offset, frac
+                                    print ylists[snode], yorders[node]
+                                    print brecon[node]
+                                    print node, snode, layout[node]"""
 
 
     # layout label sizes
@@ -261,13 +271,18 @@ def draw_tree(tree, brecon, stree,
 
     # draw events
     for node in tree:
-        snode, event, frequency =  brecon[node][-1]
+        if node in losses:
+            snode, event, frequency = losses[node]
+        else:
+            snode, event, frequency = brecon[node][-1]
         x, y = layout[node]
         o = event_size / 2.0
 
-	if event == "loss":
-            canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-1.5*font_size, font_size, fillColor = (1,1,1))
-	
+        if event == "loss":
+            canvas.rect(x - o, y - o, event_size, event_size,
+                        fillColor=loss_color,
+                        strokeColor=loss_color_border)
+            canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=loss_color)
         if event == "spec":
             canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
 

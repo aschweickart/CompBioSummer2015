@@ -88,8 +88,8 @@ else:
     snames = None
 
 if conf.brecon:
-    brecon = phylo.read_brecon(conf.brecon, tree, stree)
-    print brecon
+    brecon, losses = phylo.read_brecon(conf.brecon, tree, stree)
+
 elif conf.recon:
     recon, events = phylo.read_recon_events(conf.recon, tree, stree)
     brecon = phylo.recon_events2brecon(recon, events)
@@ -102,5 +102,5 @@ else:
     
 phylo.add_implied_spec_nodes_brecon(tree, brecon)
 
-transsvg.draw_tree(tree, brecon, stree, filename=conf.output,
+transsvg.draw_tree(tree, brecon, stree, losses, filename=conf.output,
                    snames=snames)

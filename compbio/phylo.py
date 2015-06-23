@@ -1143,31 +1143,36 @@ def read_brecon(filename, tree, stree):
     """
 
     brecon = {}
-
+    losses = {}
     for line in util.open_stream(filename):
         tokens = line.rstrip().split("\t")
-
-        # parse node
+            # parse node
         node_name = tokens[0]
         if node_name.isdigit():
             node_name = int(node_name)
         node = tree[node_name]
+        if tokens[2] != "loss":
+            events = []
+            snode_name = tokens[1]
+            event = tokens[2]
+        
+            frequency = tokens[3]
 
-        events = []
-        snode_name = tokens[1]
-        event = tokens[2]
-	frequency = tokens[3]
-
-        if snode_name.isdigit():
-           snode_name = int(snode_name)
-        print snode_name
-        snode = stree[snode_name]
+            if snode_name.isdigit():
+                snode_name = int(snode_name)
+            snode = stree[snode_name]
 
 #        events.append([snode, event])
-        events.append([snode, event, frequency])
-        brecon[node] = events
-
-    return brecon
+        
+            events.append([snode, event, frequency])
+            brecon[node] = events
+        else:
+            snode_name = tokens[1]
+            if tokens[1].isdigit():
+                snode_name = int(snode_name)
+            snode = stree[snode_name]
+            losses[node] = (snode, tokens[2], tokens[3])
+    return brecon, losses
 
 
 def find_bevents(brecon):
