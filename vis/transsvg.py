@@ -168,7 +168,7 @@ def draw_tree(tree, brecon, stree,
 
     
 
-    '''
+    
     if colormap == None:
         for node in tree:
             node.color = (0, 0, 0)
@@ -188,7 +188,7 @@ def draw_tree(tree, brecon, stree,
         coords = treelib.layout_tree(tree, xscale, yscale, minlen, maxlen)
     else:
         coords = layout
-    '''
+    
     
     xcoords, ycoords = zip(* slayout.values())
     maxwidth = max(xcoords) + max_label_size + max_slabel_size

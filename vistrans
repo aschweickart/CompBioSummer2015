@@ -89,7 +89,7 @@ else:
 
 if conf.brecon:
     brecon = phylo.read_brecon(conf.brecon, tree, stree)
-    print brecon
+
 elif conf.recon:
     recon, events = phylo.read_recon_events(conf.recon, tree, stree)
     brecon = phylo.recon_events2brecon(recon, events)

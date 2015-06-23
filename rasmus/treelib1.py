@@ -796,10 +796,8 @@ def parse_newick(infile, hostOrder=None, read_data=None, tree=None,
     names = set()
     for node in nodes:
         if node.name is None:
-            print node.name
             node.name = tree.new_name()
         node.name = tree.unique_name(node.name, names)
-        print node.name
         tree.nodes[node.name] = node
         if hostOrder:
             node.dist = hostOrder[node.name]
