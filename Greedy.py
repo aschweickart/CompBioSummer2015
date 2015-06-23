@@ -1,5 +1,3 @@
-
-
 #Team Greedy
 
 def findRoot(ParasiteTree):
@@ -10,43 +8,14 @@ def findRoot(ParasiteTree):
     return ParasiteRoot
 
 
-<<<<<<< HEAD
-#def orderDTLwrapper(DTL, ParasiteRoot):
-    """This function takes in a DTL dictionary and a ParasiteRoot, and calls orderDTL with a level of 0. It returns a list, 
-    keysL, that contains tuples. Each tuple has two elements. The first is a mapping node of the form (p, h), where p is a 
-    parasite node and h is a host node. The second element is a level representing the depth of that mapping node within 
-    the tree. This function loops through the DTL graph and recruses on the two children of each DTL mapping node, adding 
-    the results to keysL."""
-
-<<<<<<< HEAD
-def initializeMarkingDict(DTL):
-    """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
-=======
-#    markingDict = initializeMarkingDict(DTL)
-#    return orderDTL(DTL, ParasiteRoot, 0, markingDict)
-
-
-=======
->>>>>>> 6aca69f4e0abe118ee41c9df58d9b5ec2cedcac8
 def initializeMarkingDict(DTL):
     """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
 
->>>>>>> 182c49daa40127fd2359e4f1cc7db2a0cd273f65
     markingDict = {}
     for key in DTL:
         markingDict[key] = False
     markingDict[(None, None)] = False
     return markingDict
-<<<<<<< HEAD
-
-def orderDTL(DTL, ParasiteRoot, level, markingDict):
-    """This function takes in a DTL dictionary, a ParasiteRoot, and a level that represents the depth of 
-    the of a vertex pair. It returns a list, keysL, containing two-element tuples. The first element is a 
-    mapping node of the form (p, h), where p is a parasite node and h is a host node. The second element is a level 
-    representing the depth of that mapping node within the tree. This function loops through the DTL graph and recruses on the two children of each DTL 
-    mapping node, adding the results to keysL."""
-=======
->>>>>>> 182c49daa40127fd2359e4f1cc7db2a0cd273f65
 
 
 def orderDTL(DTL, ParasiteRoot):
@@ -57,23 +26,6 @@ def orderDTL(DTL, ParasiteRoot):
     keysL = []
     topNodes = []
     for key in DTL:
-<<<<<<< HEAD
-        if markingDict[key] == False:
-            if key[0] == ParasiteRoot:
-                for i in range(len(DTL[key]) - 1):          #loop through each event associated with key in DTL
-                    event = DTL[key][i]
-                    child1 = event[1]
-                    child2 = event[2]
-                    if child1[0] == None and child2[0] == None:    #base case: mapping node (key) is a tip
-                        keysL = keysL + [(key, level)]
-                    elif child2[0] == None:                        #loss case: there is only one child (child1)
-                        keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1, markingDict)
-                    elif child1[0] == None:                        #loss case: there is only one child (child2)
-                        keysL = keysL + [(key, level)] + orderDTL(DTL, child2[0], level + 1, markingDict)
-                    else:
-                        keysL = keysL + [(key, level)] + orderDTL(DTL, child1[0], level + 1, markingDict) + orderDTL(DTL, child2[0], level + 1, markingDict)
-                markingDict[key] = True
-=======
         if key[0] == ParasiteRoot:
             topNodes.append(key)
     for vertex in topNodes:
@@ -87,20 +39,6 @@ def orderDTLRoots(DTL, vertex, level):
     that mapping node within the tree. This function adds the input vertex to keysL and recurses on its children."""
 
     keysL = []
-<<<<<<< HEAD
-    if markingDict[vertex] == False:
-        for i in range(len(DTL[vertex]) - 1):          #loop through each event associated with key in DTL
-            event = DTL[vertex][i]
-            child1 = event[1]
-            child2 = event[2]
-            keysL = keysL + [(vertex, level)]
-            if child1[0] != None:
-                keysL.extend(orderDTLRoots(DTL, child1, level + 1, markingDict))
-            if child2[0] != None:
-                keysL.extend(orderDTLRoots(DTL, child2, level + 1, markingDict)) 
-        markingDict[vertex] = True
->>>>>>> 182c49daa40127fd2359e4f1cc7db2a0cd273f65
-=======
     for i in range(len(DTL[vertex]) - 1):          #loop through each event associated with key in DTL
         event = DTL[vertex][i]
         child1 = event[1]
@@ -110,7 +48,6 @@ def orderDTLRoots(DTL, vertex, level):
             keysL.extend(orderDTLRoots(DTL, child1, level + 1))
         if child2[0] != None:
             keysL.extend(orderDTLRoots(DTL, child2, level + 1)) 
->>>>>>> 6aca69f4e0abe118ee41c9df58d9b5ec2cedcac8
     return keysL
 
 
@@ -287,5 +224,3 @@ P = {('p8', 'p7'): ('p8', 'p7', ('p7', 'p3'), ('p7', 'p4')),
 ('p7', 'p3'): ('p7', 'p3', None, None), 
 'pTop': ('Top', 'p9', ('p9', 'p8'), ('p9', 'p6')), 
 ('p6', 'p2'): ('p6', 'p2', None, None)}
-
-
