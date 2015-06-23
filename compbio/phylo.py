@@ -1155,10 +1155,7 @@ def read_brecon(filename, tree, stree):
             events = []
             snode_name = tokens[1]
             event = tokens[2]
-        
             frequency = tokens[3]
-
-
             if snode_name.isdigit():
                 snode_name = int(snode_name)
             snode = stree[snode_name]
