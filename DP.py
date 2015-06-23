@@ -10,7 +10,6 @@
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
 
 import newickFormatReader
-import turtle
 
 H = {('h6', 'h8'): ('h6', 'h8', ('h8', 'h3'), ('h8', 'h4')), ('h8', 'h3'): \
 ('h8', 'h3', None, None), ('h6', 'h7'): ('h6', 'h7', ('h7', 'h1'), ('h7', 'h2')), 'hTop': \
@@ -147,15 +146,15 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                                      C[(ep2, eh)] + BestSwitch[(ep1, eh)]) 
                 if (C[(ep1, eh)] + BestSwitch[(ep2, eh)])<(C[(ep2, eh)] + BestSwitch[(ep1, eh)]):
                     for item in BestSwitchLocations[(pChild2,vh)]:
-                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.extend(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
                 elif (C[(ep2, eh)] + BestSwitch[(ep1, eh)])<(C[(ep1, eh)] + BestSwitch[(ep2, eh)]): 
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.extend(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
                 else: 
                     for item in BestSwitchLocations[(pChild2, vh)]:
-                        switchList.append(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
+                        switchList.extend(["SWITCH", (pChild1, eh[1]), (pChild2, item[1])])
                     for item in BestSwitchLocations[(pChild1,vh)]:
-                        switchList.append(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
+                        switchList.extend(["SWITCH", (pChild2, eh[1]), (pChild1, item[1])])
             else:
                 SWITCHepeh = Infinity
                 switchList = ["inf"]
@@ -165,7 +164,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 dupList = ["DUP", (pChild1, vh), (pChild2, vh)]
                 Dictionary[(vp, vh)].append(dupList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == SWITCHepeh:
-                Dictionary[(vp, vh)].extend(switchList)
+                Dictionary[(vp, vh)].append(switchList)
             if min(A[(ep, eh)], DUPepeh, SWITCHepeh) == A[(ep, eh)]: Dictionary[(vp, vh)].append(Amin)
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
@@ -236,7 +235,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
     DTL = findPath(treeMin, Dictionary, DTL)
-    #drawDTL(treeMin, DTL)
     return DTL
 
 def findBest(Parasite, MinimumDict):
@@ -270,4 +268,7 @@ def reconcile(fileName, D, T, L):
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
             
-#def drawDTL(treeMin, DTLDict):
+
+            
+    
+        
