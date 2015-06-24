@@ -10,6 +10,20 @@ import time
 import math
 
 # xscape libraries
+
+from newickFormatReader import *
+
+def getInput(newickFile, switchLo, switchHi, lossLo, lossHi):
+    """Takes as input a newick file in the form <filename>.newick, and low and high values
+    for costscape for both switches and losses. Returns hostTree, parasiteTree, phi, and the 
+    same high and low values for switch and loss."""
+
+    hostTree, parasiteTree, phi = newickFormatReader(newickFile)
+    return hostTree, parasiteTree, phi
+
+
+
+
 try:
     import xscape
 except ImportError:
@@ -19,34 +33,8 @@ except ImportError:
     import xscape
 from xscape.commonAnalytic import *
 from xscape.CostVector import *
-from xscape import getInput
 from xscape import reconcile
 from xscape import plotcostsAnalyticNew as plotcosts
-
-print "Costscape %s" % xscape.PROGRAM_VERSION_TEXT
-hostTree, parasiteTree, phi, switchLo, switchHi, lossLo, lossHi, outfile = \
-    getInput.getInput(outputExtension = "pdf", allowEmptyOutfile=True)
-log = getInput.boolInput("Display in log coordinates? ")
-if outfile == "":
-    display = True
-else:
-    display = getInput.boolInput("Display to screen? ")
-print "Reconciling trees..."
-startTime = time.time()
-CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, \
-                                 switchLo, switchHi, lossLo, lossHi)
-endTime = time.time()
-elapsedTime = endTime- startTime
-print "Elapsed time %.2f seconds" % elapsedTime
-
-# plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, \
-#                         outfile, \
-#                         log, display)
-
-if outfile != "":
-    print "Output written to file: ", outfile
-
-#if __name__ == '__main__': main()
 
 
 import shapely
@@ -61,9 +49,13 @@ from shapely.wkt import loads as load_wkt
 [(0.1, 1.3), (0.1, 5.0), (1.3333333333333335, 5.0), (0.1, 1.3)]]
 
 
-def getNewCoordList():
-    """ """
-    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, outfile, log, display)
+def getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi):
+    """Takes as input a newick file in the form <filename>.newick, and low and high values
+    for costscape for both switches and losses. Returns a list of coordinates in the form of 
+    strings."""
+    hostTree, parasiteTree, phi = newickFormatReader(newickFile)
+    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, switchHi, lossLo, lossHi)
+    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, "", False, False)
     newCoordList = []
     for element in coordList:
         string = "POLYGON(("
@@ -77,10 +69,12 @@ def getNewCoordList():
 #['POINT (1.155097694723539 3.159479316404207)', 'POINT (3.070767123287671 2.28172602739726)', 'POINT (0.716666666667 3.15)', 'POINT (0.51111111111 3.766666666666667)']
 
 
-def findCenters():
-    """ FIX ALL THE BUGS """
-    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, outfile, log, display)
-    polygonList = getNewCoordList()
+def findCenters(newickFile, switchLo, switchHi, lossLo, lossHi):
+    """Returns """
+    hostTree, parasiteTree, phi = newickFormatReader(newickFile)
+    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, switchHi, lossLo, lossHi)
+    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, "", False, False)
+    polygonList = getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi)
     pointList = []
     for i in range(len(polygonList)):
         point = polygonList[i]

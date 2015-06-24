@@ -26,7 +26,7 @@ def main():
         getInput.getInput(outputExtension = "pdf", allowEmptyOutfile=True)
     log = getInput.boolInput("Display in log coordinates? ")
     if outfile == "":
-        display = True
+        display = False
     else:
         display = getInput.boolInput("Display to screen? ")
 
