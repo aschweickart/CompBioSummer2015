@@ -74,21 +74,11 @@ def getNewCoordList():
     return newCoordList
 
 
+#['POINT (1.155097694723539 3.159479316404207)', 'POINT (3.070767123287671 2.28172602739726)', 'POINT (0.716666666667 3.15)', 'POINT (0.51111111111 3.766666666666667)']
 
-# ([(0.1, 0.2), (0.1, 1.3), (1.3333333333333335, 5.0), (2.5, 5.0), (0.1, 0.2)], 3.478333333333333), 
-# ([(0.1, 0.1), (0.1, 0.2), (2.5, 5.0), (5.0, 5.0), (5.0, 0.1), (0.1, 0.1)], 18.250000000000007), 
-# [(1.3333333333333335, 5.0), (0.1, 1.3)], 
-# ([(0.1, 1.3), (0.1, 5.0), (1.3333333333333335, 5.0), (0.1, 1.3)], 2.2816666666666667)
-
-['POLYGON((0.1 0.2,0.1 1.3,1.33333333333 5.0,2.5 5.0,0.1 0.2))', 
-'POLYGON((0.1 0.1,0.1 0.2,2.5 5.0,5.0 5.0,5.0 0.1,0.1 0.1))', 
-'POLYGON((1.33333333333 5.0,0.1 1.3))', 
-'POLYGON((0.1 1.3,0.1 5.0,1.33333333333 5.0,0.1 1.3))']
-
-['POINT (1.155097694723539 3.159479316404207)', 'POINT (3.070767123287671 2.28172602739726)', 'POINT (0.51111111111 3.766666666666667)']
 
 def findCenters():
-    """ """
+    """ FIX ALL THE BUGS """
     coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, outfile, log, display)
     polygonList = getNewCoordList()
     pointList = []
@@ -96,7 +86,7 @@ def findCenters():
         point = polygonList[i]
         numCommas = 0
         for j in range(len(point)):
-            if point[i] == ",":
+            if point[j] == ",":
                 numCommas = numCommas + 1
         if numCommas > 1:
             #polygon case
@@ -108,8 +98,8 @@ def findCenters():
             y1 = coordList[i][0][1]
             x2 = coordList[i][1][0]
             y2 = coordList[i][1][1]
-            midx = math.abs(x1 - x2) + min(x1, x2)
-            midy = math.abs(y1 - y2) + min(y1, y2)
+            midx = (x1 + x2)*1.0/2
+            midy = (y1 + y2)*1.0/2
             pointList.append("POINT (" + str(midx) + " " + str(midy) + ")")
         else:
             #point case

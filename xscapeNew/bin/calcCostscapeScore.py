@@ -13,11 +13,13 @@ fDTL = {('p8', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h4'), 1], 1],
 
 
 
-pointList = ['POINT (0.1, 0.2)', 'POINT (0.1, 0.1)', 'POINT (1.3333333333333335, 5.0)', 'POINT (0.1, 1.3)']
+## Figure out which is T and which is L
+
 
 
 def deleteCommas(pointList):
 	"""Takes in a list of points, returns the same list except without commas"""
+
 	newList = []
 	for point in pointList:
 		string = ""
@@ -27,8 +29,10 @@ def deleteCommas(pointList):
 		newList.append(string)
 	return newList
 
+
 def getDTLvals(pointList):
-	""" """
+	"""Takes in a list of centroids of the costscape regions, and returns a list of tuples 
+	containing the T, L costs for each region."""
 	pointList = deleteCommas(pointList)
 	DTLPairs = []
 	for point in pointList:
