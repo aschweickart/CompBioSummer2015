@@ -1,0 +1,196 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Welcome to <font face="courier">Xscape</font></title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body role="document">
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Navigate <font face="courier"> Xscape</font></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/Registration">Download</a></li>
+            <li><a href="/store_user">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+<div class="container theme-showcase" role="main">
+	<div class="jumbotron">
+        <h1>Welcome to <font face="courier"> Xscape</font></h1>
+        
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+            <a href="/signup" style="float:right;">Sign-in</a>
+<h3><font color="green">What is <font face="courier">Xscape</font>?</font></h3>
+<p>
+<font face="courier">Xscape</font> is a set of Python tools for maximum parsimony phylogenetic
+event-based tree reconciliation in undated trees using the DTL
+(duplication-loss-transfer) model with applications to gene trees and
+species trees; parasite trees and host trees; and species trees and
+area cladograms.  </p>
+
+<p>
+Rather than using explicit event costs, these tools find solutions
+that are Pareto-optimal with respect to event counts;
+reconciliations are identified by <em>event count vectors</em> that
+count the number duplications, transfers, and losses that they incur.
+A reconciliation is Pareto-optimal if there is no other reconciliation
+with a strictly better event count vector.
+</p>
+
+<p>
+Our algorithms efficiently compute the set of all Pareto-optimal
+solutions.  Using these solutions, the event cost space is partitioned
+into regions.  Each region has an associated event count vector and all
+event costs in that region admit the same set of maximum parsimony
+reconciliations (whose event counts are given by the region's event
+count vector).  In other words, these algorithms relate event costs to
+the resulting reconcilations.  The <font face="courier">Xscape</font> tool suite provides three
+tools that use these algorithms in novel ways.
+</p>
+
+The tools are based on results described in our paper: <br><br>
+
+<a href="http://bioinformatics.oxfordjournals.org/content/30/12/i87.full?keytype=ref&ijkey=CEdi2mhD0EzVkEs">
+"Pareto-Optimal Phylogenetic Tree Reconciliation," R. Libeskind-Hadas,
+Y-C Wu, M. S. Bansal, and M. Kellis, Bioinformatics, Volume 30, Issue
+12, June 15, 2014 (Proceedings of ISMB 2014)</a>
+</p>
+
+<h3>
+<font color="green">What do the tools do?</font>
+</h3>
+<p>
+All three tools assume that speciation is a "null" event of cost 0.
+(Although the underlying algorithms can be adapted for the
+general case that speciation has a non-zero cost and even negative cost.)
+Since the event costs are unit-less, duplication is normalized to cost
+1.  Transfer and loss are therefore the two free variables and are
+assumed to have positive cost.  The cost landscape is therefore
+2-dimensional space of the transfer and loss costs.  All three tools
+take the following input (described in more detail in the README file
+accompanying the software):
+<ol>
+  <li> The name of a file containing the species (host) tree and the gene
+  (parasite) tree in newick format, followed by the associations
+  between their leaves (one line per association in the format
+  gene:species).
+  <li> The name of an output file where the results will be saved.
+  <li> A numerical range for the loss and transfer costs.
+</ol>
+</p>
+
+<p>
+The three <font face="courier">Xscape</font> tools are:
+<ul>
+<img src="Vidua.png" align=right height=300>
+  <li> <font face="courier">costscape</font>:  This tool renders the
+  cost space and partitions it into regions, where each region admits
+  the same set of maximum parsimony reconciliations.  The regions are
+  listed (along with a count of the number of distinct
+  reconciliations) and two-dimensional color-coded rendering is
+  displayed or saved to a file.  An example of such a rendering is
+  shown at right.
+
+  <li> <font face="courier">eventscape</font>:  This tool determines
+  the individual events that are common to <em>every</em>
+  reconciliation in each region.  In addition, it collects all of
+  those events and partitions them into those that are found in
+  exaclty one region, exactly two regions, and up to all of the   
+  regions.  This tool is useful in identifying the events that are
+  highly supported by merit of occuring in multiple regions.  The  
+  output is saved in a .csv file that can be opened and manipulated in Excel.
+  <li> <font face="courier">sigscape</font>:  This tool uses
+  permutation testing to determine empirical p-values for significance
+  testing.  While standard tests use a single set of event costs, this
+  tool computes p-values for entire event cost space.  The tool
+  reports what fraction of the space achieves significance at the 0.01
+  level, between 0.01 and 0.05, and below the 0.05 level.  A
+  color-coded plot is stored where green, yellow, and red represent   
+  these three levels.
+</ul>
+
+In addition, we provide the <font face="courier">view_tanglegram</font> program for viewing
+the input tanglegrams (which is useful, for example, when interpreting
+the events listed by <font face="courier">eventscape</font>) and
+the <font face="courier">tree2newick</font> program for converting trees
+in .tree format (used, for example, by the <a href="http://www.cs.hmc.edu/~hadas/jane">Jane system</a>) into
+.newick format.
+
+<h3><font color="green">Installation, Requirements, and Usage</font></h3>
+<p>Below are listed the two options for using <font face="courier">Xscape</font>.</p>
+<h4> 1.<a href="/Registration">Download <font face="courier">Xscape</font></a></h4>
+<p>If you choose to download this software... information and pro/con list goes here</p>
+<h4> 2.<a href="/store_user">Register for <font face="courier">Xscape</font></a></h4>
+<p>If you choose to register for this software... information and pro/con list goes here</p>
+
+<h3><font color="green">Implementation Details</font></h3>
+<p>  
+The aforementioned paper on which these tools are based describes a
+dynamic programming algorithm for computing the Pareto-optimal event
+count vectors and a second algorithm for computer their associated regions.
+The current implementations of these tools use a slightly different
+formulation based on the technical report CS-2011-1 "Faster
+Dynamic Programming Algorithms for the Cophylogeny Reconstruction 
+Problem" by A. Yodpinyanee, B. Cousins, J. Peebles, T. Schramm, and
+R. Libeskind-Hadas.
+</p>
+
+<p> 
+The current release of the code
+uses memoization rather rather than dynamic programming.  The   
+region computation is done using a quadratic time polygon-intersection
+algorithm rather than the theoretically optimal O(N log N)
+divide-and-conquer algorithm.  Finally, the current implementation of
+sigscape uses uniform sampling rather than the analytic solution.
+</p>  
+
+<h3><font color="green">Acknowledgements</font></h3>
+<p>The authors acknowledge the contributions of Dr. Matthew Rasmussen,
+who developed some of the software used in the tanglegram viewer.  The
+first author gratefully acknowledges long-term collaborator
+Dr. Michael Charleston for many useful conversations and for
+his early work on Pareto-optimality in maximum parsimony reconciliation.</p>
+  
+<h3><font color="green">Questions, Comments, and Suggestions</font></h3>
+<p>Please contact Ran Libeskind-Hadas at (firstname AT cs DOT hmc DOT edu) with any questions, comments, or suggestions.</p>
+
+
+	</div>
+  </body>
+</html>
