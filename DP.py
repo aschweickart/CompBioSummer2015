@@ -60,8 +60,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     BestSwitchLocations = {}
     Score = {}
     Parents = {}
-
+    leaves = 0
     for ep in postorder(parasiteTree, "pTop"):
+        if parasiteTree[ep][2] == None:
+            leaves += 1
         for eh in postorder(hostTree, "hTop"):
             vp = parasiteTree[ep][1]
             vh = hostTree[eh][1]
@@ -269,7 +271,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
 
-    return DTL, numRecon
+    return DTL, numRecon, leaves
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a list, keysL, that contains tuples. Each tuple 

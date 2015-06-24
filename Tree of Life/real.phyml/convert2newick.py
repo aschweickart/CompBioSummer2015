@@ -99,8 +99,9 @@ smapping = rename(stree, prefix="m")
 
 # remove bootstraps
 for node in stree:
-    if "boot" in node.data:
-        del node.data["boot"]
+  node.dist = 0 
+  if "boot" in node.data:
+      del node.data["boot"]
 
 # read gene2species mapping
 gene2species = phylo.read_gene2species(options.smap)
@@ -113,8 +114,9 @@ for gtreefile in treefiles:
 
     # remove bootstraps
     for node in gtree:
-        if "boot" in node.data:
-            del node.data["boot"]
+      node.dist = 0
+      if "boot" in node.data:
+          del node.data["boot"]
 
     # output
     outfile = util.replace_ext(gtreefile, options.inext, options.outext)
