@@ -6,46 +6,47 @@ import os
 
 
 app = Flask(__name__)
-UPLOAD_FOLDER = '/Users/Annalise/GitHub/CompBioSummer2015'
+UPLOAD_FOLDER = '/Users/Annalise/GitHub/CompBioSummer2015/svgFiles'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/index')
 def index():
-	return render_template('index.html')
+  return render_template('index.html')
 
 @app.route('/form')
 def form():
-	return render_template('form.html')
+  return render_template('form.html')
 
 @app.route('/reconcile', methods = ['GET', 'POST'])
 def reconcile(carousel = None):
-	if request.method == 'POST':
-		file = request.files['newick']
-		Dup = request.form['dup']
-		Trans = request.form['trans']
-		Loss = request.form["loss"]
-		K = request.form['k']
-		if file:
-			filename = secure_filename(file.filename)
-			Name = filename[:-7]
-			os.system("mkdir "+Name)
-			path2files = Name + '/' + Name
-			svgFile = Name + "0.svg"
-			file.save('/Users/Annalise/GitHub/CompBioSummer2015/'+path2files + ".newick")
-			os.system("python /Users/Annalise/GitHub/CompBioSummer2015/MasterReconciliation.py "+path2files+".newick"+" "+Dup+" "+Trans+" "+Loss+" "+K)
-			# os.system("chmod ugo+r "+ svgFile)
-			htmlString1 = ""
-			htmlString2 = ""
-			for x in range(int(K)):
-				os.system("./vistrans -t "+path2files+".tree -s "+path2files+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+str(x)+".svg")
-				if x ==0:
-					htmlString1+='<li data-target="#results" data-slide-to="0" class="active"></li>'
-					htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
-				else:
-					htmlString1+='<li data-target="#results" data-slide-to="'+str(x)+'"></li>'
-					htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
-			os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+Name+'/* ' + UPLOAD_FOLDER)
-	return '''<!-- Latest compiled and minified CSS -->
+  if request.method == 'POST':
+    file = request.files['newick']
+    Dup = request.form['dup']
+    Trans = request.form['trans']
+    Loss = request.form["loss"]
+    K = request.form['k']
+    if file:
+      filename = secure_filename(file.filename)
+      Name = filename[:-7]
+      os.system("mkdir "+Name)
+      path2files = Name + '/' + Name
+      svgFile = Name + "0.svg"
+      file.save('/Users/Annalise/GitHub/CompBioSummer2015/'+path2files + ".newick")
+      os.system("python /Users/Annalise/GitHub/CompBioSummer2015/MasterReconciliation.py "+path2files+".newick"+" "+Dup+" "+Trans+" "+Loss+" "+K)
+      # os.system("chmod ugo+r "+ svgFile)
+      htmlString1 = ""
+      htmlString2 = ""
+      for x in range(int(K)):
+        os.system("./vistrans -t "+path2files+".tree -s "+path2files+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+str(x)+".svg")
+        if x ==0:
+          htmlString1+='<li data-target="#results" data-slide-to="0" class="active"></li>'
+          htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
+          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
+        else:
+          htmlString1+='<li data-target="#results" data-slide-to="'+str(x)+'"></li>'
+          htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
+          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
+  return '''<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 
 <!-- Optional theme -->
@@ -114,12 +115,12 @@ def reconcile(carousel = None):
 
 # @app.route('/show/<filename>')
 # def uploaded_file(filename):
-# 	filename = 'http://127.0.0.1:5000/uploads/'+filename
-# 	return render_template('index.html', filename = filename)
+#   filename = 'http://127.0.0.1:5000/uploads/'+filename
+#   return render_template('index.html', filename = filename)
 # 
 
 @app.route('/uploads/<filename>')
 def send_file(filename):
-	return send_from_directory(UPLOAD_FOLDER, filename )
+  return send_from_directory(UPLOAD_FOLDER, filename )
 if __name__ == "__main__":
-	app.run()
+  app.run()
