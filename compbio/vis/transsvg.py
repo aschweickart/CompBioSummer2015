@@ -234,7 +234,6 @@ def draw_tree(tree, brecon, stree,
             deltax2 = x - px
             deltay2 = slope * deltax2
             offset = py + deltay2
-            print yorders
             frac = (yorders[node][n] + 1) / float(max(len(ylists[snode]), 1) + 1)
             y = offset + (frac - .5) * stree_width * yscale
 
@@ -396,7 +395,7 @@ def draw_tree(tree, brecon, stree,
 
 	
             if event == "spec":
-                canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
+                canvas.text(frequency, x-o, y-o, font_size, fillColor = (0,0,0))
 # =======
 #         losses = copy.copy(loss)
 #     # draw events
