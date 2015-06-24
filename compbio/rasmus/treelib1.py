@@ -2141,7 +2141,6 @@ def layout_tree(tree, xscale, yscale, minlen=-util.INF, maxlen=util.INF,
                 walk2(child, xchildren, ychild)
                 ychild += sizes[child] * yscale
     walk2(tree.root, rootx, rooty)
-
     return coords
 
 

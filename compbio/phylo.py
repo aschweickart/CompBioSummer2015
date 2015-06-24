@@ -13,11 +13,11 @@ import sys
 
 # rasmus imports
 from rasmus import stats
-from rasmus import treelib
+from rasmus import treelib1
 from rasmus import util
 
 # compbio imports
-from . import fasta
+import fasta
 
 
 #=============================================================================
@@ -1090,10 +1090,22 @@ def add_implied_spec_nodes_brecon(tree, brecon):
     adds speciation nodes to tree that are implied but are not present
     because of gene losses
     """
-
     for node, events in brecon.items():
-        for sp, event, frequency in events:
-            if event == "specloss":
+        for ev in events:
+            if ev[1] == "specloss":
+                parent = node.parent
+                children = parent.children
+                node2 = tree.new_node()
+
+                node2.parent = parent
+                children[children.index(node)] = node2
+
+                node.parent = node2
+                node2.children.append(node)
+                brecon[node2] = [[ev[0], "spec"]]
+
+            elif ev[1] == "transloss":
+
                 parent = node.parent
                 children = parent.children
                 node2 = tree.new_node()
@@ -1104,24 +1116,9 @@ def add_implied_spec_nodes_brecon(tree, brecon):
                 node.parent = node2
                 node2.children.append(node)
 
-                brecon[node2] = [[sp, "spec"]]
+                brecon[node2] = [[ev[0], "trans"]]
 
-            elif event == "transloss":
-
-                parent = node.parent
-                children = parent.children
-                node2 = tree.new_node()
-
-                node2.parent = parent
-                children[children.index(node)] = node2
-
-                node.parent = node2
-                node2.children.append(node)
-
-                brecon[node2] = [[sp, "trans"]]
-
-
-        brecon[node] = events[-1:]
+                brecon[node] = events[-1:]
 
 
 def write_brecon(filename, brecon):
@@ -1143,7 +1140,6 @@ def read_brecon(filename, tree, stree):
     """
 
     brecon = {}
-
     for line in util.open_stream(filename):
         tokens = line.rstrip().split("\t")
 
@@ -1156,7 +1152,7 @@ def read_brecon(filename, tree, stree):
         events = []
         snode_name = tokens[1]
         event = tokens[2]
-	frequency = tokens[3]
+        frequency = tokens[3]
 
         if snode_name.isdigit():
            snode_name = int(snode_name)
@@ -1164,8 +1160,10 @@ def read_brecon(filename, tree, stree):
 
 #        events.append([snode, event])
         events.append([snode, event, frequency])
-        brecon[node] = events
-
+        if node in brecon:
+            brecon[node].extend(events)
+        else:
+            brecon[node]=events
     return brecon
 
 

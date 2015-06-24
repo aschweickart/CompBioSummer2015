@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?> 
+            <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 
+            'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg width='969' height='799' 
+            xmlns='http://www.w3.org/2000/svg' version='1.1'>
+<g><g style='font-family: "Sans";'>
+<g transform='translate(10.000000, 0.000000) ' >
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='280.000000,305.875000 880.000000,209.000000 880.000000,289.000000 280.000000,385.875000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='280.000000,305.875000 380.000000,402.750000 380.000000,482.750000 280.000000,385.875000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='80.000000,182.437500 280.000000,305.875000 280.000000,385.875000 80.000000,262.437500 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='380.000000,402.750000 480.000000,496.500000 480.000000,576.500000 380.000000,482.750000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='0.000000,182.437500 80.000000,182.437500 80.000000,262.437500 0.000000,262.437500 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='80.000000,182.437500 180.000000,59.000000 180.000000,139.000000 80.000000,262.437500 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='180.000000,59.000000 880.000000,9.000000 880.000000,89.000000 180.000000,139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='180.000000,59.000000 880.000000,109.000000 880.000000,189.000000 180.000000,139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='680.000000,659.000000 880.000000,609.000000 880.000000,689.000000 680.000000,739.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='580.000000,584.000000 680.000000,659.000000 680.000000,739.000000 580.000000,664.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='380.000000,402.750000 880.000000,309.000000 880.000000,389.000000 380.000000,482.750000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='680.000000,659.000000 880.000000,709.000000 880.000000,789.000000 680.000000,739.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='580.000000,584.000000 880.000000,509.000000 880.000000,589.000000 580.000000,664.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='480.000000,496.500000 580.000000,584.000000 580.000000,664.000000 480.000000,576.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='480.000000,496.500000 880.000000,409.000000 880.000000,489.000000 480.000000,576.500000 ' stroke-width='1.000000'/>
+<line x1='380.000000' y1='402.750000' x2='380.000000' y2='482.750000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='280.000000' y1='305.875000' x2='280.000000' y2='385.875000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='480.000000' y1='496.500000' x2='480.000000' y2='576.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='80.000000' y1='182.437500' x2='80.000000' y2='262.437500' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='180.000000' y1='59.000000' x2='180.000000' y2='139.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='680.000000' y1='659.000000' x2='680.000000' y2='739.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='580.000000' y1='584.000000' x2='580.000000' y2='664.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<g transform='translate(916.181818,259.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h8</text></g>
+<g transform='translate(916.181818,59.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h6</text></g>
+<g transform='translate(916.181818,159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h7</text></g>
+<g transform='translate(916.181818,659.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h16</text></g>
+<g transform='translate(916.181818,359.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h10</text></g>
+<g transform='translate(916.181818,759.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h17</text></g>
+<g transform='translate(916.181818,559.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h14</text></g>
+<g transform='translate(916.181818,459.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>h12</text></g>
+<line x1='80.000000' y1='222.437500' x2='0.000000' y2='222.437500' stroke='rgb(0,0,0)'  />
+<line x1='180.000000' y1='85.666667' x2='80.000000' y2='222.437500' stroke='rgb(0,0,0)'  />
+<line x1='180.000000' y1='297.489583' x2='80.000000' y2='222.437500' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='749.000000' x2='680.000000' y2='699.000000' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='649.000000' x2='680.000000' y2='699.000000' stroke='rgb(0,0,0)'  />
+<path d='M280.000000 332.541667 C385.000000 234.937500 385.000000 234.937500 530.000000 137.333333'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
+ <path d='M880.000000 249.000000 C560.000000 290.770833 560.000000 290.770833 280.000000 332.541667'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
+ <line x1='880.000000' y1='162.333333' x2='530.000000' y2='137.333333' stroke='rgb(0,0,0)'  />
+<line x1='430.000000' y1='476.291667' x2='380.000000' y2='482.750000' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='349.000000' x2='380.000000' y2='482.750000' stroke='rgb(0,0,0)'  />
+<line x1='280.000000' y1='359.208333' x2='180.000000' y2='297.489583' stroke='rgb(0,0,0)'  />
+<line x1='380.000000' y1='482.750000' x2='280.000000' y2='359.208333' stroke='rgb(0,0,0)'  />
+<path d='M180.000000 112.333333 C160.000000 204.911458 160.000000 204.911458 180.000000 297.489583'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
+ <line x1='530.000000' y1='137.333333' x2='180.000000' y2='112.333333' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='62.333333' x2='180.000000' y2='112.333333' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='35.666667' x2='180.000000' y2='85.666667' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='135.666667' x2='180.000000' y2='85.666667' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='449.000000' x2='480.000000' y2='523.166667' stroke='rgb(0,0,0)'  />
+<line x1='580.000000' y1='610.666667' x2='480.000000' y2='523.166667' stroke='rgb(0,0,0)'  />
+<line x1='880.000000' y1='549.000000' x2='580.000000' y2='610.666667' stroke='rgb(0,0,0)'  />
+<line x1='480.000000' y1='523.166667' x2='430.000000' y2='476.291667' stroke='rgb(0,0,0)'  />
+<line x1='580.000000' y1='610.666667' x2='430.000000' y2='476.291667' stroke='rgb(0,0,0)'  />
+<line x1='680.000000' y1='699.000000' x2='580.000000' y2='610.666667' stroke='rgb(0,0,0)'  />
+<line x1='480.000000' y1='523.166667' x2='430.000000' y2='476.291667' stroke='rgb(0,0,0)'  />
+<g transform='translate(75.000000,210.437500) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.225</text></g>
+<g transform='translate(175.000000,87.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.3</text></g>
+<rect x='175.000000' y='292.489583' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
+<g transform='translate(175.000000,292.489583) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.075</text></g>
+<rect x='275.000000' y='327.541667' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(275.000000,327.541667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.225</text></g>
+<rect x='425.000000' y='471.291667' width='10.000000' height='10.000000' stroke='rgb(127,0,0)' fill='rgb(255,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(425.000000,471.291667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.1</text></g>
+<rect x='275.000000' y='354.208333' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(275.000000,354.208333) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.15</text></g>
+<g transform='translate(375.000000,430.750000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.3</text></g>
+<g transform='translate(175.000000,87.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.225</text></g>
+<rect x='525.000000' y='132.333333' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
+<g transform='translate(525.000000,132.333333) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.225</text></g>
+<rect x='575.000000' y='605.666667' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(575.000000,605.666667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.2</text></g>
+<rect x='475.000000' y='518.166667' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(475.000000,518.166667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.1</text></g>
+<rect x='575.000000' y='605.666667' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(575.000000,605.666667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.2</text></g>
+<g transform='translate(675.000000,687.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.5</text></g>
+<g transform='translate(475.000000,524.500000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.1</text></g>
+<g transform='translate(890.000000,755.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p33</text></g>
+<g transform='translate(890.000000,655.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p32</text></g>
+<g transform='translate(890.000000,168.333333) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p24</text></g>
+<g transform='translate(890.000000,355.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p26</text></g>
+<g transform='translate(890.000000,68.333333) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p22</text></g>
+<g transform='translate(890.000000,41.666667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p18</text></g>
+<g transform='translate(890.000000,141.666667) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p19</text></g>
+<g transform='translate(890.000000,455.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>p30</text></g>
+</g>
+</g>
+</g></svg>

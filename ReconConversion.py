@@ -11,12 +11,12 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	pParent = parasiteParentsDict(ParasiteTree)
 	freqDict = frequencyDict(DTL, reconciliation)
 	for key in reconciliation:
-		if reconciliation[key][0] != 'L':
-			event = reconciliation[key][0]
-			f.write(key[0] + '\t' + key[1] + '\t' + D[event] + '\t' + str(frequencyDict[event]) + '\n')
-		else:
-			event = reconciliation[key][0]
-			f.write(pParent[key[0]] + '\t' + key[1] + '\t' + D[event] + '\t' + str(frequencyDict[event]) + '\n')
+		# # if reconciliation[key][0] != 'L':
+		event = reconciliation[key][0]
+		f.write(key[0] + '\t' + key[1] + '\t' + D[event] + '\t' + str(freqDict[key]) + '\n')
+		# # else:
+		# event = reconciliation[key][0]
+		# f.write(pParent[key[0]] + '\t' + key[1] + '\t' + D[event] + '\t' + str(freqDict[key]) + '\n')
 	f.close()
 
 def frequencyDict(DTL, reconciliation):

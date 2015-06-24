@@ -94,7 +94,7 @@ def draw_tree(tree, brecon, stree,
     # layout speciations and genes (y)
     for node in tree.preorder():
         snode, event, frequency = brecon[node][-1]
-        if event == "spec" or event == "gene":
+        if event == "spec" or event == "gene" or event == "loss":
             yorders[node] = len(ylists[snode])
             ylists[snode].append(node)
 
