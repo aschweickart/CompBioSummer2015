@@ -49,6 +49,8 @@ def draw_tree(tree, brecon, stree,
               snode_color=(.2, .2, .7),
               dup_color=(1, 0, 0),
               dup_color_border=(.5, 0, 0),
+              loss_color=(0, 0, 1),
+              loss_color_border=(0, 0, .5),
               trans_color=(0, 1, 0),
               trans_color_border=(0, .5, 0),
               event_size=10,
@@ -115,7 +117,7 @@ def draw_tree(tree, brecon, stree,
     xmax = defaultdict(lambda: 0)
     for node in tree.postorder():
         snode, event, frequency = brecon[node][-1]
-        if event == "spec" or event == "gene":
+        if event == "spec" or event == "gene" or event == "loss":
             xorders[node] = 0
         else:
             v = [xorders[child] for child in node.children
@@ -276,8 +278,11 @@ def draw_tree(tree, brecon, stree,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
             canvas.text(str(frequency), x, y, font_size, fillColor = (0,0,0))
-        
-
+        elif event == "loss":
+            canvas.rect(x - o, y - o, event_size, event_size,
+                        fillColor=loss_color,
+                        strokeColor=loss_color_border)
+            canvas.text(str(frequency), x, y, font_size, fillColor = (0,0,0))
     # draw tree leaves
     for node in tree:
         x, y = layout[node]
@@ -286,7 +291,6 @@ def draw_tree(tree, brecon, stree,
                         x + leaf_padding, y+font_size/2., font_size,
                         fillColor=(0, 0, 0))
 
-        
     canvas.endTransform()
     
     if autoclose:
@@ -294,5 +298,3 @@ def draw_tree(tree, brecon, stree,
         canvas.endSvg()
     
     return canvas
-
-
