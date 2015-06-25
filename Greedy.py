@@ -52,8 +52,9 @@ def orderDTLRoots(DTL, vertex, level):
 
 
 def sortHelper(DTL, keysL):
-    """This function takes in a list orderedKeysL and deals with duplicate mapping nodes that could potentially have the same level
-    or have two different levels, in which case we want to choose the highest level becuase we are using the bottom-up approach"""
+    """This function takes in a list orderedKeysL and deals with duplicate mapping nodes that could potentially have the 
+    same level or have two different levels, in which case we want to choose the highest level becuase we are using the 
+    bottom-up approach"""
     
     uniqueKeysL = []
     for key in DTL:
@@ -173,8 +174,10 @@ def greedyOnce(DTL, ParasiteTree):
     
     #reset score of the mapping node we used to 0
     for i in range(len(DTL[bestKey]) - 1):                          #loop through the events associated with DTL
-        if tuple(DTL[bestKey][i]) == BSFHMap[bestKey][0]:           #check if the event matches the event that gave the best score
-            DTL[bestKey][i][-1] = 0                                 #set the score to 0
+        if tuple(DTL[bestKey][i]) == tuple(BSFHMap[bestKey][0]):           #check if the event matches the event that gave the best score
+            newEvent = DTL[bestKey][i][:-1] + [0]
+            newValue = DTL[bestKey][:i] + [newEvent] + DTL[bestKey][i + 1:]
+            DTL[bestKey] = newValue                                 #set the score to 0
 
     newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
     GreedyOnce.update(newGreedyOnce)
@@ -194,11 +197,15 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
             oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
             TreeList.append(oneTree)
             counter += 1
+        print currentDTL
+
     else:
         for i in range(k):
             oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
             TreeList.append(oneTree)
+        print currentDTL
     return TreeList
+
 
 
 DTL = {('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0.5], 2], 
@@ -215,6 +222,7 @@ DTL = {('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0.5], 2],
 ('p8', 'h3'): [['T', ('p7', 'h3'), ('p5', 'h5'), 0.5], 2], 
 ('p9', 'h7'): [['S', ('p8', 'h3'), ('p6', 'h4'), 0.5], 3]}
 
+
 P = {('p8', 'p7'): ('p8', 'p7', ('p7', 'p3'), ('p7', 'p4')), 
 ('p9', 'p6'): ('p9', 'p6', ('p6', 'p1'), ('p6', 'p2')), 
 ('p8', 'p5'): ('p8', 'p5', None, None), 
@@ -224,3 +232,24 @@ P = {('p8', 'p7'): ('p8', 'p7', ('p7', 'p3'), ('p7', 'p4')),
 ('p7', 'p3'): ('p7', 'p3', None, None), 
 'pTop': ('Top', 'p9', ('p9', 'p8'), ('p9', 'p6')), 
 ('p6', 'p2'): ('p6', 'p2', None, None)}
+
+
+
+#currentDTLs from Greedy on test7tree
+{('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0], 2], 
+('p5', 'h5'): [['C', (None, None), (None, None), 0], 0], 
+('p6', 'h4'): [['T', ('p2', 'h4'), ('p1', 'h1'), 0], 1], 
+('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
+('p8', 'h3'): [['T', ('p7', 'h3'), ('p5', 'h5'), 0], 2], 
+('p9', 'h7'): [['S', ('p8', 'h3'), ('p6', 'h4'), 0.5], 3], 
+('p7', 'h3'): [['T', ('p4', 'h3'), ('p3', 'h2'), 0], 1], 
+('p4', 'h3'): [['C', (None, None), (None, None), 0], 0], 
+('p2', 'h4'): [['C', (None, None), (None, None), 0], 0], 
+('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
+('p7', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h3'), 0], 1], 
+('p9', 'h6'): [['S', ('p6', 'h1'), ('p8', 'h2'), 0.5], 3], 
+('p6', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h4'), 0], 1]}
+
+
+
+
