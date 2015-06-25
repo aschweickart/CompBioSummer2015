@@ -23,15 +23,18 @@ def Reconcile(argList):
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
+	total = DP.masterSum(DTL)
 	DTLGraph = copy.deepcopy(DTL)
 	rec = Greedy.Greedy(DTL, paras, k)
 	graph = []
+	individSums = []
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
 			orderedGraphs += orderGraph.date(graph[item])
-			ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
+			individSums.append(ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item))
 	newickToVis.convert(fileName,hostBranchs)
+	return individSums, total
 
 def branch(tree, treeOrder):
 	"""Computes Ultra-metric Branchlength from a tree dating"""
@@ -92,6 +95,8 @@ def treeFormat(tree):
 			else:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
 	return treeDict
+
+
 
 def main():
 	Reconcile(argv)

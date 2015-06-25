@@ -1,21 +1,22 @@
-from flask import Flask, request, redirect, url_for, render_template, send_from_directory
+from flask import Flask, request, redirect, url_for, render_template
 from werkzeug import secure_filename
-import os
 import MasterReconciliation
-import ReconConversion
+import os
 
 
 app = Flask(__name__)
-UPLOAD_FOLDER = '/Users/Annalise/GitHub/CompBioSummer2015/svgFiles/'
+UPLOAD_FOLDER = '/Users/Annalise/GitHub/CompBioSummer2015/svgFiles'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/index')
 def index():
-  return render_template('index.html')
+	return render_template('index.html')
+
 
 @app.route('/form')
 def form():
-  return render_template('form.html')
+	return render_template('form.html')
+
 
 @app.route('/reconcile', methods = ['GET', 'POST'])
 def reconcile(carousel = None):
@@ -34,38 +35,17 @@ def reconcile(carousel = None):
       file.save('/Users/Annalise/GitHub/CompBioSummer2015/'+path2files + ".newick")
       os.system("python /Users/Annalise/GitHub/CompBioSummer2015/MasterReconciliation.py "+path2files+".newick"+" "+Dup+" "+Trans+" "+Loss+" "+K)
       # os.system("chmod ugo+r "+ svgFile)
-      ReconConversion.freqSummation(path2files+".newick", Dup, Trans, Loss, K)
-      #with open(path2files+"freqFile.txt") as f:
-       #lines = f.readlines()
-      print lines
-      individFreqList = lines[1]
-      totalFreq = lines[2]
-
-      print individFreqList, totalFreq
-      # if request.form['scoring'] == 'Frequency':
-      #   scoreList= individFreqList
-      #   total = totalFreq
       htmlString1 = ""
       htmlString2 = ""
       for x in range(int(K)):
-        print x
         os.system("./vistrans -t "+path2files+".tree -s "+path2files+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+str(x)+".svg")
-        #score = scoreList[x]
-        #percent = 1.0*score/total
-        score =individFreqList[x]
-        percent = 1.0*score/totalFreq
-        print score
         if x ==0:
-          runningTot = percent
           htmlString1+='<li data-target="#results" data-slide-to="0" class="active"></li>'
-          htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation 1</h3><p>Score = "+str(score)+"<br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
+          htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
           os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
         else:
-          #runningTotScore = runningTotal(scoreList, x)
-          #runningTotScore = runningTotal(individFreqList, x)
-          runningTot = 0#runningTotScore/total
           htmlString1+='<li data-target="#results" data-slide-to="'+str(x)+'"></li>'
-          htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation "+str(x+1)+"</h3><p>Score = "+str(score)+" <br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
+          htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'></div>"
           os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
   return '''<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -133,20 +113,28 @@ def reconcile(carousel = None):
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>'''
-def runningTotal(scoresList, index):
-  runningTot = 0
-  for n in range(len(scoresList)):
-    if n<=index:
-      runningTot += scoresList[n]
-  return runningTot
+
 # @app.route('/show/<filename>')
 # def uploaded_file(filename):
+#       filename = 'http://127.0.0.1:5000/uploads/'+filename
+#       return render_template('index.html', filename = filename)
+# 
+
+@app.route('/uploads/<filename>')
+def send_file(filename):
+        return send_from_directory(UPLOAD_FOLDER, filename )
+
+# @app.route('/show/<filename>')
+# def uploaded_file(filename):
+# 	filename = 'http://127.0.0.1:5000/uploads/'+filename
+# 	return render_template('index.html', filename = filename)
 #   filename = 'http://127.0.0.1:5000/uploads/'+filename
 #   return render_template('index.html', filename = filename)
 # 
 
 @app.route('/uploads/<filename>')
 def send_file(filename):
-  return send_from_directory(UPLOAD_FOLDER, filename )
+	return send_from_directory(UPLOAD_FOLDER, filename )
+
 if __name__ == "__main__":
-  app.run()
+	app.run() 
