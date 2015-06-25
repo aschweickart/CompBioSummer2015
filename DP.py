@@ -49,7 +49,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         duplication cost (D), transfer cost (T), and loss cost (L) and
         returns the DTL graph in the form of a dictionary, as well as a
         drawing of the DTL graph. Cospeciation is assumed to cost 0. """
-
     A = {}
     C = {}
     O = {}
@@ -248,7 +247,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     BestSwitchLocations[(vp, hChild2)].extend(BestSwitchLocations[(vp, vh)])
                 if BestSwitch[(ep, eh2)] == O[(ep, eh1)] and Obest[(vp, hChild1)]!=[(None, None)]:
                     BestSwitchLocations[(vp, hChild2)].extend(Obest[(vp, hChild1)])
-
     for key in BestSwitchLocations.keys():
         if BestSwitchLocations[key][0] == (None, None):
             BestSwitchLocations[key] = BestSwitchLocations[key][1:]
@@ -270,7 +268,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # Draw the DTL reconciliation of this DTL Graph
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
-
     return DTL, numRecon, leaves
 
 def orderDTL(DTL, ParasiteRoot):

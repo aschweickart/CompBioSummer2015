@@ -40,7 +40,8 @@ def date(recon):
 			del LonerList[0]
 			del dicto[x]
 	if dicto:
-		return None
+		print "TimeTravel"
+		return False
 	for item in Leaves:
 		order[item] = len(Leaves)
-	return order
+	return True

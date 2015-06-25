@@ -5,19 +5,13 @@ import ReconConversion
 import orderGraph
 import newickFormatReader
 import ReconciliationGraph
-from sys import argv
 import copy
 
-def Reconcile(argList):
+def Reconcile(fileName, D, T, L, k):
 	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
 	the host, parasite, and reconciliations"""
-	fileName = argList[1]
-	print fileName
-	D = int(argList[2])
-	T = int(argList[3])
-	L = int(argList[4])
-	k = argList[5]
 	orderedGraphs = []
+	print fileName
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	#hostRoot = findRoot(host)
 	#hostv = treeFormat(host)
@@ -26,15 +20,15 @@ def Reconcile(argList):
 	DTL, numRecon, leaves = DP.DP(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
 	rec = Greedy.Greedy(DTLGraph, numRecon, paras, k)
-	"""graph = []
-				for item in rec:
-					graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
-				for item in range(len(graph)):
-						orderedGraphs += orderGraph.date(graph[item])"""
+	graph = []
+	for item in rec:
+		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
+	for item in range(len(graph)):
+		orderedGraphs += orderGraph.date(graph[item])
 			#ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	#newickToVis.convert(fileName,hostBranchs)
 	print numRecon, leaves, rec
-	return numRecon, leaves, rec
+	return numRecon, leaves, rec, orderedGraphs
 
 def branch(tree, treeOrder):
 	"""Computes Ultra-metric Branchlength from a tree dating"""
@@ -95,8 +89,3 @@ def treeFormat(tree):
 			else:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
 	return treeDict
-
-def main():
-	Reconcile(argv)
-
-if __name__ == "__main__": main()
