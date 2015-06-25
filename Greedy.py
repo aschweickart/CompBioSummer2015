@@ -79,7 +79,6 @@ def postorderDTLsort(DTL, ParasiteRoot):
         levelCounter += 1
     return orderedKeysL
 
-
 def bookkeeping(DTL, ParasiteTree):
     """This function takes as inputs a DTL graph and ParasiteTree, and then records what the max is at each mapping node and 
     which event the max came from. It outputs a dictionary BSFHMap by looping through the keys in a sorted list of mapping 
@@ -143,7 +142,7 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
             if DTL[child2][i] == BSFHMap[child2][0]:
                 newValue = DTL[child2]
                 newValue[i][-1] = 0
-                reset2DTL[child2] = newValue      
+                reset2DTL[child2] = newValue
         newGreedyOnce, DTL2 = TraceChildren(DTL, GreedyOnce, BSFHMap, child2)
         reset2DTL.update(DTL2)
         GreedyOnce.update(newGreedyOnce)
@@ -171,7 +170,7 @@ def greedyOnce(DTL, ParasiteTree):
     
     #reset score of the mapping node we used to 0
     for i in range(len(DTL[bestKey]) - 1):                          #loop through the events associated with DTL
-        if tuple(DTL[bestKey][i]) == BSFHMap[bestKey][0]:           #check if the event matches the event that gave the best score
+        if tuple(DTL[bestKey][i]) == tuple(BSFHMap[bestKey][0]):           #check if the event matches the event that gave the best score
             DTL[bestKey][i][-1] = 0                                 #set the score to 0
 
     newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
@@ -179,21 +178,34 @@ def greedyOnce(DTL, ParasiteTree):
     DTL.update(resetDTL)
     return GreedyOnce, DTL, bestScore
 
-
 def Greedy(DTL, numRecon, ParasiteTree, k):
     """This function takes as input a DTL graph, a ParasiteTree, and k, the desired number of best reconciliation trees. 
     It returns TreeList, a list of k dictionaries, each of which represent one of the best trees."""
     scores = []
     currentDTL = DTL
     counter = 0
-
+    rec = []
     if k == 'all':
-        while counter < numRecon:
+        not0 = True
+        while not0:
             oneTree, currentDTL, score = greedyOnce(currentDTL, ParasiteTree)
             scores.append(score)
+            rec.extend(oneTree)
             counter += 1
+            not0 = False
+            zeroes = 0
+            events = 0
+            for key in currentDTL:
+                for i in range(len(currentDTL[key])-1):
+                    if currentDTL[key][i][-1] != 0:
+                        not0 = True
+                    else:
+                        zeroes += 1
+                    events += 1
+            print str(events) + '\t' + str(zeroes) + '\n' + str(score)
     else:
         for i in range(k):
             oneTree, currentDTL, scores = greedyOnce(currentDTL, ParasiteTree)
             scores.append(oneTree)
-    return scores
+            rec.extend(oneTree)
+    return scores, rec

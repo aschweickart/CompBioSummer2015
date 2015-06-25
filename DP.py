@@ -49,6 +49,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         duplication cost (D), transfer cost (T), and loss cost (L) and
         returns the DTL graph in the form of a dictionary, as well as a
         drawing of the DTL graph. Cospeciation is assumed to cost 0. """
+
     A = {}
     C = {}
     O = {}
@@ -184,7 +185,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 mapScore = 0
                 for item in Dictionary[key]:
                     if type(item) == list:
-                        mapScore += item[-1]
+                        mapScore = mapScore + item[-1]
                 Score[key] = mapScore
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
@@ -203,7 +204,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 if omin == 2:
                     Obest[(vp,vh)].extend(Obest[(vp, hChild2)])
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
-
         # Compute BestSwitch values
         BestSwitch[(ep, "hTop")] = Infinity
         BestSwitchLocations[(vp, hostTree["hTop"][1])] = [(None,None)]
@@ -253,7 +253,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     # Add the costs of each event to the corresponding Dictionary entry
     for key in Dictionary.keys():
         Dictionary[key].append(Minimums[key])
-
     # Use findPath and findBest to construct the DTL graph dictionary
     treeMin = findBest(parasiteTree, Minimums)
     DTL = {}
@@ -262,7 +261,6 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         Score[key] = Score[key]*1.0
         if not key in DTL:
             del Score[key]
-
     newDTL = copy.deepcopy(DTL)
     DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
