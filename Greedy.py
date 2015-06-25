@@ -1,5 +1,3 @@
-
-
 #Team Greedy
 
 def findRoot(ParasiteTree):
@@ -54,8 +52,9 @@ def orderDTLRoots(DTL, vertex, level):
 
 
 def sortHelper(DTL, keysL):
-    """This function takes in a list orderedKeysL and deals with duplicate mapping nodes that could potentially have the same level
-    or have two different levels, in which case we want to choose the highest level becuase we are using the bottom-up approach"""
+    """This function takes in a list orderedKeysL and deals with duplicate mapping nodes that could potentially have the 
+    same level or have two different levels, in which case we want to choose the highest level becuase we are using the 
+    bottom-up approach"""
     
     uniqueKeysL = []
     for key in DTL:
@@ -176,13 +175,14 @@ def greedyOnce(DTL, ParasiteTree):
     #reset score of the mapping node we used to 0
     for i in range(len(DTL[bestKey]) - 1):                          #loop through the events associated with DTL
         if tuple(DTL[bestKey][i]) == tuple(BSFHMap[bestKey][0]):           #check if the event matches the event that gave the best score
-            DTL[bestKey][i][-1] = 0                                 #set the score to 0
+            newEvent = DTL[bestKey][i][:-1] + [0]
+            newValue = DTL[bestKey][:i] + [newEvent] + DTL[bestKey][i + 1:]
+            DTL[bestKey] = newValue                                 #set the score to 0
 
     newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
     GreedyOnce.update(newGreedyOnce)
     DTL.update(resetDTL)
     return GreedyOnce, DTL, bestScore
-
 
 def Greedy(DTL, numRecon, ParasiteTree, k):
     """This function takes as input a DTL graph, a ParasiteTree, and k, the desired number of best reconciliation trees. 
