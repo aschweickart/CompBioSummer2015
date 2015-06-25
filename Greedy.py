@@ -1,3 +1,7 @@
+
+
+#Team Greedy
+
 def findRoot(ParasiteTree):
     """This function takes in a parasiteTree and returns a string with the name of
     the root vertex of the tree"""
@@ -79,6 +83,7 @@ def postorderDTLsort(DTL, ParasiteRoot):
         levelCounter += 1
     return orderedKeysL
 
+
 def bookkeeping(DTL, ParasiteTree):
     """This function takes as inputs a DTL graph and ParasiteTree, and then records what the max is at each mapping node and 
     which event the max came from. It outputs a dictionary BSFHMap by looping through the keys in a sorted list of mapping 
@@ -142,7 +147,7 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
             if DTL[child2][i] == BSFHMap[child2][0]:
                 newValue = DTL[child2]
                 newValue[i][-1] = 0
-                reset2DTL[child2] = newValue
+                reset2DTL[child2] = newValue      
         newGreedyOnce, DTL2 = TraceChildren(DTL, GreedyOnce, BSFHMap, child2)
         reset2DTL.update(DTL2)
         GreedyOnce.update(newGreedyOnce)
@@ -178,6 +183,7 @@ def greedyOnce(DTL, ParasiteTree):
     DTL.update(resetDTL)
     return GreedyOnce, DTL, bestScore
 
+
 def Greedy(DTL, numRecon, ParasiteTree, k):
     """This function takes as input a DTL graph, a ParasiteTree, and k, the desired number of best reconciliation trees. 
     It returns TreeList, a list of k dictionaries, each of which represent one of the best trees."""
@@ -209,3 +215,5 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
             scores.append(oneTree)
             rec.extend(oneTree)
     return scores, rec
+
+
