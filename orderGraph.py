@@ -1,20 +1,20 @@
 import copy
 def date(recon):
 	"""takes a Tree and returns a dictionary representation of the ordering of the tree"""
+	print recon
 	order = {}
 	dicto = {}
-	Leaves = []
+	Leaves = {}
 	LonerList = []
 	for key in recon.keys():
 		if  key != None:
 			dicto[key] = 0
 		for child in recon[key]:
 			if child != None:
-				if recon[child][0] != None:
-					dicto[child] = 0
-				else:
-					Leaves.append(child)
-	for key in Leaves:
+				dicto[child] = 0
+			else:
+				Leaves[key] = True
+	for key in Leaves.keys():
 		if key in dicto.keys():
 			del dicto[key]
 	for key in dicto.keys():
@@ -24,23 +24,23 @@ def date(recon):
 	place = 0
 	for key in dicto.keys():
 		if dicto[key] == 0:
+			del dicto[key]
 			LonerList.append(key)
 	while LonerList:
 		print LonerList
 		x = LonerList[0]
-		del dicto[x]
 		del LonerList[0]
 		order[x] = place
+		place += 1
 		for child in recon[x]:
-			if child != None and child[0] != None and not child in Leaves and child in dicto:
-				if recon[child] != None:
-					dicto[child] -= 1
-					if dicto[child] == 0:
-						LonerList.append(child)
-	for key in dicto.keys():
-		if dicto[key] != 0:
-			print "TimeTravel", dicto.keys(), dicto[key]
-			return False
+			if child in dicto.keys():
+				dicto[child] -= 1
+				if dicto[child] == 0:
+					del dicto[child]
+					LonerList.append(child)
+	if len(dicto.keys()) > 0:
+		print "TimeTravel", dicto,
+		return False
 	for item in Leaves:
 		order[item] = len(Leaves)
 	return True

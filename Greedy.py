@@ -205,7 +205,6 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
                     else:
                         zeroes += 1
                     events += 1
-            print str(events) + '\t' + str(zeroes) + '\n' + str(score) 
     else:
         for i in range(k):
             oneTree, currentDTL, scores = greedyOnce(currentDTL, ParasiteTree)
