@@ -11,9 +11,9 @@ for fileName in os.listdir("TreeLifeData"):
 		f = open("TreeLifeResults/" + geneName +".rnb", 'w')
 		f.write(geneName + '\n' + '\n')
 		f.write("Frequency Scoring\n\n")
-		f.write(str(leaves) + ' Leaves\n')
-		f.write(str(numRecon) + " Reconciliations\n")
-		f.write(str(scoreSum) + "Total Score\n")
+		f.write('Leaves:\t' + str(leaves) + '\n')
+		f.write("Reconciliations:\t" + str(numRecon) + '\n')
+		f.write("Total Score:\t" + str(scoreSum) + '\n')
 		for score in range(len(greedScores)):
 			if consistancies[score]:
 				consistant = "No Temporal Inconsistancies"
