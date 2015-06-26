@@ -1,11 +1,6 @@
 import matplotlib.pyplot as plt
 
-minSize = 0
-maxSize = 50
-
-xTick = 5
-
-reconPoints = [5, 2, 10, 7.0, 2.0]
+reconList = [[5, 2, 10, 7.0, 2.0]]
 
 #file i/o stuff:
 def fileConversion(reconFile):
@@ -34,16 +29,32 @@ def fileConversion(reconFile):
 		print reconPoints
 	print reconPoints
 
-def plotRecon(reconPoints):
+def calcMinandMax(reconList):
+	pointMin = float("inf")
+	pointMax = float("-inf")
+	for reconPoints in reconList:
+		if reconPoints[0] < pointMin:
+			pointMin = reconPoints[0]
+		if reconPoints[0] > pointMax:
+			pointMax = reconPoints[0]
+	return pointMin, pointMax
 
-	
+
+def plotRecon(reconList):
+	minSize, maxSize = calcMinandMax(reconList)
+
 	plt.ylabel('Percentage of points collected')
 	plt.xlabel('Gene Tree Size')
-	#plt.plot([reconPoints[0]], [reconPoints[3]/reconPoints[2], 'ro')
 	plt.axis([minSize, maxSize, 0, 101])
-	plt.vlines(reconPoints[0], reconPoints[3]/reconPoints[2]*100, 100, color = 'b')
-	plt.hlines(reconPoints[3]/reconPoints[2]*100, xTick -1, xTick + 1, color = 'k')
-	plt.hlines(reconPoints[3]/reconPoints[2]*100 + reconPoints[4]/reconPoints[2]*100, xTick-1, xTick + 1, color = 'k')
+
+	for reconPoints in reconList:
+		treeSize = reconPoints[0]
+		plt.vlines(treeSize, reconPoints[3]/reconPoints[2]*100, 100, color = 'k')
+		plt.hlines(reconPoints[3]/reconPoints[2]*100, treeSize -1, treeSize + 1, color = 'b')
+		plt.hlines(reconPoints[3]/reconPoints[2]*100 + reconPoints[4]/reconPoints[2]*100, treeSize-1, treeSize + 1, color = 'r')
+	
+
+
 	plt.show()
 
 	
