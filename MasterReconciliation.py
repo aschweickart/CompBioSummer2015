@@ -26,7 +26,8 @@ def Reconcile(fileName, D, T, L, k):
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
-		orderedGraphs += orderGraph.date(graph[item])
+		print graph[item]
+		orderedGraphs.append(orderGraph.date(graph[item]))
 			#ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	#newickToVis.convert(fileName,hostBranchs)
 	print numRecon, leaves, scores

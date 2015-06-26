@@ -8,16 +8,16 @@ for fileName in os.listdir("TreeLifeData"):
 		scoreSum = 0
 		for score in greedScores:
 			scoreSum += score
-		f = open("TreeLifeResults/" + geneName +".rnb")
+		f = open("TreeLifeResults/" + geneName +".rnb", 'w')
 		f.write(geneName + '\n' + '\n')
 		f.write("Frequency Scoring\n\n")
-		f.write(leaves + " Leaves\n")
-		f.write(numRecon + " Reconciliations\n")
-		f.write(scoreSum + "Total Score\n")
+		f.write(str(leaves) + ' Leaves\n')
+		f.write(str(numRecon) + " Reconciliations\n")
+		f.write(str(scoreSum) + "Total Score\n")
 		for score in range(len(greedScores)):
 			if consistancies[score]:
 				consistant = "No Temporal Inconsistancies"
 			else:
 				consistant = "Temporal Inconcistancy Present"
-			f.write(str(score + 1) + '.\t' + str(greedScores[score] + '\t' + str(consistant) + '\n'))
+			f.write(str(score + 1) + '.\t' + str(greedScores[score]) + '\t' + str(consistant) + '\n')
 		f.close()

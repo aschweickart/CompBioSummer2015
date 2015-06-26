@@ -133,20 +133,24 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
     if child1 != (None, None):
         GreedyOnce[child1] = BSFHMap[child1][0][0:3]
         for i in range(len(DTL[child1]) - 1):       #this loop resets all the scores of events that have been used to 0
-            if DTL[child1][i] == BSFHMap[child1][0]:
-                newValue = DTL[child1]
-                newValue[i][-1] = 0
-                reset1DTL[child1] = newValue
+            for j in range(len(DTL[child1][i]) - 2):
+                for l in range(len(BSFHMap[child1][0])):  
+                    if DTL[child1][i][j+1] == BSFHMap[child1][0][l]:
+                        newValue = DTL[child1]
+                        newValue[i][-1] = 0
+                        reset1DTL[child1] = newValue
         newGreedyOnce, DTL1 = TraceChildren(DTL, GreedyOnce, BSFHMap, child1)
         reset1DTL.update(DTL1)
         GreedyOnce.update(newGreedyOnce)
     if child2 != (None, None):
         GreedyOnce[child2] = BSFHMap[child2][0][0:3]
         for i in range(len(DTL[child2]) - 1):
-            if DTL[child2][i] == BSFHMap[child2][0]:
-                newValue = DTL[child2]
-                newValue[i][-1] = 0
-                reset2DTL[child2] = newValue      
+            for j in range(len(DTL[child2][i]) - 2):
+                for l in range(len(BSFHMap[child2][0])):  
+                    if DTL[child2][i][j+1] == BSFHMap[child2][0][l]:
+                        newValue = DTL[child2]
+                        newValue[i][-1] = 0
+                        reset2DTL[child2] = newValue      
         newGreedyOnce, DTL2 = TraceChildren(DTL, GreedyOnce, BSFHMap, child2)
         reset2DTL.update(DTL2)
         GreedyOnce.update(newGreedyOnce)
@@ -173,12 +177,13 @@ def greedyOnce(DTL, ParasiteTree):
     GreedyOnce[bestKey] = BSFHMap[bestKey][0][0:3]                  #set value in GreedyOnce of the best key we found
     
     #reset score of the mapping node we used to 0
-    for i in range(len(DTL[bestKey]) - 1):                          #loop through the events associated with DTL
-        if tuple(DTL[bestKey][i]) == tuple(BSFHMap[bestKey][0]):           #check if the event matches the event that gave the best score
-            newEvent = DTL[bestKey][i][:-1] + [0]
-            newValue = DTL[bestKey][:i] + [newEvent] + DTL[bestKey][i + 1:]
-            DTL[bestKey] = newValue                                 #set the score to 0
-
+    for i in range(len(DTL[bestKey]) - 1): 
+        for j in range(len(DTL[bestKey][i]) - 2):
+            for l in range(len(BSFHMap[bestKey][0])):                         #loop through the events associated with DTL
+                if DTL[bestKey][i][j+1] == BSFHMap[bestKey][0][l]:           #check if the event matches the event that gave the best score
+                    newEvent = DTL[bestKey][i][:-1] + [0]
+                    newValue = DTL[bestKey][:i] + [newEvent] + DTL[bestKey][i + 1:]
+                    DTL[bestKey] = newValue                                 #set the score to 0
     newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
     GreedyOnce.update(newGreedyOnce)
     DTL.update(resetDTL)
@@ -196,7 +201,7 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
         while not0:
             oneTree, currentDTL, score = greedyOnce(currentDTL, ParasiteTree)
             scores.append(score)
-            rec.extend(oneTree)
+            rec.append(oneTree)
             counter += 1
             not0 = False
             zeroes = 0
@@ -208,12 +213,12 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
                     else:
                         zeroes += 1
                     events += 1
-            print str(events) + '\t' + str(zeroes) + '\n' + str(score)
+            print str(events) + '\t' + str(zeroes) + '\n' + str(score) 
     else:
         for i in range(k):
             oneTree, currentDTL, scores = greedyOnce(currentDTL, ParasiteTree)
             scores.append(oneTree)
-            rec.extend(oneTree)
+            rec.append(oneTree)
     return scores, rec
 
 
