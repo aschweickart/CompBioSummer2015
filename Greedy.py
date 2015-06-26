@@ -33,10 +33,10 @@ def orderDTL(DTL, ParasiteRoot):
     return keysL
 
 def orderDTLRoots(DTL, vertex, level):
-    """this function takes a DTL graph, one node, vertex, of the DTL graph, a level, and a dictionary markingDict, and 
-    returns a list, keysL, that contains tuples. Each tuple has two elements. The first is a mapping node of the form 
-    (p, h), where p is a parasite node and h is a host node. The second element is a level representing the depth of 
-    that mapping node within the tree. This function adds the input vertex to keysL and recurses on its children."""
+    """this function takes a DTL graph, one node, vertex, of the DTL graph, a level, and returns a list, keysL, that 
+    contains tuples. Each tuple has two elements. The first is a mapping node of the form (p, h), where p is a 
+    parasite node and h is a host node. The second element is a level representing the depth of that mapping node 
+    within the tree. This function adds the input vertex to keysL and recurses on its children."""
 
     keysL = []
     for i in range(len(DTL[vertex]) - 1):          #loop through each event associated with key in DTL
@@ -45,9 +45,9 @@ def orderDTLRoots(DTL, vertex, level):
         child2 = event[2]
         keysL = keysL + [(vertex, level)]
         if child1[0] != None:
-            keysL.extend(orderDTLRoots(DTL, child1, level + 1))
+            keysL = keysL + orderDTLRoots(DTL, child1, level + 1)
         if child2[0] != None:
-            keysL.extend(orderDTLRoots(DTL, child2, level + 1)) 
+            keysL = keysL + orderDTLRoots(DTL, child2, level + 1)
     return keysL
 
 
@@ -114,8 +114,6 @@ def bookkeeping(DTL, ParasiteTree):
                 if BSFHEvent[event] > maxScore:  #check if current event has a higher score than current max
                     maxScore = BSFHEvent[event]  #if so, set new max score
                     maxEvent = list(event)                #record where new max came from
-                elif BSFHEvent[event] == maxScore: # if event score ties with another event, add both to the dictionary
-                    maxEvent.append(event)
             BSFHMap[mapNode] = [maxEvent, maxScore]      #set BSFH value of key
     return BSFHMap
 
@@ -134,6 +132,8 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
         GreedyOnce[child1] = BSFHMap[child1][0][0:3]
         for i in range(len(DTL[child1]) - 1):       #this loop resets all the scores of events that have been used to 0
             if DTL[child1][i] == BSFHMap[child1][0]:
+                #print "DTL[child1][i]:", DTL[child1][i]
+                #print "BSFHMap[child1][0]:", BSFHMap[child1][0]
                 newValue = DTL[child1]
                 newValue[i][-1] = 0
                 reset1DTL[child1] = newValue
@@ -144,6 +144,8 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
         GreedyOnce[child2] = BSFHMap[child2][0][0:3]
         for i in range(len(DTL[child2]) - 1):
             if DTL[child2][i] == BSFHMap[child2][0]:
+                #print "DTL[child2][i]:", DTL[child2][i]
+                #print "BSFHMap[child2][0]:", BSFHMap[child2][0]
                 newValue = DTL[child2]
                 newValue[i][-1] = 0
                 reset2DTL[child2] = newValue      
@@ -174,7 +176,9 @@ def greedyOnce(DTL, ParasiteTree):
     
     #reset score of the mapping node we used to 0
     for i in range(len(DTL[bestKey]) - 1):                          #loop through the events associated with DTL
-        if tuple(DTL[bestKey][i]) == tuple(BSFHMap[bestKey][0]):           #check if the event matches the event that gave the best score
+        #print "DTL[bestKey][i]:", DTL[bestKey][i]
+        #print "BSFHMap[bestKey][0]:", BSFHMap[bestKey][0]
+        if DTL[bestKey][i] == BSFHMap[bestKey][0]:           #check if the event matches the event that gave the best score
             newEvent = DTL[bestKey][i][:-1] + [0]
             newValue = DTL[bestKey][:i] + [newEvent] + DTL[bestKey][i + 1:]
             DTL[bestKey] = newValue                                 #set the score to 0
@@ -197,58 +201,21 @@ def Greedy(DTL, numRecon, ParasiteTree, k):
             oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
             TreeList.append(oneTree)
             counter += 1
-        print currentDTL
 
     else:
         for i in range(k):
             oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
             TreeList.append(oneTree)
-        print currentDTL
     return TreeList
 
 
 
-DTL = {('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0.5], 2], 
-('p4', 'h3'): [['C', (None, None), (None, None), 1.0], 0], 
-('p5', 'h5'): [['C', (None, None), (None, None), 1.0], 0], 
-('p7', 'h3'): [['T', ('p4', 'h3'), ('p3', 'h2'), 0.5], 1], 
-('p7', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h3'), 0.5], 1], 
-('p2', 'h4'): [['C', (None, None), (None, None), 1.0], 0], 
-('p1', 'h1'): [['C', (None, None), (None, None), 1.0], 0], 
-('p6', 'h4'): [['T', ('p2', 'h4'), ('p1', 'h1'), 0.5], 1], 
-('p3', 'h2'): [['C', (None, None), (None, None), 1.0], 0], 
-('p6', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h4'), 0.5], 1], 
-('p9', 'h6'): [['S', ('p6', 'h1'), ('p8', 'h2'), 0.5], 3], 
-('p8', 'h3'): [['T', ('p7', 'h3'), ('p5', 'h5'), 0.5], 2], 
-('p9', 'h7'): [['S', ('p8', 'h3'), ('p6', 'h4'), 0.5], 3]}
-
-
-P = {('p8', 'p7'): ('p8', 'p7', ('p7', 'p3'), ('p7', 'p4')), 
-('p9', 'p6'): ('p9', 'p6', ('p6', 'p1'), ('p6', 'p2')), 
-('p8', 'p5'): ('p8', 'p5', None, None), 
-('p9', 'p8'): ('p9', 'p8', ('p8', 'p5'), ('p8', 'p7')), 
-('p7', 'p4'): ('p7', 'p4', None, None), 
-('p6', 'p1'): ('p6', 'p1', None, None), 
-('p7', 'p3'): ('p7', 'p3', None, None), 
-'pTop': ('Top', 'p9', ('p9', 'p8'), ('p9', 'p6')), 
-('p6', 'p2'): ('p6', 'p2', None, None)}
+#from problemTreeStuff import *
 
 
 
-#currentDTLs from Greedy on test7tree
-{('p8', 'h2'): [['T', ('p7', 'h2'), ('p5', 'h5'), 0], 2], 
-('p5', 'h5'): [['C', (None, None), (None, None), 0], 0], 
-('p6', 'h4'): [['T', ('p2', 'h4'), ('p1', 'h1'), 0], 1], 
-('p3', 'h2'): [['C', (None, None), (None, None), 0], 0], 
-('p8', 'h3'): [['T', ('p7', 'h3'), ('p5', 'h5'), 0], 2], 
-('p9', 'h7'): [['S', ('p8', 'h3'), ('p6', 'h4'), 0.5], 3], 
-('p7', 'h3'): [['T', ('p4', 'h3'), ('p3', 'h2'), 0], 1], 
-('p4', 'h3'): [['C', (None, None), (None, None), 0], 0], 
-('p2', 'h4'): [['C', (None, None), (None, None), 0], 0], 
-('p1', 'h1'): [['C', (None, None), (None, None), 0], 0], 
-('p7', 'h2'): [['T', ('p3', 'h2'), ('p4', 'h3'), 0], 1], 
-('p9', 'h6'): [['S', ('p6', 'h1'), ('p8', 'h2'), 0.5], 3], 
-('p6', 'h1'): [['T', ('p1', 'h1'), ('p2', 'h4'), 0], 1]}
+
+
 
 
 
