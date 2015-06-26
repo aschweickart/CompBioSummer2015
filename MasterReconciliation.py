@@ -18,19 +18,15 @@ def Reconcile(fileName, D, T, L, k):
 	#hostOrder = orderGraph.date(hostv)
 	#hostBranchs = branch(hostv, hostOrder)
 	DTL, numRecon, leaves = DP.DP(host, paras, phi, D, T, L)
-	print "oooooooh"
 	DTLGraph = copy.deepcopy(DTL)
-	print "child"
 	scores, rec = Greedy.Greedy(DTLGraph, numRecon, paras, k)
 	graph = []
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
-		print graph[item]
 		orderedGraphs.append(orderGraph.date(graph[item]))
 			#ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	#newickToVis.convert(fileName,hostBranchs)
-	print numRecon, leaves, scores
 	return numRecon, leaves, scores, orderedGraphs
 
 def branch(tree, treeOrder):

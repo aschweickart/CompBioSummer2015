@@ -5,7 +5,7 @@ def date(recon):
 	dicto = {}
 	Leaves = []
 	LonerList = []
-	for key in recon:
+	for key in recon.keys():
 		if  key != None:
 			dicto[key] = 0
 		for child in recon[key]:
@@ -15,33 +15,32 @@ def date(recon):
 				else:
 					Leaves.append(child)
 	for key in Leaves:
-		if key in dicto:
+		if key in dicto.keys():
 			del dicto[key]
-	for key in dicto:
+	for key in dicto.keys():
 		for child in recon[key]:
 			if child != None and child in dicto:
 				dicto[child] += 1
 	place = 0
-	for key in dicto:
-		if key != None:
-			if dicto[key] == 0:
-				LonerList.append(key)
+	for key in dicto.keys():
+		if dicto[key] == 0:
+			LonerList.append(key)
 	while LonerList:
+		print LonerList
 		x = LonerList[0]
+		del dicto[x]
+		del LonerList[0]
 		order[x] = place
 		for child in recon[x]:
-			if child != None and child[0] != None and not child in Leaves:
+			if child != None and child[0] != None and not child in Leaves and child in dicto:
 				if recon[child] != None:
-					dicto[child] = dicto[child] - 1
+					dicto[child] -= 1
 					if dicto[child] == 0:
 						LonerList.append(child)
-		if x in LonerList and x in dicto:
-			place += 1
-			del LonerList[0]
-			del dicto[x]
-	if dicto:
-		print "TimeTravel"
-		return False
+	for key in dicto.keys():
+		if dicto[key] != 0:
+			print "TimeTravel", dicto.keys(), dicto[key]
+			return False
 	for item in Leaves:
 		order[item] = len(Leaves)
 	return True
