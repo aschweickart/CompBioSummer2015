@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-reconList = [[5, 2, 10, 7.0, 2.0]]
+reconList = [[5, 2, 37, 7.0, 2.0, 5.0, 13.0, 10.0], [15, 3, 115, 1.0, 7.0, 65.0, 32.0, 4.0, 6.0]]
 
 #file i/o stuff:
 def fileConversion(reconFile):
@@ -45,14 +45,18 @@ def plotRecon(reconList):
 
 	plt.ylabel('Percentage of points collected')
 	plt.xlabel('Gene Tree Size')
-	plt.axis([minSize, maxSize, 0, 101])
+	plt.axis([minSize-10, maxSize+10, 0, 101])
 
 	for reconPoints in reconList:
 		treeSize = reconPoints[0]
 		plt.vlines(treeSize, reconPoints[3]/reconPoints[2]*100, 100, color = 'k')
-		plt.hlines(reconPoints[3]/reconPoints[2]*100, treeSize -1, treeSize + 1, color = 'b')
-		plt.hlines(reconPoints[3]/reconPoints[2]*100 + reconPoints[4]/reconPoints[2]*100, treeSize-1, treeSize + 1, color = 'r')
-	
+		currentPercentTotal = 0
+		for i in range(len(reconPoints[3:])):
+			totalPoints = reconPoints[2]
+			currentReconPoint = reconPoints[i+3]
+			percentReconPoint = currentReconPoint/totalPoints*100
+			currentPercentTotal += percentReconPoint
+			plt.hlines(currentPercentTotal, treeSize-1, treeSize+1, color = 'b')
 
 
 	plt.show()
