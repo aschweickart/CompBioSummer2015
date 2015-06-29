@@ -262,11 +262,27 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         if not key in DTL:
             del Score[key]
     newDTL = copy.deepcopy(DTL)
+
     DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
     # Draw the DTL reconciliation of this DTL Graph
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
     return DTL, numRecon, leaves
+
+def sortHelper(DTL, keysL):
+    """This function takes in a list orderedKeysL and deals with duplicate mapping nodes that could potentially have the 
+    same level or have two different levels, in which case we want to choose the highest level becuase we are using the 
+    bottom-up approach"""
+    
+    uniqueKeysL = []
+    for key in DTL:
+        maxLevel = float("-inf")
+        for element in keysL:
+            if key == element[0]:
+                if element[1] > maxLevel:
+                    maxLevel = element[1]
+        uniqueKeysL.append((key, maxLevel))
+    return uniqueKeysL
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a list, keysL, that contains tuples. Each tuple 
@@ -300,20 +316,19 @@ def orderDTLRoots(DTL, vertex, level):
             keysL.extend(orderDTLRoots(DTL, child2, level + 1)) 
     return keysL
 
-def preorderDTLsort(DTL, ParasiteRoot):
+def postorderDTLsort(DTL, ParasiteRoot):
     """This takes in a DTL dictionary and parasite root and returns a sorted list, orderedKeysL, that is ordered
     by level from largest to smallest, where level 0 is the root and the highest level has tips."""
 
     keysL = orderDTL(DTL, ParasiteRoot)
+    uniqueKeysL = sortHelper(DTL, keysL)
     orderedKeysL = []
     levelCounter = 0
-    while len(orderedKeysL) < len(keysL):
-        for mapping in keysL:
+    while len(orderedKeysL) < len(uniqueKeysL):
+        for mapping in uniqueKeysL:
             if mapping[-1] == levelCounter:
                 orderedKeysL = orderedKeysL + [mapping]
         levelCounter += 1
-    
-    lastLevel = orderedKeysL[-1][1]
     return orderedKeysL
 
 def preorderCheck(preOrderList):
@@ -339,7 +354,7 @@ def preorderCheck(preOrderList):
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with the normalized frequency scores calculated."""
-    preOrder = preorderDTLsort(DTLDict, treeMin[0][0])
+    preOrder = postorderDTLsort(DTLDict, treeMin[0][0])
     preOrderCheck = preorderCheck(preOrder)
     for root in preOrderCheck:
         if root != (None, None):
