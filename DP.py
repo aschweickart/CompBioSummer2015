@@ -331,31 +331,11 @@ def postorderDTLsort(DTL, ParasiteRoot):
         levelCounter += 1
     return orderedKeysL
 
-def preorderCheck(preOrderList):
-    """This takes a list from preorderDTLsort and removes the duplicate tuples"""
-    newList = []
-    preDict = {}
-    for root in preOrderList:
-        if not root in newList:
-            newList.append(root)
-    for x in range(len(newList)):
-        currentRoot = newList[x][0]
-        currentLevel = newList[x][1]
-        if currentRoot in preDict:
-            if preDict[currentRoot][0]> currentLevel:
-                newList[x] = (None, None)
-            else:
-                location = preDict[currentRoot][1]
-                newList[location] = (None, None)
-        else:
-            preDict[currentRoot] = (currentLevel,x)
-    return newList
 
 def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
     """Takes the list of reconciliation roots, the DTL , a dictionary of parent nodes, and
     a dictionary of score values, and returns the DTL with the normalized frequency scores calculated."""
-    preOrder = postorderDTLsort(DTLDict, treeMin[0][0])
-    preOrderCheck = preorderCheck(preOrder)
+    preOrderCheck = postorderDTLsort(DTLDict, treeMin[0][0])
     for root in preOrderCheck:
         if root != (None, None):
             vertices = root[0]
