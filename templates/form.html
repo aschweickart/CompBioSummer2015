@@ -49,9 +49,12 @@
     <label>T:</label><input type="text" name="trans" class="form-control">
     <label>L:</label><input type="text" name="loss" class="form-control">
     <label>k:</label><input type="text" name="k" class="form-control">
-    <label>Score Method:</label><input type="radio" name="scoring" class="form-control" value="Frequency">Frequency
+    <div class="radio">
+    <label>Score Method:</label><input type="radio" name="scoring" value="freq" checked> Frequency
+    <input type="radio" name="scoring" value="xscape"> Xscape
+    </div> 
     <input type="submit" value="Submit">
-</form>
+    </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
     <script src="../../assets/js/docs.min.js"></script>

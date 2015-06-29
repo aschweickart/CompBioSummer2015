@@ -34,38 +34,40 @@ def reconcile(carousel = None):
       file.save('/Users/Annalise/GitHub/CompBioSummer2015/'+path2files + ".newick")
       os.system("python /Users/Annalise/GitHub/CompBioSummer2015/MasterReconciliation.py "+path2files+".newick"+" "+Dup+" "+Trans+" "+Loss+" "+K)
       # os.system("chmod ugo+r "+ svgFile)
-      ReconConversion.freqSummation(path2files+".newick", Dup, Trans, Loss, K)
-      #with open(path2files+"freqFile.txt") as f:
-       #lines = f.readlines()
-      print lines
-      individFreqList = lines[1]
-      totalFreq = lines[2]
-
-      print individFreqList, totalFreq
-      # if request.form['scoring'] == 'Frequency':
-      #   scoreList= individFreqList
-      #   total = totalFreq
+      os.system('python /Users/Annalise/GitHub/CompBioSummer2015/ReconConversion.py '+path2files+".newick"+" "+Dup+" "+Trans+" "+Loss+" "+K)
+      with open(path2files+"freqFile.txt") as f:
+       lines = f.readlines()
+      individFreqList = string2List(lines[0])
+      print individFreqList
+      print len(individFreqList)
+      totalFreq = float(lines[1][:-2])
+      totalRecon = float(lines[3])
+      print totalRecon
+      totalCost = float(lines[2][:-2])
+      if request.form['scoring'] == "freq":
+        scoreList= individFreqList
+        total = totalFreq
+        scoreMethod = "Frequency"
       htmlString1 = ""
       htmlString2 = ""
+      staticString = "<h4>Duplication Cost:"+str(Dup)+", Transfer Cost:"+str(Trans)+", Loss Cost:"+str(Loss)+"<br>Maximum Parsimony Cost:"+str(totalCost)+"<br>Your scoring method:"+scoreMethod+"Total Sum of Scores:"+str(totalFreq)+"<br>Total Number of Reconciliations:"+str(totalRecon)+"</h4>"
+      if len(scoreList)<K:
+        K = len(scoreList)
       for x in range(int(K)):
-        print x
         os.system("./vistrans -t "+path2files+".tree -s "+path2files+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+str(x)+".svg")
-        #score = scoreList[x]
-        #percent = 1.0*score/total
-        score =individFreqList[x]
-        percent = 1.0*score/totalFreq
-        print score
+        score = scoreList[x]
+        percent = 100.0*score/total
         if x ==0:
           runningTot = percent
           htmlString1+='<li data-target="#results" data-slide-to="0" class="active"></li>'
-          htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation 1</h3><p>Score = "+str(score)+"<br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
+          htmlString2+="<div class='item active'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation 1 of "+str(K)+"</h3><p>Score = "+str(score)+"<br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
           os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
         else:
-          #runningTotScore = runningTotal(scoreList, x)
-          #runningTotScore = runningTotal(individFreqList, x)
-          runningTot = 0#runningTotScore/total
+          runningTotScore = runningTotal(scoreList, x)
+          runningTotScore = runningTotal(individFreqList, x)
+          runningTot = 100.0*runningTotScore/total
           htmlString1+='<li data-target="#results" data-slide-to="'+str(x)+'"></li>'
-          htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation "+str(x+1)+"</h3><p>Score = "+str(score)+" <br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
+          htmlString2+="<div class='item'><img src='http://127.0.0.1:5000/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'><div class='carousel-caption'><font color='black'><h3>Reconciliation "+str(x+1)+" of "+str(K)+"</h3><p>Score = "+str(score)+" <br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"
           os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
   return '''<!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -102,7 +104,7 @@ def reconcile(carousel = None):
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
       <div class="page-header">
-        <h1>Results</h1>
+        <h1>Results</h1>'''+staticString+'''
       </div>
       <div class="container">
       <br>
@@ -139,6 +141,22 @@ def runningTotal(scoresList, index):
     if n<=index:
       runningTot += scoresList[n]
   return runningTot
+
+def string2List(string):
+  newList = []
+  commaList = []
+  for n in range(len(string)):
+    if string[n:n+2]== ', ':
+      commaList.append(n)
+  if commaList == []:
+    return [float(string[1:-3])]
+  newList.append(float(string[1:commaList[0]]))
+  for n in range(len(commaList)):
+    if commaList[n] != commaList[-1]:
+      newList.append(float(string[commaList[n]+2:commaList[n+1]]))
+  newList.append(float(string[commaList[-1]+2:-2]))
+  return newList
+
 # @app.route('/show/<filename>')
 # def uploaded_file(filename):
 #   filename = 'http://127.0.0.1:5000/uploads/'+filename

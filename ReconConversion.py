@@ -23,10 +23,10 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 
 def freqSummation(argList):
 	newickFile = argList[1]
-	D = argList[2]
-	T = argList[3]
-	L = argList[4]
-	k = argList[5]
+	D = float(argList[2])
+	T = float(argList[3])
+	L = float(argList[4])
+	k = int(argList[5])
 	fileName = newickFile[:-7]
 	f = open(fileName+"freqFile.txt", 'w')
 	individSum = []
@@ -35,17 +35,26 @@ def freqSummation(argList):
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
 	reconciliation = Greedy.Greedy(DTL, paras, k)
+	print len(reconciliation)
 	for index in reconciliation:
+		totalColst = 0
 		currentScore = 0
 		freqDict = frequencyDict(DTLGraph, index)
 		for key in index:
+			if index[key][0] == "L":
+				totalColst+=L
+			elif index[key][0] == "T":
+				totalColst+=T
+			elif index[key][0] == "D":
+				totalColst+=D
 			currentScore+=freqDict[key]
+			freqDict[key] = 0 
 		individSum.append(currentScore)
 		totalSum += currentScore
-	print individSum
-	print totalSum
 	f.write(str(individSum)+'\n')
-	f.write(str(totalSum))	
+	f.write(str(totalSum)+'\n')
+	f.write(str(totalColst)+'\n')
+	f.write(str(numRecon))
 	f.close()
 
 def frequencyDict(DTL, reconciliation):
