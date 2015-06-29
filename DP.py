@@ -350,19 +350,18 @@ def addScores(treeMin, DTLDict, ParentsDict, ScoreDict, newDTL):
                 if type(DTLDict[vertices][n]) == list:
                     child1 = DTLDict[vertices][n][1]
                     child2 = DTLDict[vertices][n][2]
-                    oldScore = DTLDict[vertices][n][3]
-                    newDTL[vertices][n][3] = ParentsDict[vertices] * (1.0 * oldScore / ScoreDict[vertices])
+                    oldScore = DTLDict[vertices][n][-1]
+                    newDTL[vertices][n][-1] = ParentsDict[vertices] * (1.0 * oldScore / ScoreDict[vertices])
                     if child1!= (None, None):
                         if child1 in ParentsDict:
-                            ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][3]
+                            ParentsDict[DTLDict[vertices][n][1]]+= newDTL[vertices][n][-1]
                         else: 
-                            ParentsDict[child1] = newDTL[vertices][n][3] 
+                            ParentsDict[child1] = newDTL[vertices][n][-1] 
                     if child2!=(None, None):
                         if child2 in ParentsDict:
-                            ParentsDict[child2]+= newDTL[vertices][n][3]
+                            ParentsDict[child2]+= newDTL[vertices][n][-1]
                         else: 
-
-                            ParentsDict[child2] = newDTL[vertices][n][3]   
+                            ParentsDict[child2] = newDTL[vertices][n][-1]   
     normalize = newDTL[preOrderCheck[-1][0]][0][-1]
     for key in newDTL.keys():
         for n in range(len(newDTL[key])-1):
