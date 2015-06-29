@@ -3,13 +3,13 @@ COG0018
 Frequency Scoring
 
 Leaves:	103
-Reconciliations:	635904.0
-Total Score:	27.6392914654
-1.	26.7735507246	Temporal Inconcistancy Present
-2.	0.606481481481	Temporal Inconcistancy Present
-3.	0.149959742351	Temporal Inconcistancy Present
-4.	0.0561594202899	Temporal Inconcistancy Present
-5.	0.0253623188406	Temporal Inconcistancy Present
-6.	0.0157004830918	Temporal Inconcistancy Present
-7.	0.006038647343	Temporal Inconcistancy Present
-8.	0.006038647343	Temporal Inconcistancy Present
+Reconciliations:	30720.0
+Total Score:	232.0
+1.	217.829166667	No Temporal Inconsistancies
+2.	10.3041666667	No Temporal Inconsistancies
+3.	2.30416666667	No Temporal Inconsistancies
+4.	0.7625	No Temporal Inconsistancies
+5.	0.325	No Temporal Inconsistancies
+6.	0.225	No Temporal Inconsistancies
+7.	0.125	No Temporal Inconsistancies
+8.	0.125	No Temporal Inconsistancies
