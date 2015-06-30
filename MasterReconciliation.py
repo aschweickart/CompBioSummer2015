@@ -7,7 +7,7 @@ import newickFormatReader
 import ReconciliationGraph
 import copy
 
-def Reconcile(fileName, D, T, L, k):
+def Reconcile(fileName, D, T, L, k, unitc):
 	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
 	the host, parasite, and reconciliations"""
 	orderedGraphs = []
@@ -18,10 +18,15 @@ def Reconcile(fileName, D, T, L, k):
 	#hostOrder = orderGraph.date(hostv)
 	#hostBranchs = branch(hostv, hostOrder)
 	DTL, numRecon, leaves = DP.DP(host, paras, phi, D, T, L)
+	if unitc:
+		for key in DTL:
+			for event in range(len(DTL[key])-1):
+				DTL[key][event][-1] = 1.0
 	DTLGraph = copy.deepcopy(DTL)
 	scores, rec = Greedy.Greedy(DTLGraph, numRecon, paras, k)
 	graph = []
 	for item in rec:
+		print item
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
 		orderedGraphs.append(orderGraph.date(graph[item]))

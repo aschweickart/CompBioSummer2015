@@ -5,12 +5,12 @@ Frequency Scoring
 Leaves:	103
 Reconciliations:	19968.0
 Total Score:	224.0
-1.	205.977564103	No Temporal Inconsistancies
-2.	11.4423076923	No Temporal Inconsistancies
-3.	3.40705128205	No Temporal Inconsistancies
-4.	1.33012820513	No Temporal Inconsistancies
-5.	0.766025641026	No Temporal Inconsistancies
-6.	0.358974358974	No Temporal Inconsistancies
-7.	0.320512820513	No Temporal Inconsistancies
-8.	0.237179487179	No Temporal Inconsistancies
-9.	0.160256410256	No Temporal Inconsistancies
+1.	205.977564103	Temporal Inconcistancy Present
+2.	11.4423076923	Temporal Inconcistancy Present
+3.	3.40705128205	Temporal Inconcistancy Present
+4.	1.33012820513	Temporal Inconcistancy Present
+5.	0.766025641026	Temporal Inconcistancy Present
+6.	0.358974358974	Temporal Inconcistancy Present
+7.	0.320512820513	Temporal Inconcistancy Present
+8.	0.237179487179	Temporal Inconcistancy Present
+9.	0.160256410256	Temporal Inconcistancy Present

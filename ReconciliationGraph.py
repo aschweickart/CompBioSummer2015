@@ -108,15 +108,13 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 			reconGraph[key[1]] = [None]
 			reconGraph[key[0]] = [None]
 
-		else:
-			parent = parents[key[0]]
-			if parent != 'Top':
-				reconGraph[parent] = reconGraph[parent] + [key[1]]
-				if reconciliation[key][1] != (None, None):
-					reconGraph[key[1]] = reconGraph[key[0]]+ [reconciliation[key][1][0]]
-				else: reconGraph[key[1]] = reconGraph[key[1]]+[reconciliation[key][2][0]]
-
-
+		#else:
+		#	parent = parents[key[0]]
+		#	if parent != 'Top':
+		#		reconGraph[parent] = reconGraph[parent] + [key[1]]
+		#		if reconciliation[key][1] != (None, None):
+		#			reconGraph[key[1]] = reconGraph[key[0]]+ [reconciliation[key][1][0]]
+		#		else: reconGraph[key[1]] = reconGraph[key[1]]+[reconciliation[key][2][0]]
 
 	for key in reconGraph:
 		reconGraph[key] = uniquify(reconGraph[key])

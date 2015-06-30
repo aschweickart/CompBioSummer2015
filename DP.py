@@ -264,7 +264,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     newDTL = copy.deepcopy(DTL)
 
     DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
-    # Draw the DTL reconciliation of this DTL Graph
+    #Draw the DTL reconciliation of this DTL Graph
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
     return DTL, numRecon, leaves
