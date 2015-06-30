@@ -1,3 +1,13 @@
+# MasterReconciliation.py
+# Juliet Forman, Srinidhi Srinivasan, Annalise Schweickart, and Carter Slocum
+# July 2015
+
+# This file contains functions for computing maximum parsimony 
+# DTL reconciliations using the edge-based DP algorithm.  The main # # function in this file is called Reconcile and the remaining 
+# functions are helper functions that are used by Reconcile.
+
+
+
 import DP
 import Greedy
 import newickToVis
