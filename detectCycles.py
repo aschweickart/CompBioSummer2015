@@ -196,7 +196,7 @@ def detectCycles(reconGraph, H, P):
 	#stack.append([P, H])
 	markingDict[Proot] = 'root'
 	markingDict[Hroot] = 'root'
-	recurseChildren(reconGraph, markingDict, Proot)
+	#recurseChildren(reconGraph, markingDict, Proot)
 	recurseChildren(reconGraph, markingDict, Hroot)
 	return markingDict
 
@@ -205,15 +205,19 @@ def recurseChildren(reconGraph, markingDict, node):
 	"""This function takes as input reconGraph, the cycle checking graph, markingDict, a dictionary that keeps track
 	of all the childNodes that are marked, and childNode, the node that we will recurse on. It returns an updated 
 	markingDict if there are no cycles, or"""
-
+	print "node:", node
 	for child in reconGraph[node]:
+		print "child:", child
 		if child not in markingDict and child != None:
 			markingDict[child] = node
+			print "markingDict[child]/node:", node
 			childDict = recurseChildren(reconGraph, markingDict, child)
-			if recurseChildren(reconGraph, markingDict, child) is type(dict):
-				markingDict.update(recurseChildren(reconGraph, markingDict, child))
-		else:
-			return child
+			print "childDict:", childDict
+			if childDict is type(dict):
+				markingDict.update(childDict)
+		elif child != None:
+			return "cycle detected!!!!!!!:", child
+		print "markingDict:", markingDict
 	return markingDict
 
 def deleteTransfer(reconGraph, markingDict, transferList):
