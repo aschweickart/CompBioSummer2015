@@ -258,7 +258,7 @@ def recurseChildren(reconGraph, markingDict, node, cycleNode):
 		return
 	for child in reconGraph[node]:
 		if child in markingDict and len(markingDict[child]) == 2:
-			cycleNode = cycleNode + [child]
+			cycleNode.append(child)
 			return cycleNode
 		elif child not in markingDict and child != None:
 			markingDict[child] = [node, 'tick']
@@ -291,7 +291,6 @@ reconGraph1 = {'h8': [None], 'h9': [None], 'h2': ['p5', 'p4', 'h4', 'h5'], 'h3':
 reconGraphOrig = {'h8': [None], 'h9': [None], 'h2': ['p5', 'p4', 'h4', 'h5'], 'h3': ['p6', 'h6', 'h7', 'p7'], 'h1': ['h2', 'h3', 'p2', 'p3'], 'h6': ['h12', 'h13', 'p6'], 'h7': ['h14', 'h15', 'p7'], 'h4': ['h8', 'h9', 'p4'], 'h5': ['h10', 'h11', 'p5'], 'p10': [None], 'p11': [None], 'p12': [None], 'p13': [None], 'p14': [None], 'p15': [None], 'p2': ['p4', 'p5'], 'p3': ['p6', 'p7'], 'p1': ['p2', 'p3', 'h2', 'h3'], 'p6': ['p12', 'p13', 'h13', 'h7'], 'p7': ['h14', 'p14', 'p15', 'h6'], 'p4': ['h9', 'p8', 'p9', 'h5'], 'p5': ['p10', 'p11', 'h10', 'h4'], 'h10': [None], 'h11': [None], 'h12': [None], 'h13': [None], 'h14': [None], 'h15': [None], 'p9': [None], 'p8': [None]}
 
 transferList = [['p4', 'h4', 'h5'], ['p6', 'h6', 'h7'], ['p5', 'h5', 'h4'], ['p7', 'h7', 'h6']]
-
 
 
 
