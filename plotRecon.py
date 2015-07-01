@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 
-reconList = [[5, 2, 37, 7.0, 2.0, 5.0, 13.0, 10.0], [15, 3, 115, 1.0, 7.0, 65.0, 32.0, 4.0, 6.0]]
+#reconList = [[5, 2, 37, 7.0, 2.0, 5.0, 13.0, 10.0], [15, 3, 115, 1.0, 7.0, 65.0, 32.0, 4.0, 6.0]]
 
 #file i/o stuff:
 def fileConversion(reconFile):
 	lines = [line.rstrip('\n') for line in open(reconFile)]
-	lines = lines[2:]
+	lines = lines[4:]
 	reconPoints = []
 	for string in lines[:3]:
 		index = 0
 		for char in string:
 			if char == ":":
-				reconPoints.append(int(string[index + 2:]))
+				reconPoints.append(float(string[index + 2:]))
 			index += 1
 	#print reconPoints
 	for string in lines[3:]:
@@ -57,7 +57,6 @@ def plotRecon(reconList):
 			percentReconPoint = currentReconPoint/totalPoints*100
 			currentPercentTotal += percentReconPoint
 			plt.hlines(currentPercentTotal, treeSize-1, treeSize+1, color = 'b')
-
 
 	plt.show()
 
