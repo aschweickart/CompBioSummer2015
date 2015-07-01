@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  {% block styles %}
+<link rel="stylesheet" href="{{url_for('.static', filename = 'customize.min.css')}}">
+
+{% endblock %}
+{% block scripts %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>K-best</title>
+</head>
+<body background = "static/Green.jpg" width="100%" height="100%">
+<body role="document">
+ <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" <!-- aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">Navigate <font face="Awesome">DTL RnB</font></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/index">Home</a></li>
+            <li class="active"><a href="/Registration">Download</a></li>
+            <li><a href="/signup">Login</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <br>
+    <div class="container">
+    <div class="alert alert-success" role="alert">
+    <br>
+    <h2><font color = "black">Submission and Format:</h2>
+    <p><b> Please upload a file. Files should be submitted in <font face="courier">.newick</font> form. When entering species names, please avoid using quotation marks and/or unnecessary whitespace.</font></p></b>
+</div>
+<form enctype="multipart/form-data" action="/reconcile" method="post">
+    <br>
+    <div class = "row">
+        <div class = "col-lg-12">
+            <div class = "panel panel-info">
+            <div class = "panel-heading"> 
+                <label><h3>Inputs for file:</h3></label></div>
+                <div class = "container">
+
+                <br><label>Select a file to upload:</label><input type="file" name="newick">
+                <br><label>Please enter costs for the events. Also, remember that all weights are strictly positive (nonzero).</label>
+                <div class = "col-lg-6">
+                    <br><label>Duplication:</label><input type="text" name="dup" class="form-control" placeholder="Default: 1"><br>
+                    <label>Transfer:</label><input type="text" name="trans" class="form-control" placeholder="Default: 1"><br>
+                    <label>Loss:</label><input type="text" name="loss" class="form-control" placeholder="Default: 1" ><br>
+                    
+                <label>Which scoring function would you like to use?<br> <small>(Default: Unit Frequency)</small></label><br>
+                <div class = "radio">
+                    <input type="radio" name="scoring" value="Frequency">Frequency <br><br>
+                    <input type = "radio" name = "scoring"  value = "xscape"> Xscape Scoring<br> <br>
+                    <input type = "radio" name = "scoring" value = "unit" checked> Unit Scoring <br><br>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+            <br>
+            
+            <div class = "col-lg-12">
+            <div class = "panel panel-success">
+            <div class = "panel-heading">
+                <label><h3>Inputs for Xscape frequency (optional):</h3></label><br></div>
+                <div class = "container">
+                <div class = "col-lg-6"><br> 
+                <label>Switch low value:</label><input type = "text" name = "switchlow" class = "form-control" placeholder = "Default: 0.1"><br>
+                <label>Switch high value:</label><input type = "text" name = "switchhigh" class = "form-control" placeholder = "Default: 5"><br>
+                <label>Loss low value:</label><input type = "text" name = "losslow" class = "form-control" placeholder = "Default: 0.1"><br>
+                <label>Loss high value:</label><input type = "text" name = "losshigh" class = "form-control" placeholder = "Default: 5"><br>
+                <h3><input type="submit" value="Submit"></h3><br>
+
+                </div>
+                </div>
+                </div>
+            </div>
+            </div>
+</form>
+
+</body>
+
+</html>

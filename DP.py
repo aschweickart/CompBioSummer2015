@@ -411,11 +411,3 @@ def reconcile(fileName, D, T, L):
     DP to return the DTL reconciliation graph of the provided newick file"""
     host, paras, phi = newickFormatReader.getInput(fileName)
     return DP(host, paras, phi, D, T, L)
-
-def masterSum(DTL):
-    total = 0
-    for key in DTL.keys():
-        for event in DTL[key]:
-            if type(event) == list:
-                total+=event[-1]
-    return total

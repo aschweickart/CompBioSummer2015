@@ -9,7 +9,7 @@
 
 
 import DP
-import Greedy
+import HeyJuliet
 import newickToVis
 import ReconConversion
 import orderGraph
@@ -17,34 +17,57 @@ import newickFormatReader
 import ReconciliationGraph
 from sys import argv
 import copy
+import calcCostscapeScore
 
 def Reconcile(argList):
 	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
 	the host, parasite, and reconciliations"""
 	fileName = argList[1]
-	D = int(argList[2])
-	T = int(argList[3])
-	L = int(argList[4])
-	k = int(argList[5])
+	D = float(argList[2])
+	T = float(argList[3])
+	L = float(argList[4])
+	freqType = argList[5]
+	switchLo = float(argList[6])
+	switchHi = float(argList[7])
+	lossLo = float(argList[8])
+	lossHi = float(argList[9])
 	orderedGraphs = []
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
 	hostBranchs = branch(hostv, hostOrder)
-	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	total = DP.masterSum(DTL)
+	if freqType == "Frequency":
+		DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
+	elif freqType == "xscape":
+		DTL = calcCostscapeScore.newScoreWrapper(fileName, switchLo, switchHi, lossLo, lossHi, D, T, L)
+	elif freqType == "unit":
+		DTL = unitScoreDTL(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
-	rec = Greedy.Greedy(DTL, paras, k)
+	scoresList, rec = HeyJuliet.Greedy(DTL, paras)
 	graph = []
-	individSums = []
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
 			orderedGraphs += orderGraph.date(graph[item])
-			individSums.append(ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item))
+			ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	newickToVis.convert(fileName,hostBranchs)
-	return individSums, total
+
+def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
+	""" Takes a hostTree, parasiteTree, tip mapping function phi, and duplication cost (D), 
+	transfer cost (T), and loss cost (L) and returns the DTL graph in the form of a dictionary, 
+	with event scores set to 1. Cospeciation is assumed to cost 0. """
+	DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
+	newDTL = {}
+	for vertex in DTL:
+		newDTL[vertex] = []
+		for i in range(len(DTL[vertex]) - 1):
+			event = DTL[vertex][i]
+			event = event[:-1] + [1.0]
+			newDTL[vertex] = newDTL[vertex] + [event]
+		newDTL[vertex] = newDTL[vertex] + [DTL[vertex][-1]]
+	return newDTL
+
 
 def branch(tree, treeOrder):
 	"""Computes Ultra-metric Branchlength from a tree dating"""

@@ -1,8 +1,10 @@
 # PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
 import newickFormatReader
 import DP
-import Greedy
+import HeyJuliet
 import copy
+import calcCostscapeScore
+import MasterReconciliation
 from sys import argv
 def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	"""Takes as input a dictionary of a reconciliation between host and parasite trees, a DTL graph, and a string containing the name of a 
@@ -26,20 +28,27 @@ def freqSummation(argList):
 	D = float(argList[2])
 	T = float(argList[3])
 	L = float(argList[4])
-	k = int(argList[5])
+	freqType = argList[5]
+	switchLo = float(argList[6])
+	switchHi = float(argList[7])
+	lossLo = float(argList[8])
+	lossHi = float(argList[9])
 	fileName = newickFile[:-7]
 	f = open(fileName+"freqFile.txt", 'w')
-	individSum = []
-	totalSum = 0
 	host, paras, phi = newickFormatReader.getInput(newickFile)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	DTLGraph = copy.deepcopy(DTL)
-	reconciliation = Greedy.Greedy(DTL, paras, k)
-	print len(reconciliation)
+	if freqType == "Frequency":
+		newDTL = DTL
+	elif freqType == "xscape":
+		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L)
+	elif freqType == "unit":
+		newDTL = MasterReconciliation.unitScoreDTL(host, paras, phi, D, T, L)
+	scoresList, reconciliation = HeyJuliet.Greedy(newDTL, paras)
+	totalSum = 0
+	for score in scoresList:
+		totalSum +=score
 	for index in reconciliation:
 		totalColst = 0
-		currentScore = 0
-		freqDict = frequencyDict(DTLGraph, index)
 		for key in index:
 			if index[key][0] == "L":
 				totalColst+=L
@@ -47,11 +56,7 @@ def freqSummation(argList):
 				totalColst+=T
 			elif index[key][0] == "D":
 				totalColst+=D
-			currentScore+=freqDict[key]
-			freqDict[key] = 0 
-		individSum.append(currentScore)
-		totalSum += currentScore
-	f.write(str(individSum)+'\n')
+	f.write(str(scoresList)+'\n')
 	f.write(str(totalSum)+'\n')
 	f.write(str(totalColst)+'\n')
 	f.write(str(numRecon))

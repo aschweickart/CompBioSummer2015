@@ -42,14 +42,14 @@ def draw_tree(tree, brecon, stree,
               rmargin=10, lmargin=10, tmargin=0, bmargin=0,
               tree_color=(0, 0, 0),
               tree_trans_color=(0, 0, 0),
-              stree_color=(.6, .3, .8),
+              stree_color=(.3, .7, .3),
               snode_color=(.2, .2, .7),
               loss_color = (1,1,1),
               loss_color_border=(.5,.5,.5),
               dup_color=(1, 0, 0),
               dup_color_border=(.5, 0, 0),
-              trans_color=(0, 1, 0),
-              trans_color_border=(0, .5, 0),
+              trans_color=(1, 1, 0),
+              trans_color_border=(.5, .5, 0),
               event_size=10,
               snames=None,
               rootlen=None,
@@ -395,32 +395,35 @@ def draw_tree(tree, brecon, stree,
 
 	
             if event == "spec":
+                canvas.rect(x - o, y - o, event_size, event_size,
+                        fillColor=(0,0,0),
+                        strokeColor=(0,0,0))
                 canvas.text(frequency, x-o, y-o, font_size, fillColor = (0,0,0))
-# =======
-#         losses = copy.copy(loss)
-#     # draw events
-#     for node in tree:
+# # =======
+# #         losses = copy.copy(loss)
+# #     # draw events
+# #     for node in tree:
         
-#         if node in losses:
-#             snode, event, frequency = losses[node]
-#         if node in brec:
-#             snode, event, frequency = brec[node][-1]
-#             if node in losses:
-#                 try:
-#                     losses[node.children[0]] = losses[node]
-#                 except:
-#                     print"  "
-#         x, y = layout[node]
-#         o = event_size / 2.0
+# #         if node in losses:
+# #             snode, event, frequency = losses[node]
+# #         if node in brec:
+# #             snode, event, frequency = brec[node][-1]
+# #             if node in losses:
+# #                 try:
+# #                     losses[node.children[0]] = losses[node]
+# #                 except:
+# #                     print"  "
+# #         x, y = layout[node]
+# #         o = event_size / 2.0
 
-#         if event == "loss":
-#             canvas.rect(x - o, y - o, event_size, event_size,
-#                         fillColor=loss_color,
-#                         strokeColor=loss_color_border)
-#             canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=loss_color)
-#         elif event == "spec":
-#             canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
-# >>>>>>> origin/master
+# #         if event == "loss":
+# #             canvas.rect(x - o, y - o, event_size, event_size,
+# #                         fillColor=loss_color,
+# #                         strokeColor=loss_color_border)
+# #             canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=loss_color)
+# #         elif event == "spec":
+# #             canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
+# # >>>>>>> origin/master
 
             if event == "dup":
                 canvas.rect(x - o, y - o, event_size, event_size,
