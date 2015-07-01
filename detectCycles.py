@@ -237,17 +237,22 @@ markingDict = {'p2': 'p1', 'p3': 'h3', 'p1': 'root', 'p6': 'p3', 'p7': 'p3', 'p4
 def detectCycles(HostTree, ParasiteTree, reconciliation):
 	"""This function takes as input the cycle checking graph, reconGraph, and returns a new reconGraph where the cycles
 	are removed and also keeps track of where the transfers occurred in the reconciliation."""
+	guiltyTransferList = []
 	markingDict = {}
 	reconGraph, transferList = buildReconciliation(H, P, R)
 	Hroot = findRoot(H)
 	markingDict[Hroot] = ['root', 'tick']
 	markingDict, cycleNode = recurseChildren(reconGraph, markingDict, Hroot, [])
-	newReconGraph = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
+	newReconGraph, guiltyTransfer = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
+	if guiltyTransfer != []:
+		guiltyTransferList.append(guiltyTransfer)
 	while cycleNode != []:
 		markingDict, cycleNode = recurseChildren(newReconGraph, {Hroot: ['root', 'tick']}, Hroot, [])
-		newReconGraph = deleteTransfer(newReconGraph, markingDict, transferList, cycleNode)
+		newReconGraph, guiltyTransfer = deleteTransfer(newReconGraph, markingDict, transferList, cycleNode)
+		if guiltyTransfer != []:
+			guiltyTransferList.append(guiltyTransfer)
 
-	return newReconGraph
+	return newReconGraph, guiltyTransferList
 
 
 def recurseChildren(reconGraph, markingDict, node, cycleNode):
@@ -271,10 +276,12 @@ def recurseChildren(reconGraph, markingDict, node, cycleNode):
 def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 	"""This function takes as input the cycle checking graph, markingDict, transferList, and cycleNode, and 
 	returns the updated cycle checking graph with the guilty transfers removed."""
+	guiltyTransfer = []
 	if cycleNode == []:
-		return reconGraph
+		return reconGraph, guiltyTransfer
 	for transfer in transferList:
 		if cycleNode[0] in transfer:
+			guiltyTransfer = transfer
 			childList = reconGraph[transfer[1]]
 			childList.remove(transfer[0])
 			reconGraph[transfer[1]] = childList
@@ -282,7 +289,7 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 			childList.remove(transfer[2])
 			reconGraph[transfer[0]] = childList
 			break
-	return reconGraph
+	return reconGraph, guiltyTransfer
 
 
 
