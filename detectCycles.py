@@ -98,6 +98,8 @@ R = {('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')],
 ('p15', 'h14'): ['C', (None, None), (None, None)], 
 ('p13', 'h15'): ['C', (None, None), (None, None)]}
 
+from DPJune17 import *
+from newickFormatReader import *
 
 
 
@@ -307,7 +309,7 @@ def updateReconciliation(guiltyTransferList, HostTree, ParasiteTree, reconciliat
 	return newReconciliation
 
 
-newReconciliation = 
+#newReconciliation = 
 {('p5', 'h5'): ['L', ('p5', 'h10'), (None, None)], 
 ('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')], 
 ('p4', 'h9'): ['T', ('p8', 'h9'), ('p9', 'h5')], 
