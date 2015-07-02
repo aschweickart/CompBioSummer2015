@@ -1,10 +1,11 @@
 # PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
 import newickFormatReader
 import DPJune17
-#import HeyJuliet
+import HeyJuliet
 import copy
 import calcCostscapeScore
 import MasterReconciliation
+import detectCycles
 from sys import argv
 def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	"""Takes as input a dictionary of a reconciliation between host and parasite trees, a DTL graph, and a string containing the name of a 
