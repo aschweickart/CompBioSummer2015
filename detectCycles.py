@@ -38,6 +38,7 @@
 # ('p4', 'h5'): ['C', (None, None), (None, None)],
 # ('p7', 'h6'): ['C', (None, None), (None, None)],
 # ('p5', 'h7'): ['C', (None, None), (None, None)]}
+import copy
 
 H = {('h2', 'h4'): ('h2', 'h4', ('h4', 'h8'), ('h4', 'h9')), 
 ('h7', 'h14'): ('h7', 'h14', None, None), 
@@ -53,7 +54,7 @@ H = {('h2', 'h4'): ('h2', 'h4', ('h4', 'h8'), ('h4', 'h9')),
 ('h6', 'h12'): ('h6', 'h12', None, None), 
 ('h4', 'h8'): ('h4', 'h8', None, None), 
 ('h2', 'h5'): ('h2', 'h5', ('h5', 'h10'), ('h5', 'h11')), 
-('h7', 'h15'): ('h7', 'h15', None, None)} 
+('h7', 'h15'): ('h7', 'h15', None, None)}
 
 P = {('p1', 'p3'): ('p1', 'p3', ('p3', 'p6'), ('p3', 'p7')), 
 ('p6', 'p13'): ('p6', 'p13', None, None), 
@@ -79,11 +80,11 @@ R = {('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')],
 ('p4', 'h9'): ['T', ('p8', 'h9'), ('p9', 'h5')], 
 ('p9', 'h5'): ['L', ('p9', 'h11'), (None, None)], 
 ('p5', 'h5'): ['L', ('p5', 'h10'), (None, None)], 
-('p5', 'h10'): ['T', ('p11', 'h10'), ('p10', 'h4')], 
+('p5', 'h10'): ['T', ('p11', 'h10'), ('p10', 'h4')], #guilty
 ('p10', 'h4'): ['L', ('p10', 'h8'), (None, None)], 
 ('p3', 'h3'): ['S', ('p6', 'h6'), ('p7', 'h7')], 
 ('p6', 'h6'): ['L', ('p6', 'h13'), (None, None)], 
-('p6', 'h13'): ['T', ('p12', 'h13'), ('p13', 'h7')], 
+('p6', 'h13'): ['T', ('p12', 'h13'), ('p13', 'h7')],  #guilty
 ('p13', 'h7'): ['L', ('p13', 'h15'), (None, None)], 
 ('p7', 'h7'): ['L', ('p7', 'h14'), (None, None)], 
 ('p7', 'h14'): ['T', ('p15', 'h14'), ('p14', 'h6')], 
@@ -291,7 +292,45 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 			break
 	return reconGraph, guiltyTransfer
 
+guiltyTransferList = [['p5', 'h5', 'h4'], ['p6', 'h6', 'h7']]
 
+def updateReconciliation(guiltyTransferList, HostTree, ParasiteTree, reconciliation):
+	""" """
+	parents = parentsDict(HostTree, ParasiteTree)
+	newReconciliation = copy.deepcopy(reconciliation)
+	for transfer in guiltyTransferList:
+		for key in newReconciliation:
+			if transfer[0] == key[0] and transfer[1] == parents[key[1]]:
+				newValue = ['GT'] + newReconciliation[key][1:]
+				print "newValue:", newValue
+				newReconciliation[key] = newValue
+	return newReconciliation
+
+
+newReconciliation = 
+{('p5', 'h5'): ['L', ('p5', 'h10'), (None, None)], 
+('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')], 
+('p4', 'h9'): ['T', ('p8', 'h9'), ('p9', 'h5')], 
+('p13', 'h7'): ['L', ('p13', 'h15'), (None, None)], 
+('p6', 'h13'): ['GT', ('p12', 'h13'), ('p13', 'h7')], 
+('p9', 'h5'): ['L', ('p9', 'h11'), (None, None)], 
+('p3', 'h3'): ['S', ('p6', 'h6'), ('p7', 'h7')], 
+('p2', 'h2'): ['S', ('p4', 'h4'), ('p5', 'h5')], 
+('p5', 'h10'): ['GT', ('p11', 'h10'), ('p10', 'h4')], 
+('p9', 'h11'): ['C', (None, None), (None, None)], 
+('p10', 'h8'): ['C', (None, None), (None, None)], 
+('p10', 'h4'): ['L', ('p10', 'h8'), (None, None)], 
+('p15', 'h14'): ['C', (None, None), (None, None)], 
+('p12', 'h13'): ['C', (None, None), (None, None)], 
+('p11', 'h10'): ['C', (None, None), (None, None)], 
+('p14', 'h6'): ['L', ('p14', 'h12'), (None, None)], 
+('p7', 'h14'): ['T', ('p15', 'h14'), ('p14', 'h6')], 
+('p7', 'h7'): ['L', ('p7', 'h14'), (None, None)], 
+('p14', 'h12'): ['C', (None, None), (None, None)], 
+('p6', 'h6'): ['L', ('p6', 'h13'), (None, None)], 
+('p13', 'h15'): ['C', (None, None), (None, None)], 
+('p8', 'h9'): ['C', (None, None), (None, None)], 
+('p4', 'h4'): ['L', ('p4', 'h9'), (None, None)]}
 
 reconGraph2 = {'h8': [None], 'h9': [None], 'h2': ['p5', 'p4', 'h4', 'h5'], 'h3': ['p6', 'h6', 'h7', 'p7'], 'h1': ['h2', 'h3', 'p2', 'p3'], 'h6': ['h12', 'h13'], 'h7': ['h14', 'h15', 'p7'], 'h4': ['h8', 'h9', 'p4'], 'h5': ['h10', 'h11'], 'p10': [None], 'p11': [None], 'p12': [None], 'p13': [None], 'p14': [None], 'p15': [None], 'p2': ['p4', 'p5'], 'p3': ['p6', 'p7'], 'p1': ['p2', 'p3', 'h2', 'h3'], 'p6': ['p12', 'p13', 'h13'], 'p7': ['h14', 'p14', 'p15', 'h6'], 'p4': ['h9', 'p8', 'p9', 'h5'], 'p5': ['p10', 'p11', 'h10'], 'h10': [None], 'h11': [None], 'h12': [None], 'h13': [None], 'h14': [None], 'h15': [None], 'p9': [None], 'p8': [None]}
 reconGraph1 = {'h8': [None], 'h9': [None], 'h2': ['p5', 'p4', 'h4', 'h5'], 'h3': ['p6', 'h6', 'h7', 'p7'], 'h1': ['h2', 'h3', 'p2', 'p3'], 'h6': ['h12', 'h13', 'p6'], 'h7': ['h14', 'h15', 'p7'], 'h4': ['h8', 'h9', 'p4'], 'h5': ['h10', 'h11'], 'p10': [None], 'p11': [None], 'p12': [None], 'p13': [None], 'p14': [None], 'p15': [None], 'p2': ['p4', 'p5'], 'p3': ['p6', 'p7'], 'p1': ['p2', 'p3', 'h2', 'h3'], 'p6': ['p12', 'p13', 'h13', 'h7'], 'p7': ['h14', 'p14', 'p15', 'h6'], 'p4': ['h9', 'p8', 'p9', 'h5'], 'p5': ['p10', 'p11', 'h10'], 'h10': [None], 'h11': [None], 'h12': [None], 'h13': [None], 'h14': [None], 'h15': [None], 'p9': [None], 'p8': [None]}
