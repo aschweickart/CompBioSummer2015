@@ -334,6 +334,7 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 			childList.remove(transfer[2])
 			print "childList2.0:", childList
 			reconGraph[transfer[0]] = childList
+			print reconGraph
 			break
 	return reconGraph, guiltyTransfer
 
