@@ -1,4 +1,9 @@
+# transsvg.py
+# Edited by Annalise Schweickart
+# July 2015
 
+# This is the drawing tool of vistrans, drawing the host and parasite trees and the events that occur
+# This code was edited to include loss events, transfer events causing cycles, and frequencies of events
 from collections import defaultdict
 
 from rasmus import treelib1, svg, util, stats
@@ -10,7 +15,9 @@ def draw_stree(canvas, stree, slayout,
                stree_width=.8, 
                stree_color=(.4, .4, 1),
                snode_color=(.2, .2, .4)):
-
+    '''Takes as input a canvas, a host tree, stree, created by treelib1, a slayout, also created by
+    treelib1, a scaling, yscale, the width of the tree, sree_width, and the colors of the tree and its nodes
+    and draws the host tree on which the species tree is built'''
     # draw stree branches
     for node in stree:
         x, y = slayout[node]
@@ -46,47 +53,26 @@ def draw_tree(tree, brecon, stree,
               snode_color=(.2, .2, .7),
               loss_color = (1,1,1),
               loss_color_border=(.5,.5,.5),
-              dup_color=(1, 0, 0),
-              dup_color_border=(.5, 0, 0),
+              dup_color=(0, 0, 1),
+              dup_color_border=(0, 0, 1),
               trans_color=(1, 1, 0),
               trans_color_border=(.5, .5, 0),
+              gtrans_color=(1,0,0),
+              gtrans_color_border=(.5,0,0),
               event_size=10,
               snames=None,
               rootlen=None,
               stree_width=.8,
               filename="tree.svg"
               ):
-# def draw_tree(tree, brec, stree, loss,
-#               xscale=100, yscale=100,
-#               leaf_padding=10, 
-#               label_size=None,
-#               label_offset=None,
-#               font_size=12,
-#               stree_font_size=20,
-#               canvas=None, autoclose=True,
-#               rmargin=10, lmargin=10, tmargin=0, bmargin=0,
-#               tree_color=(0, 0, 0),
-#               tree_trans_color=(0, 0, 0),
-#               stree_color=(.6, .3, .8),
-#               snode_color=(.2, .2, .7),
-#               loss_color = (1,1,1),
-#               loss_color_border=(.5,.5,.5),
-#               dup_color=(1, 0, 0),
-#               dup_color_border=(.5, 0, 0),
-#               trans_color=(0, 1, 0),
-#               trans_color_border=(0, .5, 0),
-#               event_size=10,
-#               snames=None,
-#               rootlen=None,
-#               stree_width=.8,
-#               filename="tree.svg"
-#               ):
+    '''Takes as input a parasite tree, tree, a reconciliation file, brecon, a host tree, stree, as well as
+    sizes and colors of the trees components and returns a drawing of the reconciliation of the parasite 
+    tree on the host tree with event nodes of specified colors'''
     # set defaults
     font_ratio = 8. / 11.    
     if label_size is None:
         label_size = .7 * font_size
-    #if label_offset is None:
-    #    label_offset = -1
+
 
     if sum(x.dist for x in tree.nodes.values()) == 0:
         legend_scale = False
@@ -119,22 +105,8 @@ def draw_tree(tree, brecon, stree,
                 yorders[node].append(len(ylists[snode]))
                 ylists[snode].append(node)
 
-# =======
-#         if node in losses:
-#             snode, event, frequency = losses[node]
-#         if node in brec:
-#             snode, event, frequency = brec[node][-1]
-#             if node in losses:
-#                 try:
-#                     losses[node.children[0]] = losses[node]
-#                 except:
-#                     print"  "
-#         if event == "spec" or event == "gene" or event == "loss":
-#             yorders[node] = len(ylists[snode])
-#             ylists[snode].append(node)
-# >>>>>>> origin/master
+
     # layout dups and transfers (y)
-    #losses = copy.copy(loss)
     for node in tree.postorder():
 
         for ev in brecon[node]:
@@ -147,25 +119,7 @@ def draw_tree(tree, brecon, stree,
                     yorders[node].append(0)
                 else:
                     yorders[node].append(stats.mean(flatten(v)))
-# =======
-#         if node in losses:
-#             snode, event, frequency = losses[node]
-#         if node in brec:
-#             snode, event, frequency = brec[node][-1]
-#             if node in losses:
-#                 try:
-#                     losses[node.children[0]] = losses[node]
-#                 except:
-#                     print"  "
-#         if event != "spec" and event != "gene" and event != "loss":
-#             v = [yorders[child]
-#                  for child in node.children
-#                  if brec[child][-1][0] == snode]
-#             if len(v) == 0:
-#                 yorders[node] = 0
-#             else:
-#                 yorders[node] = stats.mean(v)
-# >>>>>>> origin/master
+
     # layout node (x)
     xorders = {}
     xmax = defaultdict(lambda: 0)
@@ -177,24 +131,7 @@ def draw_tree(tree, brecon, stree,
             if event == "spec" or event == "gene" or event == "loss":
                     xorders[node].append(0)
 
-# =======
-#         if node in losses:
-#             snode, event, frequency = losses[node]
-#         if node in brec:
-#             snode, event, frequency = brec[node][-1]
-#             if node in losses:
-#                 try:
-#                     losses[node.children[0]] = losses[node]
-#                 except:
-#                     print"  "
-#         if event == "spec" or event == "gene" or event == "loss":
-#             xorders[node] = 0
-#         else:
-#             v = [xorders[child] for child in node.children
-#                  if brec[child][-1][0] == snode]
-#             if len(v) == 0:
-#                 xorders[node] = 1
-# >>>>>>> origin/master
+
             else:
                 v = [xorders[child] for child in node.children
                     if brecon[child][-1][0] == snode]
@@ -205,23 +142,13 @@ def draw_tree(tree, brecon, stree,
             xmax[snode] = max(xmax[snode], maxList([xorders[node]]))
 
     # setup layout
-# <<<<<<< HEAD
     layout = {None: [slayout[brecon[tree.root][-1][0].parent]]}
     for node in tree:
         for n in range(len(brecon[node])):
             snode, event, frequency = brecon[node][n]
             nx, ny = slayout[snode]
             px, py = slayout[snode.parent]
-# =======
-#     layout = {None: slayout[brec[tree.root][-1][0].parent]}
-#     for node in tree:
-#         if node in losses:
-#             snode = losses[node][0]
-#         else:
-#             snode = brec[node][-1][0]
-#         nx, ny = slayout[snode]
-#         px, py = slayout[snode.parent]
-# >>>>>>> origin/master
+
 
         # calc x
             frac = (xorders[node][n]) / float(xmax[snode] + 1)
@@ -240,8 +167,10 @@ def draw_tree(tree, brecon, stree,
             if node in layout: layout[node].append((x, y))
             else:
                 layout[node] = [(x, y)]
+        
+        # order brecon nodes temporally
         brecon[node] = orderLoss(node, brecon, layout)
-
+        # order layout nodes temporally
         layout[node] = orderLayout(node, layout)
 
         if y > max(l[1] for l in slayout.values()) + 50:
@@ -253,15 +182,12 @@ def draw_tree(tree, brecon, stree,
             print node, snode, layout[node]
 
 
-
-
     # layout label sizes
     max_label_size = max(len(x.name)
         for x in tree.leaves()) * font_ratio * font_size
     max_slabel_size = max(len(x.name)
         for x in stree.leaves()) * font_ratio * stree_font_size
 
-    
 
     '''
     if colormap == None:
@@ -330,57 +256,55 @@ def draw_tree(tree, brecon, stree,
         containsL= containsLoss(node, brecon)
         for n in range(len(brecon[node])):
             x, y = layout[node][n]
-            if containsL == False:
+            
+            if containsL == False: # no loss event
                 px, py = layout[node.parent][-1]       
-            else:
-                if n == 0:
+            else: # loss event present
+                if n == 0: # event is loss
                     px, py = layout[node.parent][-1]
-                else: 
+                else: # event stems from loss
                     px, py = layout[node][n-1]
             
 
             trans = False
 
             if node.parent:
-                for ev in brecon[node]:
-                    snode, event, frequency =  ev
-                    psnode = brecon[node.parent][-1][0]
-                while snode:
-                    if psnode == snode:
-                        break
-                    snode = snode.parent
+                snode, event, frequency =  brecon[node][n]
+                if n == 0:
+                    psnode, pevent, pfrequency = brecon[node.parent][-1]
+                
+                # Event stemming from a loss event
+                else: psnode, pevent, pfrequency = brecon[node][n-1]
+                if pevent == "trans" or pevent == "gtrans":
+                    if psnode != snode:
+                        trans = True
+                else: trans = False
+
+                if not trans:
+                    canvas.line(x, y, px, py, color=tree_color)
+                
+                # draw the transfer dashed line        
                 else:
-                    trans = True
+                    arch = 20
+                    x2 = (x*.5 + px*.5) - arch
+                    y2 = (y*.5 + py*.5)
+                    x3 = (x*.5 + px*.5) - arch
+                    y3 = (y*.5 + py*.5)
+                    
+                    if pevent == "trans":
+                        canvas.write("<path d='M%f %f C%f %f %f %f %f %f' %s />\n " %
+                            (x, y, x2, y2,
+                             x3, y3, px, py,
+                            " style='stroke-dasharray: 4, 2' " +
+                            svg.colorFields(tree_trans_color, (0,0,0,0))))
+                    # draw guilty transfer line
+                    else: canvas.write("<path d='M%f %f C%f %f %f %f %f %f' %s />\n " %
+                            (x, y, x2, y2,
+                             x3, y3, px, py,
+                            " style='stroke-dasharray: 4, 2' " +
+                            svg.colorFields(gtrans_color, (0,0,0,0))))
 
-            if not trans:
-                canvas.line(x, y, px, py, color=tree_color)
-# =======
-#         x, y = layout[node]
-#         px, py = layout[node.parent]
-#         trans = False
 
-#         if node.parent:
-#             snode =  brec[node][-1][0]
-#             psnode = brec[node.parent][-1][0]
-#             while snode:
-#                 if psnode == snode:
-#                     break
-#                 snode = snode.parent
-# >>>>>>> origin/master
-            else:
-                arch = 20
-                x2 = (x*.5 + px*.5) - arch
-                y2 = (y*.5 + py*.5)
-                x3 = (x*.5 + px*.5) - arch
-                y3 = (y*.5 + py*.5)
-            
-                canvas.write("<path d='M%f %f C%f %f %f %f %f %f' %s />\n " %
-                         (x, y, x2, y2,
-                          x3, y3, px, py,
-                          " style='stroke-dasharray: 4, 2' " +
-                          svg.colorFields(tree_trans_color, (0,0,0,0))))
-
-# <<<<<<< HEAD
     # draw events
     for node in tree:
         for n in range(len(brecon[node])):
@@ -391,59 +315,41 @@ def draw_tree(tree, brecon, stree,
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=loss_color,
                         strokeColor=loss_color_border)
-                canvas.text(frequency, x-o, y-o, font_size, fillColor = (1,1,1))
+                canvas.text(frequency, x-o, y-o, font_size+2, fillColor = (1,1,1))
 
 	
             if event == "spec":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=(0,0,0),
                         strokeColor=(0,0,0))
-                canvas.text(frequency, x-o, y-o, font_size, fillColor = (0,0,0))
-# # =======
-# #         losses = copy.copy(loss)
-# #     # draw events
-# #     for node in tree:
-        
-# #         if node in losses:
-# #             snode, event, frequency = losses[node]
-# #         if node in brec:
-# #             snode, event, frequency = brec[node][-1]
-# #             if node in losses:
-# #                 try:
-# #                     losses[node.children[0]] = losses[node]
-# #                 except:
-# #                     print"  "
-# #         x, y = layout[node]
-# #         o = event_size / 2.0
+                canvas.text(frequency, x-o, y-o, font_size+2, fillColor = (0,0,0))
 
-# #         if event == "loss":
-# #             canvas.rect(x - o, y - o, event_size, event_size,
-# #                         fillColor=loss_color,
-# #                         strokeColor=loss_color_border)
-# #             canvas.text(frequency, x-leaf_padding/2, y-font_size, font_size, fillColor=loss_color)
-# #         elif event == "spec":
-# #             canvas.text(frequency, slayout[snode][0]-leaf_padding/2, slayout[snode][1]-font_size, font_size, fillColor = (0,0,0))
-# # >>>>>>> origin/master
 
             if event == "dup":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=dup_color,
                         strokeColor=dup_color_border)
-                canvas.text(frequency, x-o, y-o, font_size, fillColor=dup_color)
+                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=dup_color)
 
             elif event == "trans":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
-                canvas.text(frequency, x-o, y-o, font_size, fillColor=trans_color)
+                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=trans_color)
+            
+            elif event == "gtrans":
+                canvas.rect(x-o, y-o, event_size, event_size,
+                        fillColor=gtrans_color,
+                        strokeColor=gtrans_color_border)
+                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=gtrans_color)
 
     # draw tree leaves
     for node in tree:
         for n in range(len(brecon[node])):
             x, y = layout[node][n]
-            if node.is_leaf() and containsLoss(node, brecon) == False:
+            if node.is_leaf() and brecon[node][n][1] == "gene":
                 canvas.text(node.name, 
-                        x + leaf_padding, y+font_size/2., font_size,
+                        x + leaf_padding, y+font_size/2., font_size+2,
                         fillColor=(0, 0, 0))
 
         
@@ -456,28 +362,42 @@ def draw_tree(tree, brecon, stree,
     return canvas
 
 def containsLoss(node, brecon):
+    '''Takes as input a node and a reconciliation, brecon, and returns a boolean
+    of whether that node leads to a loss event or not'''
     containsL = False
     for n in range(len(brecon[node])):
         if brecon[node][n][1] == "loss":
             containsL = True
     return containsL
+
+
 def orderLoss(node, brecon, layout):
+    '''Takes as input a node, a reconciliation, and a tree layout and changes the
+    nodes reconciliation to be ordered based on location in the layout. The nodes
+    occuring earlier in the graph occur earlier in the nodes reconciliation entry'''
     eventDict = {}
     for n in range(len(brecon[node])):
         eventDict[str(brecon[node][n])] = layout[node][n]
     return sorted(brecon[node], key=lambda xCoord: eventDict[str(xCoord)][0])
 
 def orderLayout(node, layout):
+    '''Takes as input a node and a tree layout and returns the layout of that
+    nodes children in timed order, much like orderLoss'''
     return sorted(layout[node], key=lambda xCoord: xCoord[0])
 
 def maxList(vList):
+    '''Takes as input vList, a list of lists, and finds the maximum value in all
+    of the lists'''
     maxVal = 0
     for item in vList:
         for value in item:
             if value >= maxVal:
                 maxVal = value
     return maxVal
+
 def flatten(vList):
+    '''Takes as input a list of lists, vList, and returns a newList containing every item in the
+    internal lists of vList'''
     newList = []
     for item in vList:
         newList.extend(item)

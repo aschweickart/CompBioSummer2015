@@ -1,109 +1,117 @@
 <?xml version='1.0' encoding='UTF-8'?> 
             <!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 
             'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
-<svg width='1764' height='1199' 
+<svg width='2864' height='1199' 
             xmlns='http://www.w3.org/2000/svg' version='1.1'>
 <g><g style='font-family: "Sans";'>
 <g transform='translate(10.000000, 0.000000) ' >
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='620.000000,834.000000 1320.000000,909.000000 1320.000000,989.000000 620.000000,914.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='820.000000,59.000000 1320.000000,9.000000 1320.000000,89.000000 820.000000,139.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='320.000000,946.500000 720.000000,1059.000000 720.000000,1139.000000 320.000000,1026.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='620.000000,834.000000 1120.000000,759.000000 1120.000000,839.000000 620.000000,914.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='1120.000000,759.000000 1320.000000,709.000000 1320.000000,789.000000 1120.000000,839.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='920.000000,259.000000 1320.000000,309.000000 1320.000000,389.000000 920.000000,339.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='1020.000000,459.000000 1320.000000,509.000000 1320.000000,589.000000 1020.000000,539.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='720.000000,1059.000000 1320.000000,1109.000000 1320.000000,1189.000000 720.000000,1139.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='420.000000,159.000000 920.000000,259.000000 920.000000,339.000000 420.000000,239.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='420.000000,159.000000 820.000000,59.000000 820.000000,139.000000 420.000000,239.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='520.000000,534.000000 1020.000000,459.000000 1020.000000,539.000000 520.000000,614.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='220.000000,346.500000 520.000000,534.000000 520.000000,614.000000 220.000000,426.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='0.000000,646.500000 120.000000,646.500000 120.000000,726.500000 0.000000,726.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='220.000000,346.500000 420.000000,159.000000 420.000000,239.000000 220.000000,426.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='120.000000,646.500000 220.000000,346.500000 220.000000,426.500000 120.000000,726.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='320.000000,946.500000 620.000000,834.000000 620.000000,914.000000 320.000000,1026.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='120.000000,646.500000 320.000000,946.500000 320.000000,1026.500000 120.000000,726.500000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='520.000000,534.000000 1320.000000,609.000000 1320.000000,689.000000 520.000000,614.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='720.000000,1059.000000 1320.000000,1009.000000 1320.000000,1089.000000 720.000000,1139.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='1120.000000,759.000000 1320.000000,809.000000 1320.000000,889.000000 1120.000000,839.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='820.000000,59.000000 1320.000000,109.000000 1320.000000,189.000000 820.000000,139.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='920.000000,259.000000 1320.000000,209.000000 1320.000000,289.000000 920.000000,339.000000 ' stroke-width='1.000000'/>
-<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(153,76,204)'  points='1020.000000,459.000000 1320.000000,409.000000 1320.000000,489.000000 1020.000000,539.000000 ' stroke-width='1.000000'/>
-<line x1='720.000000' y1='1059.000000' x2='720.000000' y2='1139.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1120.000000' y1='759.000000' x2='1120.000000' y2='839.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='920.000000' y1='259.000000' x2='920.000000' y2='339.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='820.000000' y1='59.000000' x2='820.000000' y2='139.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='1020.000000' y1='459.000000' x2='1020.000000' y2='539.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='520.000000' y1='534.000000' x2='520.000000' y2='614.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='120.000000' y1='646.500000' x2='120.000000' y2='726.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='420.000000' y1='159.000000' x2='420.000000' y2='239.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='220.000000' y1='346.500000' x2='220.000000' y2='426.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='620.000000' y1='834.000000' x2='620.000000' y2='914.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<line x1='320.000000' y1='946.500000' x2='320.000000' y2='1026.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
-<g transform='translate(1478.363636,959.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>rosina_WestPA</text></g>
-<g transform='translate(1478.363636,59.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>aglaope_EastPE</text></g>
-<g transform='translate(1478.363636,759.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_WestPA</text></g>
-<g transform='translate(1478.363636,359.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>malleti_EastE</text></g>
-<g transform='translate(1478.363636,559.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastFG</text></g>
-<g transform='translate(1478.363636,1159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>cythera_WestE</text></g>
-<g transform='translate(1478.363636,659.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastT</text></g>
-<g transform='translate(1478.363636,1059.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastC</text></g>
-<g transform='translate(1478.363636,859.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>rosina_WestCR</text></g>
-<g transform='translate(1478.363636,159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>amaryllis_EastPE</text></g>
-<g transform='translate(1478.363636,259.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>ecuadoriensis_EastE</text></g>
-<g transform='translate(1478.363636,459.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>thelxiopeia_EastFG</text></g>
-<line x1='1320.000000' y1='1149.000000' x2='720.000000' y2='1099.000000' stroke='rgb(0,0,0)'  />
-<line x1='1220.000000' y1='774.000000' x2='1120.000000' y2='799.000000' stroke='rgb(0,0,0)'  />
-<line x1='720.000000' y1='1099.000000' x2='320.000000' y2='986.500000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='549.000000' x2='1020.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='1049.000000' x2='720.000000' y2='1099.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='49.000000' x2='820.000000' y2='99.000000' stroke='rgb(0,0,0)'  />
-<path d='M1320.000000 649.000000 C1250.000000 711.500000 1250.000000 711.500000 1220.000000 774.000000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='1320.000000' y1='949.000000' x2='620.000000' y2='874.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='449.000000' x2='1020.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='849.000000' x2='1120.000000' y2='799.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='749.000000' x2='1220.000000' y2='774.000000' stroke='rgb(0,0,0)'  />
-<line x1='920.000000' y1='299.000000' x2='420.000000' y2='199.000000' stroke='rgb(0,0,0)'  />
-<line x1='1320.000000' y1='349.000000' x2='920.000000' y2='299.000000' stroke='rgb(0,0,0)'  />
-<line x1='620.000000' y1='874.000000' x2='320.000000' y2='986.500000' stroke='rgb(0,0,0)'  />
-<line x1='1120.000000' y1='799.000000' x2='620.000000' y2='874.000000' stroke='rgb(0,0,0)'  />
-<path d='M1320.000000 249.000000 C1175.000000 186.500000 1175.000000 186.500000 1070.000000 124.000000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
- <line x1='1320.000000' y1='149.000000' x2='1070.000000' y2='124.000000' stroke='rgb(0,0,0)'  />
-<line x1='120.000000' y1='686.500000' x2='0.000000' y2='686.500000' stroke='rgb(0,0,0)'  />
-<line x1='220.000000' y1='386.500000' x2='120.000000' y2='686.500000' stroke='rgb(0,0,0)'  />
-<line x1='420.000000' y1='199.000000' x2='220.000000' y2='386.500000' stroke='rgb(0,0,0)'  />
-<line x1='820.000000' y1='99.000000' x2='420.000000' y2='199.000000' stroke='rgb(0,0,0)'  />
-<line x1='1070.000000' y1='124.000000' x2='820.000000' y2='99.000000' stroke='rgb(0,0,0)'  />
-<line x1='520.000000' y1='574.000000' x2='220.000000' y2='386.500000' stroke='rgb(0,0,0)'  />
-<line x1='1020.000000' y1='499.000000' x2='520.000000' y2='574.000000' stroke='rgb(0,0,0)'  />
-<line x1='320.000000' y1='986.500000' x2='120.000000' y2='686.500000' stroke='rgb(0,0,0)'  />
-<rect x='1215.000000' y='769.000000' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<g transform='translate(1215.000000,769.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(715.000000,1094.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<rect x='915.000000' y='294.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
-<g transform='translate(915.000000,294.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(615.000000,869.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(1115.000000,794.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(115.000000,681.500000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(215.000000,381.500000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(415.000000,194.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(815.000000,94.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<rect x='1065.000000' y='119.000000' width='10.000000' height='10.000000' stroke='rgb(0,127,0)' fill='rgb(0,255,0)'  stroke-width='1.000000'/>
-<g transform='translate(1065.000000,119.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<rect x='515.000000' y='569.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
-<g transform='translate(515.000000,569.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(1015.000000,494.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(315.000000,981.500000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
-<g transform='translate(1330.000000,1155.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>cyrbia_WestE</text></g>
-<g transform='translate(1330.000000,555.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastFG</text></g>
-<g transform='translate(1330.000000,1055.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastC</text></g>
-<g transform='translate(1330.000000,55.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>emma_EastPE</text></g>
-<g transform='translate(1330.000000,655.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastT</text></g>
-<g transform='translate(1330.000000,955.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>petiverana_WestPA</text></g>
-<g transform='translate(1330.000000,455.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>erato_EastFG</text></g>
-<g transform='translate(1330.000000,855.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>petiverana_WestCR</text></g>
-<g transform='translate(1330.000000,755.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_WestPA</text></g>
-<g transform='translate(1330.000000,255.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>etylus_EastE</text></g>
-<g transform='translate(1330.000000,155.000000) rotate(0.000000)'><text x='0' y='0' font-size='12.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>favorinus_EastPE</text></g>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='720.000000,834.000000 1420.000000,909.000000 1420.000000,989.000000 720.000000,914.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='920.000000,59.000000 1720.000000,9.000000 1720.000000,89.000000 920.000000,139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='420.000000,946.500000 820.000000,1059.000000 820.000000,1139.000000 420.000000,1026.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='720.000000,834.000000 1320.000000,759.000000 1320.000000,839.000000 720.000000,914.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1320.000000,759.000000 2320.000000,709.000000 2320.000000,789.000000 1320.000000,839.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1020.000000,259.000000 2020.000000,309.000000 2020.000000,389.000000 1020.000000,339.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1120.000000,459.000000 2220.000000,509.000000 2220.000000,589.000000 1120.000000,539.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='820.000000,1059.000000 1620.000000,1109.000000 1620.000000,1189.000000 820.000000,1139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='520.000000,159.000000 1020.000000,259.000000 1020.000000,339.000000 520.000000,239.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='520.000000,159.000000 920.000000,59.000000 920.000000,139.000000 520.000000,239.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='620.000000,534.000000 1120.000000,459.000000 1120.000000,539.000000 620.000000,614.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='320.000000,346.500000 620.000000,534.000000 620.000000,614.000000 320.000000,426.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='0.000000,646.500000 220.000000,646.500000 220.000000,726.500000 0.000000,726.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='320.000000,346.500000 520.000000,159.000000 520.000000,239.000000 320.000000,426.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='220.000000,646.500000 320.000000,346.500000 320.000000,426.500000 220.000000,726.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='420.000000,946.500000 720.000000,834.000000 720.000000,914.000000 420.000000,1026.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='220.000000,646.500000 420.000000,946.500000 420.000000,1026.500000 220.000000,726.500000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='620.000000,534.000000 1220.000000,609.000000 1220.000000,689.000000 620.000000,614.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='820.000000,1059.000000 1520.000000,1009.000000 1520.000000,1089.000000 820.000000,1139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1320.000000,759.000000 2420.000000,809.000000 2420.000000,889.000000 1320.000000,839.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='920.000000,59.000000 1820.000000,109.000000 1820.000000,189.000000 920.000000,139.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1020.000000,259.000000 1920.000000,209.000000 1920.000000,289.000000 1020.000000,339.000000 ' stroke-width='1.000000'/>
+<polygon stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(76,178,76)'  points='1120.000000,459.000000 2120.000000,409.000000 2120.000000,489.000000 1120.000000,539.000000 ' stroke-width='1.000000'/>
+<line x1='820.000000' y1='1059.000000' x2='820.000000' y2='1139.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='1320.000000' y1='759.000000' x2='1320.000000' y2='839.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='1020.000000' y1='259.000000' x2='1020.000000' y2='339.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='920.000000' y1='59.000000' x2='920.000000' y2='139.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='1120.000000' y1='459.000000' x2='1120.000000' y2='539.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='620.000000' y1='534.000000' x2='620.000000' y2='614.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='220.000000' y1='646.500000' x2='220.000000' y2='726.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='520.000000' y1='159.000000' x2='520.000000' y2='239.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='320.000000' y1='346.500000' x2='320.000000' y2='426.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='720.000000' y1='834.000000' x2='720.000000' y2='914.000000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<line x1='420.000000' y1='946.500000' x2='420.000000' y2='1026.500000' stroke='rgb(51,51,178)' style='stroke-dasharray: 1, 1'  />
+<g transform='translate(1578.363636,959.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>rosina_WestPA</text></g>
+<g transform='translate(1878.363636,59.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>aglaope_EastPE</text></g>
+<g transform='translate(2478.363636,759.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_WestPA</text></g>
+<g transform='translate(2178.363636,359.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>malleti_EastE</text></g>
+<g transform='translate(2378.363636,559.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastFG</text></g>
+<g transform='translate(1778.363636,1159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>cythera_WestE</text></g>
+<g transform='translate(1378.363636,659.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastT</text></g>
+<g transform='translate(1678.363636,1059.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>melpomene_EastC</text></g>
+<g transform='translate(2578.363636,859.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>rosina_WestCR</text></g>
+<g transform='translate(1978.363636,159.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>amaryllis_EastPE</text></g>
+<g transform='translate(2078.363636,259.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>ecuadoriensis_EastE</text></g>
+<g transform='translate(2278.363636,459.000000) rotate(0.000000)'><text x='0' y='0' font-size='20.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(51,51,178)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>thelxiopeia_EastFG</text></g>
+<line x1='1620.000000' y1='1149.000000' x2='820.000000' y2='1099.000000' stroke='rgb(0,0,0)'  />
+<line x1='1820.000000' y1='774.000000' x2='1320.000000' y2='799.000000' stroke='rgb(0,0,0)'  />
+<line x1='820.000000' y1='1099.000000' x2='420.000000' y2='986.500000' stroke='rgb(0,0,0)'  />
+<line x1='2220.000000' y1='549.000000' x2='1120.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
+<line x1='1520.000000' y1='1049.000000' x2='820.000000' y2='1099.000000' stroke='rgb(0,0,0)'  />
+<line x1='1720.000000' y1='49.000000' x2='920.000000' y2='99.000000' stroke='rgb(0,0,0)'  />
+<path d='M1220.000000 649.000000 C1500.000000 711.500000 1500.000000 711.500000 1820.000000 774.000000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
+ <line x1='1420.000000' y1='949.000000' x2='720.000000' y2='874.000000' stroke='rgb(0,0,0)'  />
+<line x1='2120.000000' y1='449.000000' x2='1120.000000' y2='499.000000' stroke='rgb(0,0,0)'  />
+<line x1='2420.000000' y1='849.000000' x2='1320.000000' y2='799.000000' stroke='rgb(0,0,0)'  />
+<line x1='2320.000000' y1='749.000000' x2='1820.000000' y2='774.000000' stroke='rgb(0,0,0)'  />
+<line x1='1020.000000' y1='299.000000' x2='520.000000' y2='199.000000' stroke='rgb(0,0,0)'  />
+<line x1='2020.000000' y1='349.000000' x2='1020.000000' y2='299.000000' stroke='rgb(0,0,0)'  />
+<line x1='720.000000' y1='874.000000' x2='420.000000' y2='986.500000' stroke='rgb(0,0,0)'  />
+<line x1='1320.000000' y1='799.000000' x2='720.000000' y2='874.000000' stroke='rgb(0,0,0)'  />
+<path d='M1920.000000 249.000000 C1625.000000 186.500000 1625.000000 186.500000 1370.000000 124.000000'  style='stroke-dasharray: 4, 2' stroke='rgb(0,0,0)' fill='rgb(0,0,0)' fill-opacity='0.000000'  />
+ <line x1='1820.000000' y1='149.000000' x2='1370.000000' y2='124.000000' stroke='rgb(0,0,0)'  />
+<line x1='320.000000' y1='386.500000' x2='220.000000' y2='686.500000' stroke='rgb(0,0,0)'  />
+<line x1='520.000000' y1='199.000000' x2='320.000000' y2='386.500000' stroke='rgb(0,0,0)'  />
+<line x1='920.000000' y1='99.000000' x2='520.000000' y2='199.000000' stroke='rgb(0,0,0)'  />
+<line x1='1370.000000' y1='124.000000' x2='920.000000' y2='99.000000' stroke='rgb(0,0,0)'  />
+<line x1='620.000000' y1='574.000000' x2='320.000000' y2='386.500000' stroke='rgb(0,0,0)'  />
+<line x1='1120.000000' y1='499.000000' x2='620.000000' y2='574.000000' stroke='rgb(0,0,0)'  />
+<line x1='420.000000' y1='986.500000' x2='220.000000' y2='686.500000' stroke='rgb(0,0,0)'  />
+<rect x='1815.000000' y='769.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,0)' fill='rgb(255,255,0)'  stroke-width='1.000000'/>
+<g transform='translate(1815.000000,769.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='815.000000' y='1094.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(815.000000,1094.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='1015.000000' y='294.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(1015.000000,294.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='715.000000' y='869.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(715.000000,869.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='1315.000000' y='794.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(1315.000000,794.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='215.000000' y='681.500000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(215.000000,681.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='315.000000' y='381.500000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(315.000000,381.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='515.000000' y='194.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(515.000000,194.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='915.000000' y='94.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(915.000000,94.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='1365.000000' y='119.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,0)' fill='rgb(255,255,0)'  stroke-width='1.000000'/>
+<g transform='translate(1365.000000,119.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='615.000000' y='569.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
+<g transform='translate(615.000000,569.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='1115.000000' y='494.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(1115.000000,494.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<rect x='415.000000' y='981.500000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
+<g transform='translate(415.000000,981.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.0</text></g>
+<g transform='translate(1630.000000,1155.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>cyrbia_WestE</text></g>
+<g transform='translate(2230.000000,555.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastFG</text></g>
+<g transform='translate(1530.000000,1055.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastC</text></g>
+<g transform='translate(1730.000000,55.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>emma_EastPE</text></g>
+<g transform='translate(1230.000000,655.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_EastT</text></g>
+<g transform='translate(1430.000000,955.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>petiverana_WestPA</text></g>
+<g transform='translate(2130.000000,455.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>erato_EastFG</text></g>
+<g transform='translate(2430.000000,855.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>petiverana_WestCR</text></g>
+<g transform='translate(2330.000000,755.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>hydara_WestPA</text></g>
+<g transform='translate(1930.000000,255.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>etylus_EastE</text></g>
+<g transform='translate(1830.000000,155.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>favorinus_EastPE</text></g>
 </g>
 </g>
 </g></svg>

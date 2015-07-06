@@ -4,7 +4,7 @@
 # Contains special features for representing phylogeny.
 # See compbio.phylo for more.
 #
-#
+# Edited July 2015 by Annalise Schweickart 
 
 
 # python libs

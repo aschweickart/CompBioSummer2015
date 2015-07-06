@@ -1,22 +1,36 @@
-# PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
+# ReconConversion.py
+# Juliet Forman, Srinidhi Srinivasan, and Annalise Schweickart
+# July 2015
+
+# This file contains the functions for converting DTL reconciliations into mowgli.brecon files
+# to use in vistrans as well as freqSummation to create a file with information to be shown on 
+# the website for DTL RnB
+
 import newickFormatReader
 import DP
 import HeyJuliet
 import copy
 import calcCostscapeScore
 import MasterReconciliation
+import detectCycles
 from sys import argv
+
+
 def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	"""Takes as input a dictionary of a reconciliation between host and parasite trees, a DTL graph, and a string containing the name of a 
 	file where it will put the output. The function outputs the same tree converted to brecon format. 
 	Note that for losses, the parasite node in the brecon representation is the parent of the given parasite node. 
 	This accounts for the brecon format's inability to handle losses"""
 	freqSum = 0
-	D = {'T': 'trans', 'S': 'spec', 'D': 'dup', 'C': 'gene', 'L': 'loss'}
+	D = {'T': 'trans', 'S': 'spec', 'D': 'dup', 'C': 'gene', 'L': 'loss', 'GT': 'gtrans'}
 	f = open(outputFile + str(n) + ".mowgli.brecon", 'w')
 	event = ""
 	pParent = parasiteParentsDict(ParasiteTree)
-	freqDict = frequencyDict(DTL, reconciliation)
+	newRecon = copy.deepcopy(reconciliation)
+	for key in reconciliation.keys():
+		if reconciliation[key][0] == 'GT':
+			newRecon[key][0] = 'T'
+	freqDict = frequencyDict(DTL, newRecon)
 	for key in reconciliation:
 		freqSum += freqDict[key]
 		event = reconciliation[key][0]
@@ -24,6 +38,11 @@ def convert(reconciliation, DTL, ParasiteTree, outputFile, n):
 	f.close()
 
 def freqSummation(argList):
+	"""Takes as input an argument list containing a newick file of host and parasite trees as well as their 
+	phi mapping, duplication, transfer, and loss costs, the type of frequency scoring to be used, as well as
+	switch and loss cost ranges for xscape scoring, and returns a file containing the list of scores for each
+	individual reconciliation, the sum of the those scores, the total cost of those reconciliations and the 
+	number of reconciliations of those trees"""
 	newickFile = argList[1]
 	D = float(argList[2])
 	T = float(argList[3])
@@ -48,22 +67,23 @@ def freqSummation(argList):
 	for score in scoresList:
 		totalSum +=score
 	for index in reconciliation:
-		totalColst = 0
+		totalCost = 0
 		for key in index:
 			if index[key][0] == "L":
-				totalColst+=L
+				totalCost+=L
 			elif index[key][0] == "T":
-				totalColst+=T
+				totalCost+=T
 			elif index[key][0] == "D":
-				totalColst+=D
+				totalCost+=D
 	f.write(str(scoresList)+'\n')
 	f.write(str(totalSum)+'\n')
-	f.write(str(totalColst)+'\n')
+	f.write(str(totalCost)+'\n')
 	f.write(str(numRecon))
 	f.close()
 
 def frequencyDict(DTL, reconciliation):
-	""" """
+	"""Takes as input a DTL and a single reconciliation of that DTL and returns a dictionary
+	of the frequencies for each event in the reconciliation"""
 	freqDict = {}
 	for key in reconciliation:
 		events = DTL[key][:-1]
@@ -89,34 +109,6 @@ def main():
 	freqSummation(argv)
 
 if __name__ == "__main__": main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -37,19 +37,19 @@ def reconcile(carousel = None):
 
     if request.form['switchhigh'] != '':
       switchHi = request.form['switchhigh']
-    else: switchHi = 5
+    else: switchHi = 4.5
 
     if request.form['switchlow'] != '':
       switchLo = request.form['switchlow']
-    else: switchLo = 0.1
+    else: switchLo = 1.5
 
     if request.form['losshigh'] != '':
       lossHi = request.form['losshigh']
-    else: lossHi = 5
+    else: lossHi = 3
 
     if request.form['losslow'] != '':
       lossLo = request.form['losslow']
-    else: lossLo = 0.1
+    else: lossLo = 1
 
     if file:
       filename = secure_filename(file.filename)
@@ -95,6 +95,7 @@ def reconcile(carousel = None):
     staticString = Markup(staticString)
     carouselstr = Markup(carouselstr)
     carouselcap = Markup(carouselcap)
+    os.system("rm -r "+Name)
   return render_template("results.html", carouselstr = carouselstr, carouselcap = carouselcap, staticString = staticString)
 def runningTotal(scoresList, index):
   runningTot = 0

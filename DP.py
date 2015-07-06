@@ -1,12 +1,14 @@
 # DP.py
 # Ran Libeskind-Hadas, June 2015
 # The basic DP algorithm for reconciling pairs of trees
-
 # A tree is represented as a dictionary of key-value pairs where a key is an
 # edge name and the value is a tuple of the form
 # (start vertex, end vertex, left child edge name, right child edge name)
 # An edge name may be None.  The "dummy" edge leading to the root of the
 # parasite tree, denoted e^P in the technical report, must be named "pTop".
+# Edited by Annalise Schweickart and Carter Slocum, July 2015 to return
+# the DTL reconciliation graph, as well as the number of reconciliations 
+# of the host and parasite trees
 
 import newickFormatReader
 #import DrawDTL
@@ -398,11 +400,11 @@ def findPath(TupleList, eventDict, uniqueDict):
     for Tuple in TupleList:
         if not Tuple in uniqueDict:
             uniqueDict[(Tuple)] = eventDict[(Tuple)]
-        for thing1 in eventDict[Tuple]:
-            if type(thing1)==list:
-                for thing2 in thing1:
-                    if type(thing2) == tuple and thing2 != (None, None):
-                        findPath([thing2], eventDict, uniqueDict)
+        for event in eventDict[Tuple]:
+            if type(event)==list:
+                for item in event:
+                    if type(item) == tuple and item != (None, None):
+                        findPath([item], eventDict, uniqueDict)
     return uniqueDict
 
 def reconcile(fileName, D, T, L):

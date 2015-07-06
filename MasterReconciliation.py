@@ -6,8 +6,6 @@
 # DTL reconciliations using the edge-based DP algorithm.  The main # # function in this file is called Reconcile and the remaining 
 # functions are helper functions that are used by Reconcile.
 
-
-
 import DP
 import HeyJuliet
 import newickToVis
@@ -18,6 +16,7 @@ import ReconciliationGraph
 from sys import argv
 import copy
 import calcCostscapeScore
+import detectCycles
 
 def Reconcile(argList):
 	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
@@ -49,8 +48,14 @@ def Reconcile(argList):
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
 	for item in range(len(graph)):
-			orderedGraphs += orderGraph.date(graph[item])
-			ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
+		currentOrder = orderGraph.date(graph[item])
+		if currentOrder == "Timetravel":
+			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[item])
+			rec[item] = newOrder
+			currentOrder = ReconciliationGraph.buildReconstruction(host, paras, newOrder)
+			currentOrder = orderGraph.date(currentOrder)
+		orderedGraphs += currentOrder
+		ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
 	newickToVis.convert(fileName,hostBranchs)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
