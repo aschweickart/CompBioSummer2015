@@ -102,9 +102,9 @@ def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 			transferEdge = reconciliation[key][1][1]
 			if transferEdge == key[1]:
 				transferEdge = reconciliation[key][2][1]
-				transferList.append([key[0], parent1, transferEdge])
-			else:
 				transferList.append([key[0], parent2, transferEdge])
+			else:
+				transferList.append([key[0], parent1, transferEdge])
 
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
@@ -278,41 +278,41 @@ R = {('Trabeculus_hexakon_2', 'Procellaria_westlandica'): ['C', (None, None), (N
 {'Pelecanoides_urinatrixia': [None], 'h9': ['Austrogoniodes_cristati', 'Megadyptes_antipodes', 'Austrogoniodes_conci', 'Eudyptes_pachyrhynchus'], 'Halipeurus_pelagicus': [None], 'Halipeurus_consimilis': [None], 'h0': ['Larus_dominicanus', 'h1', 'Saemundssonia_tari', 'p4'], 'h1': ['p25', 'p24', 'h6', 'h7'], 'h6': ['h12', 'h13', 'p41', 'p30', 'p31'], 'h7': ['Eudyptula_minor', 'p27', 'h9', 'Austrogonidoes_watersoni'], 'p3': ['h1', 'Saemundssonia_tari', 'p4'], 'p25': ['p27', 'h9', 'Austrogonidoes_watersoni'], 'Puffinus_griseus': [None], 'p27': ['Austrogoniodes_cristati', 'Austrogoniodes_conci'], 'Eudyptes_pachyrhynchus': [None], 'p44': ['Halipeurus_spadix', 'Halipeurus_diversus'], 'p43': ['h19', 'p44', 'Halipeurus_falsus'], 'p41': ['Pelagodroma_marina', 'h13', 'p43', 'Halipeurus_pelagicus'], 'Halipeurus_diversus': [None], 'Pelagodroma_marina': [None], 'Trabeculus_flemingi': [None], 'Trabeculus_hexakon_2': [None], 'Trabeculus_hexakon': [None], 'Halipeurus_falsus': [None], 'Megadyptes_antipodes': [None], 'Trabeculus_schillingi': [None], 'Puffinus_huttoni': [None], 'Procellaria_westlandica': [None], 'Austrogoniodes_cristati': [None], 'Saemundssonia_tari': [None], 'p39': ['Halipeurus_consimilis', 'Pelagodroma_marina', 'Pterodroma_inexpecta', 'p41'], 'p32': ['h17', 'Trabeculus_schillingi', 'p35'], 'p30': ['p39', 'Harrisoniella_hopkinsi'], 'p31': ['p32', 'h14', 'Trabeculus_flemingi'], 'Pterodroma_inexpecta': [None], 'Diomedea_epomophora': [None], 'p35': ['Trabeculus_hexakon_2', 'Trabeculus_hexakon'], 'h19': ['Puffinus_griseus', 'Halipeurus_spadix', 'Puffinus_huttoni', 'Halipeurus_diversus'], 'Austrogoniodes_conci': [None], 'p4': ['p25', 'p24', 'h6', 'h7'], 'p24': ['p30', 'p31', 'h12'], 'h12': ['p39', 'Pelagodroma_marina', 'p41', 'Diomedea_epomophora', 'Harrisoniella_hopkinsi'], 'h13': ['p31', 'Pelecanoides_urinatrixia', 'p44', 'h14', 'Halipeurus_falsus'], 'h14': ['p35', 'Trabeculus_schillingi', 'Pterodroma_inexpecta', 'p39', 'h17'], 'h17': ['h19', 'Trabeculus_hexakon', 'Trabeculus_hexakon_2', 'Procellaria_westlandica'], 'Larus_dominicanus': [None], 'Austrogonidoes_watersoni': [None], 'Harrisoniella_hopkinsi': [None], 'Eudyptula_minor': [None], 'Halipeurus_spadix': [None]}
 
 {'Pelecanoides_urinatrixia': [None], 'h9': ['Austrogoniodes_cristati', 'Megadyptes_antipodes', 'Austrogoniodes_conci', 'Eudyptes_pachyrhynchus'], 'Halipeurus_pelagicus': [None], 'Halipeurus_consimilis': [None], 'h0': ['Larus_dominicanus', 'h1', 'Saemundssonia_tari', 'p4'], 'h1': ['p25', 'p24', 'h6', 'h7'], 'h6': ['h12', 'h13', 'p41', 'p30', 'p31'], 'h7': ['Eudyptula_minor', 'p27', 'h9', 'Austrogonidoes_watersoni'], 'p3': ['h1', 'Saemundssonia_tari', 'p4'], 'p25': ['p27', 'h9', 'Austrogonidoes_watersoni'], 'Puffinus_griseus': [None], 'p27': ['Austrogoniodes_cristati', 'Austrogoniodes_conci'], 'Eudyptes_pachyrhynchus': [None], 'p44': ['Halipeurus_spadix', 'Halipeurus_diversus'], 'p43': ['h19', 'p44', 'Halipeurus_falsus'], 'p41': ['Pelagodroma_marina', 'h13', 'p43', 'Halipeurus_pelagicus'], 'Halipeurus_diversus': [None], 'Pelagodroma_marina': [None], 'Trabeculus_flemingi': [None], 'Trabeculus_hexakon_2': [None], 'Trabeculus_hexakon': [None], 'Halipeurus_falsus': [None], 'Megadyptes_antipodes': [None], 'Trabeculus_schillingi': [None], 'Puffinus_huttoni': [None], 'Procellaria_westlandica': [None], 'Austrogoniodes_cristati': [None], 'Saemundssonia_tari': [None], 'p39': ['Halipeurus_consimilis', 'Pelagodroma_marina', 'p41'], 'p32': ['h17', 'Trabeculus_schillingi', 'p35'], 'p30': ['p39', 'Harrisoniella_hopkinsi'], 'p31': ['p32', 'h14', 'Trabeculus_flemingi'], 'Pterodroma_inexpecta': [None], 'Diomedea_epomophora': [None], 'p35': ['Trabeculus_hexakon_2', 'Trabeculus_hexakon'], 'h19': ['Puffinus_griseus', 'Halipeurus_spadix', 'Puffinus_huttoni', 'Halipeurus_diversus'], 'Austrogoniodes_conci': [None], 'p4': ['p25', 'p24', 'h6', 'h7'], 'p24': ['p30', 'p31', 'h12'], 'h12': ['Pelagodroma_marina', 'p41', 'Diomedea_epomophora', 'Harrisoniella_hopkinsi'], 'h13': ['p31', 'Pelecanoides_urinatrixia', 'p44', 'h14', 'Halipeurus_falsus'], 'h14': ['p35', 'Trabeculus_schillingi', 'Pterodroma_inexpecta', 'p39', 'h17'], 'h17': ['h19', 'Trabeculus_hexakon', 'Trabeculus_hexakon_2', 'Procellaria_westlandica'], 'Larus_dominicanus': [None], 'Austrogonidoes_watersoni': [None], 'Harrisoniella_hopkinsi': [None], 'Eudyptula_minor': [None], 'Halipeurus_spadix': [None]}
-# H = {('h2', 'h4'): ('h2', 'h4', ('h4', 'h8'), ('h4', 'h9')), ('h7', 'h14'): ('h7', 'h14', None, None), ('h3', 'h6'): ('h3', 'h6', ('h6', 'h12'), ('h6', 'h13')), ('h3', 'h7'): ('h3', 'h7', ('h7', 'h14'), ('h7', 'h15')), ('h1', 'h2'): ('h1', 'h2', ('h2', 'h4'), ('h2', 'h5')), ('h1', 'h3'): ('h1', 'h3', ('h3', 'h6'), ('h3', 'h7')), ('h5', 'h10'): ('h5', 'h10', None, None), 'hTop': ('Top', 'h1', ('h1', 'h2'), ('h1', 'h3')), ('h6', 'h13'): ('h6', 'h13', None, None), ('h5', 'h11'): ('h5', 'h11', None, None), ('h4', 'h9'): ('h4', 'h9', None, None), ('h6', 'h12'): ('h6', 'h12', None, None), ('h4', 'h8'): ('h4', 'h8', None, None), ('h2', 'h5'): ('h2', 'h5', ('h5', 'h10'), ('h5', 'h11')), ('h7', 'h15'): ('h7', 'h15', None, None)}
+H = {('h2', 'h4'): ('h2', 'h4', ('h4', 'h8'), ('h4', 'h9')), ('h7', 'h14'): ('h7', 'h14', None, None), ('h3', 'h6'): ('h3', 'h6', ('h6', 'h12'), ('h6', 'h13')), ('h3', 'h7'): ('h3', 'h7', ('h7', 'h14'), ('h7', 'h15')), ('h1', 'h2'): ('h1', 'h2', ('h2', 'h4'), ('h2', 'h5')), ('h1', 'h3'): ('h1', 'h3', ('h3', 'h6'), ('h3', 'h7')), ('h5', 'h10'): ('h5', 'h10', None, None), 'hTop': ('Top', 'h1', ('h1', 'h2'), ('h1', 'h3')), ('h6', 'h13'): ('h6', 'h13', None, None), ('h5', 'h11'): ('h5', 'h11', None, None), ('h4', 'h9'): ('h4', 'h9', None, None), ('h6', 'h12'): ('h6', 'h12', None, None), ('h4', 'h8'): ('h4', 'h8', None, None), ('h2', 'h5'): ('h2', 'h5', ('h5', 'h10'), ('h5', 'h11')), ('h7', 'h15'): ('h7', 'h15', None, None)}
 
-# P = {('p1', 'p3'): ('p1', 'p3', ('p3', 'p6'), ('p3', 'p7')), ('p6', 'p13'): ('p6', 'p13', None, None), ('p3', 'p7'): ('p3', 'p7', ('p7', 'p14'), ('p7', 'p15')), ('p1', 'p2'): ('p1', 'p2', ('p2', 'p4'), ('p2', 'p5')), ('p6', 'p12'): ('p6', 'p12', None, None), ('p4', 'p9'): ('p4', 'p9', None, None), ('p4', 'p8'): ('p4', 'p8', None, None), ('p2', 'p5'): ('p2', 'p5', ('p5', 'p10'), ('p5', 'p11')), ('p2', 'p4'): ('p2', 'p4', ('p4', 'p8'), ('p4', 'p9')), ('p7', 'p14'): ('p7', 'p14', None, None), ('p5', 'p10'): ('p5', 'p10', None, None), ('p3', 'p6'): ('p3', 'p6', ('p6', 'p12'), ('p6', 'p13')), ('p5', 'p11'): ('p5', 'p11', None, None), 'pTop': ('Top', 'p1', ('p1', 'p2'), ('p1', 'p3')), ('p7', 'p15'): ('p7', 'p15', None, None)}
+P = {('p1', 'p3'): ('p1', 'p3', ('p3', 'p6'), ('p3', 'p7')), ('p6', 'p13'): ('p6', 'p13', None, None), ('p3', 'p7'): ('p3', 'p7', ('p7', 'p14'), ('p7', 'p15')), ('p1', 'p2'): ('p1', 'p2', ('p2', 'p4'), ('p2', 'p5')), ('p6', 'p12'): ('p6', 'p12', None, None), ('p4', 'p9'): ('p4', 'p9', None, None), ('p4', 'p8'): ('p4', 'p8', None, None), ('p2', 'p5'): ('p2', 'p5', ('p5', 'p10'), ('p5', 'p11')), ('p2', 'p4'): ('p2', 'p4', ('p4', 'p8'), ('p4', 'p9')), ('p7', 'p14'): ('p7', 'p14', None, None), ('p5', 'p10'): ('p5', 'p10', None, None), ('p3', 'p6'): ('p3', 'p6', ('p6', 'p12'), ('p6', 'p13')), ('p5', 'p11'): ('p5', 'p11', None, None), 'pTop': ('Top', 'p1', ('p1', 'p2'), ('p1', 'p3')), ('p7', 'p15'): ('p7', 'p15', None, None)}
 
-# R = {('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')], 
-# ('p2', 'h2'): ['S', ('p4', 'h4'), ('p5', 'h5')], 
-# ('p4', 'h4'): ['L', ('p4', 'h9'), (None, None)], 
-# ('p4', 'h9'): ['T', ('p8', 'h9'), ('p9', 'h5')], 
-# ('p9', 'h5'): ['L', ('p9', 'h11'), (None, None)], 
-# ('p5', 'h5'): ['L', ('p5', 'h10'), (None, None)], 
-# ('p5', 'h10'): ['T', ('p11', 'h10'), ('p10', 'h4')], #guilty
-# ('p10', 'h4'): ['L', ('p10', 'h8'), (None, None)], 
-# ('p3', 'h3'): ['S', ('p6', 'h6'), ('p7', 'h7')], 
-# ('p6', 'h6'): ['L', ('p6', 'h13'), (None, None)], 
-# ('p6', 'h13'): ['T', ('p12', 'h13'), ('p13', 'h7')],  #guilty
-# ('p13', 'h7'): ['L', ('p13', 'h15'), (None, None)], 
-# ('p7', 'h7'): ['L', ('p7', 'h14'), (None, None)], 
-# ('p7', 'h14'): ['T', ('p15', 'h14'), ('p14', 'h6')], 
-# ('p14', 'h6'): ['L', ('p14', 'h12'), (None, None)],
-# ('p10', 'h8'): ['C', (None, None), (None, None)], 
-# ('p8', 'h9'): ['C', (None, None), (None, None)], 
-# ('p11', 'h10'): ['C', (None, None), (None, None)], 
-# ('p9', 'h11'): ['C', (None, None), (None, None)], 
-# ('p14', 'h12'): ['C', (None, None), (None, None)], 
-# ('p12', 'h13'): ['C', (None, None), (None, None)], 
-# ('p15', 'h14'): ['C', (None, None), (None, None)], 
-# ('p13', 'h15'): ['C', (None, None), (None, None)]}
+R = {('p1', 'h1'): ['S', ('p2', 'h2'), ('p3', 'h3')], 
+('p2', 'h2'): ['S', ('p4', 'h4'), ('p5', 'h5')], 
+('p4', 'h4'): ['L', ('p4', 'h9'), (None, None)], 
+('p4', 'h9'): ['T', ('p8', 'h9'), ('p9', 'h5')], 
+('p9', 'h5'): ['L', ('p9', 'h11'), (None, None)], 
+('p5', 'h5'): ['L', ('p5', 'h10'), (None, None)], 
+('p5', 'h10'): ['T', ('p11', 'h10'), ('p10', 'h4')], #guilty
+('p10', 'h4'): ['L', ('p10', 'h8'), (None, None)], 
+('p3', 'h3'): ['S', ('p6', 'h6'), ('p7', 'h7')], 
+('p6', 'h6'): ['L', ('p6', 'h13'), (None, None)], 
+('p6', 'h13'): ['T', ('p12', 'h13'), ('p13', 'h7')],  #guilty
+('p13', 'h7'): ['L', ('p13', 'h15'), (None, None)], 
+('p7', 'h7'): ['L', ('p7', 'h14'), (None, None)], 
+('p7', 'h14'): ['T', ('p15', 'h14'), ('p14', 'h6')], 
+('p14', 'h6'): ['L', ('p14', 'h12'), (None, None)],
+('p10', 'h8'): ['C', (None, None), (None, None)], 
+('p8', 'h9'): ['C', (None, None), (None, None)], 
+('p11', 'h10'): ['C', (None, None), (None, None)], 
+('p9', 'h11'): ['C', (None, None), (None, None)], 
+('p14', 'h12'): ['C', (None, None), (None, None)], 
+('p12', 'h13'): ['C', (None, None), (None, None)], 
+('p15', 'h14'): ['C', (None, None), (None, None)], 
+('p13', 'h15'): ['C', (None, None), (None, None)]}
 
 
-markingDict = {}
-reconGraph, transferList = buildReconciliation(H, P, R)
-Hroot = findRoot(H)
-markingDict[Hroot] = ['check']
-cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
-newReconGraph, guiltyTransfer = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
+# markingDict = {}
+# reconGraph, transferList = buildReconciliation(H, P, R)
+# Hroot = findRoot(H)
+# markingDict[Hroot] = ['check']
+# cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
+# newReconGraph, guiltyTransfer = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
 
 
 	
