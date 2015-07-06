@@ -59,14 +59,6 @@ def changeDTLScores(originalDTL, DTLList):
 def newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L):
 	"""takes as input hostTree, parasiteTree, phi, D, T, and L, and returns the newDTL whose scores were calculated from
 	costscape."""
-	# newickFile = argList[1]
-	# switchLo = float(argList[2])
-	# switchHi = float(argList[3])
-	# lossLo = float(argList[4])
-	# lossHi = float(argList[5])
-	# D = float(argList[6])
-	# T = float(argList[7])
-	# L = float(argList[8])
 	H, P, phi = newickFormatReader(newickFile)
 	originalDTL = DP(H, P, phi, D, T, L)
 	pointList = findCenters(newickFile, switchLo, switchHi, lossLo, lossHi)
@@ -74,12 +66,6 @@ def newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L):
 	DTLList = getCostscapeDTLs(DTLPairs, H, P, phi)
 	newDTL = changeDTLScores(originalDTL, DTLList)
 	return newDTL
-
-# def main():
-# 	newScoreWrapper(argv)
-
-# if __name__=="__main__": main()
-
 
 
 
