@@ -1,3 +1,4 @@
+
 # ReconConversion.py
 # Juliet Forman, Srinidhi Srinivasan, and Annalise Schweickart
 # July 2015
@@ -6,6 +7,9 @@
 # to use in vistrans as well as freqSummation to create a file with information to be shown on 
 # the website for DTL RnB
 
+
+# PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
+>>>>>>> origin/master
 import newickFormatReader
 import DP
 import HeyJuliet

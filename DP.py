@@ -1,6 +1,10 @@
 # DP.py
 # Ran Libeskind-Hadas, June 2015
 # The basic DP algorithm for reconciling pairs of trees
+
+# Altered and expanded by Carter Slocum and Annalise Schweickart
+
+
 # A tree is represented as a dictionary of key-value pairs where a key is an
 # edge name and the value is a tuple of the form
 # (start vertex, end vertex, left child edge name, right child edge name)
@@ -268,7 +272,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     newDTL = copy.deepcopy(DTL)
     DTL, numRecon = addScores(treeMin, DTL, Parents, Score, newDTL)
 
-    # Draw the DTL reconciliation of this DTL Graph
+    # Draw the DTL reconciliation of this DTL Graph if desired
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
 

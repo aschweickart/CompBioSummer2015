@@ -1,4 +1,8 @@
+#DrawDTL.py
+#July 2015
+#Annalise and Carter
 
+#File uses turtle graphics to render an image of the Total reconciliations graph
 import turtle
 import math
 
@@ -15,13 +19,15 @@ def connect(Turtle,Start,End,rad):
 	hed = Turtle.heading()
 	movr = Start[0] < End[0]
 	movu = Start[1] < End[1]
-	lessery = min(Start[1],End[1])
-	biggery = max(Start[1],End[1])
-	lesserx = min(Start[0],End[0])
-	biggerx = max(Start[0],End[0])
+	lesserY = min(Start[1],End[1])
+	biggerY = max(Start[1],End[1])
+	lesserX = min(Start[0],End[0])
+	biggerX = max(Start[0],End[0])
 	theta = 0
+
+	#find angle of the arrow
 	try:
-		theta = (math.atan(float(biggery - lessery)/float(biggerx - lesserx)))
+		theta = (math.atan(float(biggerY - lesserY)/float(biggerX - lesserX)))
 		if not movr and movu:
 			theta = math.pi - theta
 		elif not movr and not movu:
@@ -32,10 +38,13 @@ def connect(Turtle,Start,End,rad):
 		theta = (math.pi/2)
 		if not movu:
 			theta += math.pi
+
+	#adjust start and ending points so as to not draw inside nodes
 	Start = (Start[0] + (rad * math.cos(theta)), Start[1])
 	Start = (Start[0], Start[1] + (rad * math.sin(theta)))
 	End = (End[0] - (rad * math.cos(theta)), End[1])
 	End = (End[0], End[1] - (rad * math.sin(theta)))
+
 	Turtle.penup()
 	Turtle.radians()
 	Turtle.seth(theta)

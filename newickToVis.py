@@ -1,4 +1,9 @@
+#newickToVis.py
+#July 2015
+#Carter Slocum
 
+#File contains function that creates separate newick files for the parasite tree and the ultra-metric 
+#host tree.
 
 from rasmus import treelib1, util
 import copy
@@ -7,10 +12,11 @@ import MasterReconciliation
 import newickFormatReader
 
 def convert(fileName, HostOrder):
-
+    """takes name of origional file and the dictionary of host tree branch lengths
+    and creates files for the host + parasite trees"""
     f = open(fileName, 'r')
     contents = f.read()
-    host, paras, phi = host, paras, phi = newickFormatReader.getInput(fileName)
+    host, paras, phi = newickFormatReader.getInput(fileName)
     hostRoot = MasterReconciliation.findRoot(host)
     f.close()
     H,P,phi = contents.split(";")
@@ -19,8 +25,8 @@ def convert(fileName, HostOrder):
     H = H + ';'
     host = treelib1.parse_newick(H, HostOrder)
   
-    # for key in HostOrder:
-    #     H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
+    for key in HostOrder:
+        H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
     f = open(fileName[:-7]+".stree", 'w')
     treelib1.write_newick(host, f, root_data = True)
     f.close()
