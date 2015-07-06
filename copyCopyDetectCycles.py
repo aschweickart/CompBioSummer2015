@@ -313,7 +313,3 @@ Hroot = findRoot(H)
 markingDict[Hroot] = ['check']
 cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
 newReconGraph, guiltyTransfer = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
-
-
-	
-
