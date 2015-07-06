@@ -1,4 +1,5 @@
 # commonAnalytic.py
+#July 2015
 
 from shapely.geometry import *
 from CostVector import *
