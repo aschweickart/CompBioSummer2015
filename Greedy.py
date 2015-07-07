@@ -4,13 +4,13 @@
 
 # This file contains the functions for finding the best reconciliations using a DTL graph, as well as the scores of each of the events
 
-def findRoot(ParasiteTree):
+def findRoot(Tree):
     """This function takes in a parasiteTree and returns a string with the name of
     the root vertex of the tree"""
 
-    ParasiteRoot = ParasiteTree['pTop'][1]
-    return ParasiteRoot
-
+    if 'pTop' in Tree:
+        return Tree['pTop'][1]
+    return Tree['hTop'][1] 
 
 def initializeMarkingDict(DTL):
     """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
