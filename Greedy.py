@@ -28,7 +28,7 @@ def orderDTL(DTL, ParasiteRoot):
     return keysL
 
 def orderDTLRoots(DTL, vertex, level):
-    """this function takes a DTL graph, one node, vertex, of the DTL graph, a level, and a dictionary markingDict, and 
+    """this function takes a DTL graph, one node, vertex, of the DTL graph, and a level, and 
     returns a list, keysL, that contains tuples. Each tuple has two elements. The first is a mapping node of the form 
     (p, h), where p is a parasite node and h is a host node. The second element is a level representing the depth of 
     that mapping node within the tree. This function adds the input vertex to keysL and recurses on its children."""

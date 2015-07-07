@@ -1,5 +1,8 @@
-#!/usr/bin/python
+
 # Thu Dec 22 12:05:13 EST 2011
+
+# Edited by Annalise Schweickart, Carter Slocum, July 2015
+# Now imports treelib1, and edited rasmus file
 
 import sys
 import optparse
@@ -89,7 +92,7 @@ else:
 if conf.brecon:
 
     brecon = phylo.read_brecon(conf.brecon, tree, stree)
-    # brecon, losses = phylo.read_brecon(conf.brecon, tree, stree)
+
 
 
 elif conf.recon:
@@ -107,5 +110,4 @@ phylo.add_implied_spec_nodes_brecon(tree, brecon)
 transsvg.draw_tree(tree, brecon, stree, filename=conf.output,
                    snames=snames)
 
-# transsvg.draw_tree(tree, brecon, stree, losses, filename=conf.output,
-                   # snames=snames)
+

@@ -1,10 +1,11 @@
-# RandomGenerator.py
+# BiasedGenerator.py
 # Annalise Schweickart, July 2015
 
 
 import random
-import newickFormatReader
-import DP
+import RandomDP
+import newickFormatReader   
+
 
 def findRoot(Tree):
     """This function takes in a Tree and returns a string with the name of
@@ -40,7 +41,7 @@ def orderDTLRoots(DTL, vertex, level):
     adds the input vertex to keysL and recurses on its children."""
 
     keysL = []
-    for i in range(len(DTL[vertex]) - 1):    # loop through each event of key
+    for i in range(len(DTL[vertex]) - 1):      #loop through each event of key
         event = DTL[vertex][i]
         child1 = event[1]
         child2 = event[2]
@@ -85,9 +86,30 @@ def preorderDTLsort(DTL, ParasiteRoot):
         levelCounter += 1
     return orderedKeysL
 
+def normalizer(DTL):
+    """Takes in a DTL graph and normalizes the scores within a key,
+    returning a new DTL with normalized scores"""
+    for key in DTL.keys():
+        totalScore = 0
+        for event in DTL[key][:-1]:
+            totalScore += event[-1]
+        for event in DTL[key][:-1]:
+            event[-1] = event[-1]/totalScore
+    return DTL
+
+def normalizeList(scoreList):
+    """Takes in a list of scores and returns a new list with those scores
+    normalized"""
+    totalScore = 0
+    newScoreList = []
+    for score in scoreList:
+        totalScore+=score
+    for score in scoreList:
+        newScoreList.append(score/totalScore)
+    return newScoreList
+
 def rootGenerator(DTL, parasiteTree):
-    """Takes in a DTL graph and the parasite tree and returns a list of the 
-    roots of that DTL graph"""
+    """Generates a list of the roots in a DTL graph"""
     parasiteRoot = findRoot(parasiteTree)
     preOrder = preorderDTLsort(DTL, parasiteRoot)
     rootList = []
@@ -96,17 +118,37 @@ def rootGenerator(DTL, parasiteTree):
             rootList.append(key[0])
     return rootList
 
+def biasedChoice(rootList, probList):
+    """Takes in a list of vertex pairs and a correspondiing list of their 
+    frequencies and returns a vertex pair randomly chosen but weighted by
+    its frequency"""
+    num = 100
+    choices = []
+    for n in range(len(rootList)):
+        currentProb = probList[n]
+        currentRoot = [rootList[n]]
+        currentEntry = int(currentProb*num)*currentRoot
+        choices.extend(currentEntry)
+    return random.choice(choices)
+
+def makeProbList(DTL, root):
+    """Takes as input a DTL graph and a root and returns the frequencies 
+    associated with the events occuring at that root in a list"""
+    probList = []
+    for event in DTL[root][:-1]:
+        probList.append(event[-1])
+    return probList
 
 def randomReconGen(DTL, rootList, randomRecon):
-    '''Takes as input a DTL graph, a rootList, and a growing reconciliation
-    dictionary and recursively builds the reconciliation dictionary, choosing
-    random events'''
+    '''Takes in a DTL graph, a list of vertex pairs, and a dictionary of the
+    growing reconciliation and recursively builds the reconciliation using 
+    biasedChoice to decide which events will occur'''
     if rootList ==[]:
         return randomRecon  
     newRootL = []   
     for root in rootList:
-        newChild = random.choice(DTL[root][:-1])
-        print newChild
+        probList = makeProbList(DTL, root)
+        newChild = biasedChoice(DTL[root][:-1],probList)
         randomRecon[root] = newChild
         if newChild[1] != (None, None) and not newChild[1] in randomRecon and\
         not newChild[1] in newRootL:
@@ -117,13 +159,18 @@ def randomReconGen(DTL, rootList, randomRecon):
     return randomReconGen(DTL, newRootL, randomRecon)
 
 
-def randomReconGenWrapper(fileName, D, T, L):
-    """Takes in a file and duplication, loss and transfer costs, and calls 
-    randomReconGen to build a random reconciliation"""
-    hostTree, parasiteTree, phi = newickFormatReader.getInput(fileName)
-    DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
-    rootList = rootGenerator(DTL, parasiteTree)
-    startRoot = random.choice(rootList)
+def biasedReconGenWrapper(fileName, D, T, L):
+    '''Takes in a file, and duplication, transfer, and loss costs and returns
+    the reconciliation built by randomReconGen starting at the root'''
+    H, P, phi = newickFormatReader.getInput(fileName)
+    DTL, numRecon, Score = RandomDP.reconcile(fileName, D, T, L)
+    normalizedDTL = normalizer(DTL)
+    rootList = rootGenerator(normalizedDTL, P)
+    scoreList = []
+    for root in rootList:
+        scoreList.append(Score[root])
+    rootScoreList = normalizeList(scoreList)
+    startRoot = biasedChoice(rootList,rootScoreList)
     randomRecon = randomReconGen(DTL, [startRoot], {})
     for key in randomRecon.keys():
         randomRecon[key] = randomRecon[key][:-1]

@@ -17,10 +17,12 @@ from sys import argv
 import copy
 import calcCostscapeScore
 import detectCycles
+import RandomGenerator
 
 def Reconcile(argList):
-	"""Takes command-line arguments of a .newick file, duplication, transfer, and loss costs, the type of 
-	scoring desired and possible switch and loss ranges. Creates Files for the host, parasite, and reconciliations"""
+	"""Takes command-line arguments of a .newick file, duplication, transfer, 
+	and loss costs, the type of scoring desired and possible switch and loss 
+	ranges. Creates Files for the host, parasite, and reconciliations"""
 	fileName = argList[1]
 	D = float(argList[2])
 	T = float(argList[3])
@@ -35,33 +37,41 @@ def Reconcile(argList):
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
 	hostOrder = orderGraph.date(hostv)
+	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	hostBranchs = branch(hostv, hostOrder)
 	if freqType == "Frequency":
 		DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	elif freqType == "xscape":
-		DTL = calcCostscapeScore.newScoreWrapper(fileName, switchLo, switchHi, lossLo, lossHi, D, T, L)
+		DTL = calcCostscapeScore.newScoreWrapper(fileName, switchLo, \
+			switchHi, lossLo, lossHi, D, T, L)
 	elif freqType == "unit":
 		DTL = unitScoreDTL(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
 	scoresList, rec = Greedy.Greedy(DTL, paras)
 	graph = []
+	if freqType == "random":
+		recon = RandomGenerator.randomReconGenWrapper(DTL, paras)
+		rec = [recon]
 	for item in rec:
-		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
+		graph.append(ReconciliationGraph.buildReconstruction\
+			(host, paras, item))
 	for n in range(len(graph)):
 		currentOrder = orderGraph.date(graph[n])
 		if currentOrder == "timeTravel":
 			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
 			rec[n] = newOrder
-			currentOrder = ReconciliationGraph.buildReconstruction(host, paras, newOrder)
+			currentOrder = ReconciliationGraph.buildReconstruction\
+			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
 		orderedGraphs += currentOrder
 		ReconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
 	newickToVis.convert(fileName,hostBranchs)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
-	""" Takes a hostTree, parasiteTree, tip mapping function phi, and duplication cost (D), 
-	transfer cost (T), and loss cost (L) and returns the DTL graph in the form of a dictionary, 
-	with event scores set to 1. Cospeciation is assumed to cost 0. """
+	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 
+	duplication cost (D), transfer cost (T), and loss cost (L) and returns the
+	DTL graph in the form of a dictionary, with event scores set to 1. 
+	Cospeciation is assumed to cost 0. """
 	DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
 	newDTL = {}
 	for vertex in DTL:
@@ -87,16 +97,17 @@ def branch(tree, treeOrder):
 	return branches
 
 def findRoot(Tree):
-    """This function takes in a parasiteTree and returns a string with the name of
-    the root vertex of the tree"""
+    """This function takes in a parasiteTree and returns a string with the 
+    name of the root vertex of the tree"""
 
     if 'pTop' in Tree:
     	return Tree['pTop'][1]
     return Tree['hTop'][1]
 
 def InitDicts(tree):
-	"""This function takes as input a tree dictionary and returns a dictionary with all of the bottom nodes 
-	of the edges as keys and empty lists as values."""
+	"""This function takes as input a tree dictionary and returns a dictionary
+	with all of the bottom nodes of the edges as keys and empty lists as 
+	values."""
 	treeDict = {}
 	for key in tree:
 		if key == 'pTop':
@@ -108,8 +119,9 @@ def InitDicts(tree):
 	return treeDict
 
 def treeFormat(tree):
-	"""Takes a tree in the format that it comes out of newickFormatReader and converts it into a dictionary
-	with keys which are the bottom nodes of the edge and values which are the children."""
+	"""Takes a tree in the format that it comes out of newickFormatReader and
+	converts it into a dictionary with keys which are the bottom nodes of the
+	edge and values which are the children."""
 	treeDict = InitDicts(tree)
 	treeRoot = findRoot(tree)
 	for key in tree:

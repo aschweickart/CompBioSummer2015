@@ -4,7 +4,8 @@
 # Contains special features for representing phylogeny.
 # See compbio.phylo for more.
 #
-# Edited July 2015 by Annalise Schweickart 
+# Edited July 2015 by Annalise Schweickart, Carter Slocum
+# Edited to include root in write_newick
 
 
 # python libs

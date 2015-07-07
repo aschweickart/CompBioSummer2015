@@ -309,7 +309,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
 
     #DrawDTL.drawNodes(treeMin, DTL, 450, {})
 
-    return DTL, numRecon
+    return DTL, numRecon, Score
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a 
