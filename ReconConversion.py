@@ -9,10 +9,10 @@
 
 
 # PROF WU VISUALIZATION RECONCILIATION FORMAT CONVERSION
->>>>>>> origin/master
+
 import newickFormatReader
 import DP
-import HeyJuliet
+import Greedy
 import copy
 import calcCostscapeScore
 import MasterReconciliation
@@ -66,7 +66,7 @@ def freqSummation(argList):
 		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L)
 	elif freqType == "unit":
 		newDTL = MasterReconciliation.unitScoreDTL(host, paras, phi, D, T, L)
-	scoresList, reconciliation = HeyJuliet.Greedy(newDTL, paras)
+	scoresList, reconciliation = Greedy.Greedy(newDTL, paras)
 	totalSum = 0
 	for score in scoresList:
 		totalSum +=score

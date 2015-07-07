@@ -2,7 +2,7 @@
 # Carter Slocum
 # July 2015
 
-# This file contains a function for topologically ordering a tree graph and detecting non-acyclic graphs
+# This file contains a function for topologically ordering a tree graph and detecting cyclic graphs
 
 
 import copy
@@ -47,7 +47,7 @@ def date(recon):
 					del dicto[child]
 					LonerList.append(child)
 	if len(dicto.keys()) > 0:
-		return "Timetravel"
+		return "timeTravel"
 	else:
 		for item in Leaves:
 			order[item] = len(Leaves)

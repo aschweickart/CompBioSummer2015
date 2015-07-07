@@ -7,7 +7,7 @@
 # functions are helper functions that are used by Reconcile.
 
 import DP
-import HeyJuliet
+import Greedy
 import newickToVis
 import ReconConversion
 import orderGraph
@@ -19,8 +19,8 @@ import calcCostscapeScore
 import detectCycles
 
 def Reconcile(argList):
-	"""Takes command-line arguments of File, costs, and amount of desired reconciliations. Creates Files for 
-	the host, parasite, and reconciliations"""
+	"""Takes command-line arguments of a .newick file, duplication, transfer, and loss costs, the type of 
+	scoring desired and possible switch and loss ranges. Creates Files for the host, parasite, and reconciliations"""
 	fileName = argList[1]
 	D = float(argList[2])
 	T = float(argList[3])
@@ -43,19 +43,19 @@ def Reconcile(argList):
 	elif freqType == "unit":
 		DTL = unitScoreDTL(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
-	scoresList, rec = HeyJuliet.Greedy(DTL, paras)
+	scoresList, rec = Greedy.Greedy(DTL, paras)
 	graph = []
 	for item in rec:
 		graph.append(ReconciliationGraph.buildReconstruction(host, paras, item))
-	for item in range(len(graph)):
-		currentOrder = orderGraph.date(graph[item])
-		if currentOrder == "Timetravel":
-			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[item])
-			rec[item] = newOrder
+	for n in range(len(graph)):
+		currentOrder = orderGraph.date(graph[n])
+		if currentOrder == "timeTravel":
+			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
+			rec[n] = newOrder
 			currentOrder = ReconciliationGraph.buildReconstruction(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
 		orderedGraphs += currentOrder
-		ReconConversion.convert(rec[item], DTLGraph, paras, fileName[:-7], item)
+		ReconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
 	newickToVis.convert(fileName,hostBranchs)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):

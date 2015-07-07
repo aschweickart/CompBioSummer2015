@@ -1,4 +1,8 @@
+# ReconciliationGraph.py
+# Srinidhi Srinivasan, Juliet Forman, Annalise Schweickart
+# July 2015
 
+# This file contains functions for creating a reconciliation graph used to detect cycles and date untimed trees
 
 
 def findRoot(Tree):

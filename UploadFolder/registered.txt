@@ -1,5 +1,0 @@
-registered.txt
-asdf;Harvey Mudd College;aschweickart@hmc.edu
-Annalise;Harvey Mudd College;aschweickart@hmc.edu
-Annalise;Harvey Mudd College;aschweickart@hmc.edu
-Annalise;Harvey Mudd College;annalise.schweickart@gmail.com

@@ -1,4 +1,8 @@
-#Team Greedy
+# Greedy.py
+# Srinidhi Srinivasan, Juliet Forman
+# July 2015
+
+# This file contains the functions for finding the best reconciliations using a DTL graph, as well as the scores of each of the events
 
 def findRoot(ParasiteTree):
     """This function takes in a parasiteTree and returns a string with the name of
@@ -179,24 +183,32 @@ def greedyOnce(DTL, ParasiteTree):
     newGreedyOnce, resetDTL = TraceChildren(DTL, GreedyOnce, BSFHMap, bestKey)
     GreedyOnce.update(newGreedyOnce)
     DTL.update(resetDTL)
-    return GreedyOnce, DTL
+    return GreedyOnce, DTL, bestScore
 
 def Greedy(DTL, ParasiteTree):
     """This function takes as input a DTL graph, a ParasiteTree, and k, the desired number of best reconciliation trees. 
     It returns TreeList, a list of k dictionaries, each of which represent one of the best trees."""
+    scores = []
     currentDTL = DTL
     counter = 0
     rec = []
     not0 = True
     while not0:
-        oneTree, currentDTL = greedyOnce(currentDTL, ParasiteTree)
+        oneTree, currentDTL, score = greedyOnce(currentDTL, ParasiteTree)
+        scores.append(score)
         rec.append(oneTree)
         counter += 1
         not0 = False
+        zeroes = 0
+        events = 0
         for key in currentDTL:
             for i in range(len(currentDTL[key])-1):
                 if currentDTL[key][i][-1] != 0:
                     not0 = True
-    return rec
+                else:
+                    zeroes += 1
+                events += 1
+
+    return scores, rec
 
 
