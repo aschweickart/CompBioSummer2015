@@ -1,20 +1,28 @@
-# ReconciliationGraph.py
-# Srinidhi Srinivasan, Juliet Forman, Annalise Schweickart
+# reconciliationGraph.py
+
+# Srinidhi Srinivasan, Juliet Forman
 # July 2015
 
-# This file contains functions for creating a reconciliation graph used to detect cycles and date untimed trees
-
+# This file contains function for building the cycle checking graph, 
+# reconGrap, which is in the form of a dictionary. This dictionary has keys 
+# that are nodes and values that are a list of all the children. The 
+# reconGraph represents edges between nodes that show the temporal 
+# relationship between the host tree and the parasite Tree. The main function
+# in this file is buildReconstruction and the rest of the functions are 
+# helper function that are used by buildReconstruction
 
 def findRoot(Tree):
-	"""This function takes in a tree and returns a string with the name of the root vertex of the tree"""
+	"""This function takes in a tree and returns a string with the name of 
+	the root vertex of the tree."""
 
 	if 'pTop' in Tree:
 		return Tree['pTop'][1]
 	return Tree['hTop'][1]
 
 def InitDicts(tree):
-	"""This function takes as input a tree dictionary and returns a dictionary with all of the bottom nodes 
-	of the edges as keys and empty lists as values."""
+	"""This function takes as input a tree dictionary and returns a dictionary
+	with all of the bottom nodes of the edges as keys and empty lists as 
+	values."""
 
 	treeDict = {}
 	for key in tree:
@@ -27,12 +35,14 @@ def InitDicts(tree):
 	return treeDict
 
 def treeFormat(tree):
-	"""Takes a tree in the format that it comes out of newickFormatReader and converts it into a dictionary
-	with keys which are the bottom nodes of the edge and values which are the children."""
+	"""Takes a tree in the format that it comes out of newickFormatReader and
+	converts it into a dictionary with keys which are the bottom nodes of the
+	edges and values which are the children."""
 
 	treeDict = InitDicts(tree)
 	treeRoot = findRoot(tree)
 	for key in tree:
+		#deal with case where the key is not in tuple form
 		if key == 'hTop' or key == 'pTop':
 			if tree[key][-2] == None:
 				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2]]
@@ -43,6 +53,7 @@ def treeFormat(tree):
 			else:
 				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1][1]]
 		else:
+			#where key is in tuple form
 			if tree[key][-2] == None:
 				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
 			else:
@@ -54,9 +65,9 @@ def treeFormat(tree):
 	return treeDict
 
 def parentsDict(H, P):
-	"""Takes a host and a parasite tree with edges as keys and returns a dictionary with 
-	keys which are the bottom nodes of those edges and values which are the top nodes of 
-	those edges."""
+	"""Takes a host and a parasite tree with edges as keys and returns a 
+	dictionary with keys which are the bottom nodes of those edges and values
+	which are the top nodes of those edges."""
 
 	parentsDict = {}
 	for key in H:
@@ -72,8 +83,8 @@ def parentsDict(H, P):
 	return parentsDict
 
 def uniquify(list):
-	"""Takes as input a list and returns a list containing only the unique elements of 
-	the input list."""
+	"""Takes as input a list and returns a list containing only the unique 
+	elements of the input list."""
 
 	keys = {}
 	for e in list:
@@ -81,9 +92,10 @@ def uniquify(list):
 	return keys.keys()
 
 def buildReconstruction(HostTree, ParasiteTree, reconciliation):
-	"""Takes as input a host tree, a parasite tree, and a reconciliation, and returns a graph where the
-	keys are host or parasite nodes, and the values are a list of the children of a particular node. The
-	graph represents temporal relationships between events."""
+	"""Takes as input a host tree, a parasite tree, and a reconciliation, and
+	returns a graph where the keys are host or parasite nodes, and the values
+	are a list of the children of a particular node. The graph represents 
+	temporal relationships between events."""
 
 	parents = parentsDict(HostTree, ParasiteTree)
 	H = treeFormat(HostTree)
@@ -91,41 +103,47 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	reconGraph = H
 	reconGraph.update(P) 
 	for key in reconciliation:
+		print "key:", key
+		#deal with transfer case:
 		if reconciliation[key][0] == 'T':
-			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], reconciliation[key][2][1]]
+			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], \
+												reconciliation[key][2][1]]
 			parent1 = parents[reconciliation[key][1][1]]
 			parent2 = parents[reconciliation[key][2][1]]
 			reconGraph[parent1] = reconGraph[parent1] + [key[0]]
 			reconGraph[parent2] = reconGraph[parent2] + [key[0]]
-
+		#deal with speciation case:
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
 			if parent != 'Top':
 				reconGraph[parent] = reconGraph[parent] + [key[1]]
 			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
-			#del reconGraph[key[0]]
-
+			del reconGraph[key[0]]
+		#deal with duplication case:
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]
 			if parent != 'Top':
 				reconGraph[parent] = reconGraph[parent] + [key[0]]
 			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
-
+		#deal with contemporary case:
 		elif reconciliation[key][0] == 'C':
 			reconGraph[key[1]] = [None]
 			reconGraph[key[0]] = [None]
-
-		# else:
-		# 	parent = parents[key[0]]
-		# 	if parent != 'Top':
-		# 		reconGraph[parent] = reconGraph[parent] + [key[1]]
-		# 		if reconciliation[key][1] != (None, None):
-		# 			reconGraph[key[1]] = reconGraph[key[1]]+ [reconciliation[key][1]]
-		# 		else: reconGraph[key[1]] = reconGraph[key[1]]+[reconciliation[key][2]]
-
-
 
 	for key in reconGraph:
 		reconGraph[key] = uniquify(reconGraph[key])
 
 	return reconGraph
+
+
+
+
+
+
+
+
+
+
+
+
+
