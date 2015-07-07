@@ -11,10 +11,7 @@
 # detectCyclesWrapper, and the rest of the functions are helper functions 
 # that are used by detectCyclesWrapper.
 
-
-
 import copy
-
 
 def findRoot(Tree):
 	"""This function takes in a tree and returns a string with the name of 
@@ -175,20 +172,41 @@ def detectCycles(HostTree, ParasiteTree, reconciliation):
 
 	return newReconGraph, guiltyTransferList
 
+
 def checked(markingDict, node):
+	"""This function takes as input a markingDict and a node, and checks the 
+	node in markingDict, marking it as visited."""
+
 	return node in markingDict
 
+
 def ticked(markingDict, node):
+	"""This function takes as input a markingDict and a checked node, and 
+	returns True if the node is already ticked, False if it is not."""
+
 	return node in markingDict and len(markingDict[node]) == 2
 
+
 def tick(markingDict, node):
+	"""This function takes as input a markingDict and node which is checked 
+	but not ticked, and ticks the node in markingDict."""
+
 	markingDict[node] = markingDict[node] + ['tick']
 
+
 def untick(markingDict, node):
+	"""This function takes as input a markingDict and a ticked node, and 
+	unticks the node in markingDict."""
+
 	markingDict[node] = markingDict[node][:1]
 
+
 def check(markingDict, node):
+	"""This function takes as input markingDict and a node, and checks the 
+	node in markingDict."""
+
 	markingDict[node] = ['check']
+
 
 def recurseChildren(reconGraph, markingDict, node):
 	"""This function takes as input the cycle checking graph reconGraph, 
@@ -221,6 +239,7 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 	reconciliation, and a node cycleNode which is either a node in a cycle or 
 	None. The function returns a new cycle checking graph newReconGraph, 
 	from which the guilty transfers have been removed."""
+
 	newReconGraph = copy.deepcopy(reconGraph)
 	guiltyTransfer = []
 	if cycleNode == None:
@@ -235,11 +254,15 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 			removeChild(newReconGraph, transfer[0], transfer[4])
 			if transfer[1] != transfer[3]:
 				removeChild(newReconGraph, transfer[3], transfer[0])
-
 			break
 	return newReconGraph, guiltyTransfer, transferList
 
+
 def removeChild(reconGraph, parent, child):
+	"""This function takes as input a graph reconGraph, a parent, and its 
+	child. It removes the child from the list of children that is the value 
+	associated with parent in reconGraph."""
+	
 	childList = reconGraph[parent]
 	childList.remove(child)
 	reconGraph[parent] = childList
