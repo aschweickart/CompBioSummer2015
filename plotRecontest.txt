@@ -1,7 +1,0 @@
-test
-xscape Frequency
-leaves: 5
-reconciliations: 2
-Total number of points: 10
-1.	7	"Temporally consistent"
-2.	2	"Temporally consistent"
