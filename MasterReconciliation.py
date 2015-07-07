@@ -73,7 +73,6 @@ def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 		newDTL[vertex] = newDTL[vertex] + [DTL[vertex][-1]]
 	return newDTL
 
-
 def branch(tree, treeOrder):
 	"""Computes Ultra-metric Branchlength from a tree dating"""
 	branches = {}
