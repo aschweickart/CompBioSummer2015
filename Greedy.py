@@ -5,7 +5,7 @@
 # This file contains the functions for finding all optimal reconciliations 
 # using a DTL graph, as well as the scores for each of the events using the
 # vertex-based DP algorithm. The main function in this file is called Greedy
-# and the remaining function are helper function that are used by Greedy.
+# and the remaining functions are helper function that are used by Greedy.
 
 def findRoot(Tree):
     """This function takes in a parasiteTree and returns a string with the 
