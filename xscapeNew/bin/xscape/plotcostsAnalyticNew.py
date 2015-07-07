@@ -2,7 +2,10 @@
 # Ran Libeskind-Hadas, October 2013
 # Plots the cost space using a matplotlib/pyplot
 
-import matplotlib.pyplot as plt
+# This file contains a function which finds the coordinates of the regions in 
+# costscape.
+
+#import matplotlib.pyplot as plt
 from shapely.geometry import *
 from CostVector import *
 from commonAnalytic import *
@@ -14,14 +17,8 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
         the y-axis represents switch cost (relative to unit cost for
         duplication).  The x-range is from lossMin to lossMax and the
         y-range is from switchMin to switchMax.'''
-    #print log
+
     coordList = []
-    if log==True:
-        plt.xscale('log')
-        plt.yscale('log')
-    plt.axis([lossMin, lossMax, switchMin, switchMax])
-    plt.xlabel("Loss cost relative to duplication")
-    plt.ylabel("Transfer cost relative to duplication")
     
     # color map
     numRegions = len(CVlist)
@@ -36,32 +33,17 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
         region = regions[cv_str]
         
         # output
-        #print "Cost vector ", cv
         color = colorMap[CVlist.index(cv)]
 	pattern = patternsMap[CVlist.index(cv)]
         label = cv_str
         if isinstance(region, Polygon):       # non-degenerate
             coords = list(region.exterior.coords)
-            plt.gca().add_patch(plt.Polygon(coords,
-                                            color = color, label = label, fill=False, hatch=pattern))
-            
             coordList.append(coords)
-            #print "  Polygon vertices: ", coords
-            #print "  Polygon area: ", region.area
         elif isinstance(region, LineString):  # degenerate
             coords = list(region.coords)
-            plt.plot([coords[0][0], coords[1][0]],
-                     [coords[0][1], coords[1][1]],
-                     linewidth = 4,
-                     color = color, label = label)
             coordList.append(coords)
-            #print "  Line vertices: ", coords
         elif isinstance(region, Point):       # degenerate
             coords = list(region.coords)
-            plt.plot(coords[0][0], coords[0][1],
-                     'o', markersize = 4,
-                     color = color, label = label)
-            #print "  Point vertex: ", coords
             coordList.append(coords)
         else:                                 # non-degenerate (collection)
             try:
@@ -69,45 +51,20 @@ def plotcosts(CVlist, switchMin, switchMax, lossMin, lossMax, outfile,
                 for r in region:
                     if isinstance(r, Polygon):         # non-degenerate
                         coords = list(r.exterior.coords)
-                        plt.gca().add_patch(plt.Polygon(coords,
-                                                        color = color, label = label, fill = False, hatch = pattern))
-                        #print "  Polygon vertices: ", coords
-                        #print "  Polygon area: ", r.area
                         coordList.append(coords)
                     elif isinstance(r, LineString):    # degenerate
                         coords = list(r.coords)
-                        plt.plot([coords[0][0], coords[1][0]],
-	                         [coords[0][1], coords[1][1]],
-                                 linewidth = 4,
-                                 color = color, label = label)
-                        #print "  Line vertices: ", coords
                         coordList.append(coords)
                     elif isinstance(r, Point):         # degenerate
                         coords = list(r.coords)
-                        plt.plot(coords[0][0], coords[0][1],
-                                 'o', markersize = 4,
-                                 color = color, label = label)
-                        #print "  Point vertex: ", coords
                         coordList.append(coords)
                     else:
-                         raise Exception("cost vector (%s) has invalid subregion (%s)" % (str(cv), str(type(r))))
+                         raise Exception("cost vector (%s) has invalid \
+                            subregion (%s)" % (str(cv), str(type(r))))
                     area += r.area
-                    #print "  Total area: ", area
             except:
-                raise Exception("cost vector (%s) has invalid region (%s)" % (str(cv), str(type(region))))
-        #print coordList
+                raise Exception("cost vector (%s) has invalid region (%s)" \
+                    % (str(cv), str(type(region))))
     return coordList
-    
-    # legend
-    leg = plt.legend()
-    for i in range(len(leg.legendHandles)):  # adjust legend marker thickness
-        leg.legendHandles[i].set_linewidth(2.0)
-    plt.title("Costscape:  " + outfile)
-    
-    if outfile != "":
-        plt.savefig(outfile, format="pdf")
-    if display:
-        plt.show()
-
     
 
