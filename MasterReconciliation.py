@@ -134,7 +134,6 @@ def treeFormat(tree):
 	return treeDict
 
 
-
 def main():
 	Reconcile(argv)
 
