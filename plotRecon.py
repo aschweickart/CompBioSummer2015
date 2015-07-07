@@ -1,9 +1,23 @@
+#plotRecon.py
+#Srinidhi Srinivasan, Juliet Forman
+#July 2015
+
+# This file contains functions for plotting the percentage of points collected
+# for each reconciliation vs. the Gene Tree size which is determined by the
+# number of leaves for the tree. It mainly uses matplotlib to do this. The 
+# main function in this file is called plotRecon and the remaining functions
+# are helper functions that are used by plotRecon.py
+
+
 import matplotlib.pyplot as plt
 
-#reconList = [[5, 2, 37, 7.0, 2.0, 5.0, 13.0, 10.0], [15, 3, 115, 1.0, 7.0, 65.0, 32.0, 4.0, 6.0]]
+
 
 #file i/o stuff:
 def fileConversion(reconFile):
+	"""This function takes in a text file with information about the 
+	reconciliation and returns a list reconPoints of the information in list 
+	form."""
 	lines = [line.rstrip('\n') for line in open(reconFile)]
 	lines = lines[4:]
 	reconPoints = []
@@ -30,6 +44,9 @@ def fileConversion(reconFile):
 	print reconPoints
 
 def calcMinandMax(reconList):
+	"""This function takes in a list of the lists where each list contains
+	information about the reconciliations for each tree and returns the min and
+	max size of the trees that will be plotted."""
 	pointMin = float("inf")
 	pointMax = float("-inf")
 	for reconPoints in reconList:
@@ -41,6 +58,10 @@ def calcMinandMax(reconList):
 
 
 def plotRecon(reconList):
+	"""This function takes in a list of lists where each list contains 
+	information about the reconciliations for each tree and plots the graph
+	where the y-axis is the percentage of points collected and the x-axis
+	is the gene tree size."""
 	minSize, maxSize = calcMinandMax(reconList)
 
 	plt.ylabel('Percentage of points collected')
@@ -49,14 +70,16 @@ def plotRecon(reconList):
 
 	for reconPoints in reconList:
 		treeSize = reconPoints[0]
-		plt.vlines(treeSize, reconPoints[3]/reconPoints[2]*100, 100, color = 'k')
+		plt.vlines(treeSize, reconPoints[3]/reconPoints[2]*100, 100, \
+			color = 'k')
 		currentPercentTotal = 0
 		for i in range(len(reconPoints[3:])):
 			totalPoints = reconPoints[2]
 			currentReconPoint = reconPoints[i+3]
 			percentReconPoint = currentReconPoint/totalPoints*100
 			currentPercentTotal += percentReconPoint
-			plt.hlines(currentPercentTotal, treeSize-1, treeSize+1, color = 'b')
+			plt.hlines(currentPercentTotal, treeSize-1, treeSize+1, \
+				color = 'b')
 
 	plt.show()
 
