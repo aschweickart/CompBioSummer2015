@@ -1,6 +1,6 @@
 #JULIET AND SRINIDHI
 
-from DP import *
+from DPJune17 import *
 from costscapeScore import *
 from sys import argv
 
@@ -36,7 +36,7 @@ def getCostscapeDTLs(DTLPairs, hostTree, parasiteTree, phi):
 	It returns a list of DTLs who scores are computed with the T and L values from DTLPairs"""
 	DTLList = []
 	for i in DTLPairs:
-		newDTL = DP(hostTree, parasiteTree, phi, 1, i[0], i[1])[0]
+		newDTL = DP(hostTree, parasiteTree, phi, 1, i[0], i[1])
 		DTLList.append(newDTL)
 	return DTLList
 
