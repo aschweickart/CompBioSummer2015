@@ -1,29 +1,19 @@
-#Juliet and Srinidhi
-
-#!/usr/bin/env python
-
-# costscape.py
+# costscapeScore.py
 # Ran Libeskind-Hadas, Jessica Yi-Chieh Wu, Mukul Bansal, November 2013
+# Updated by Juliet Forman and Srinidhi Srinivasan
+
+# This file contains functions that find the centers of the regions in 
+# costscape for a given .newick file. The main function is findCenters, and 
+# the rest are helper functions.
 
 # python libraries
 import time
 import math
 
-# xscape libraries
 
 from newickFormatReader import *
 
-def getInput(newickFile, switchLo, switchHi, lossLo, lossHi):
-    """Takes as input a newick file in the form <filename>.newick, and low and high values
-    for costscape for both switches and losses. Returns hostTree, parasiteTree, phi, and the 
-    same high and low values for switch and loss."""
-
-    hostTree, parasiteTree, phi = newickFormatReader(newickFile)
-    return hostTree, parasiteTree, phi
-
-
-
-
+# xscape libraries
 try:
     import xscape
 except ImportError:
@@ -41,21 +31,17 @@ import shapely
 from shapely.wkt import loads as load_wkt
 
 
-
-#coordList eg
-[[(0.1, 0.2), (0.1, 1.3), (1.3333333333333335, 5.0), (2.5, 5.0), (0.1, 0.2)], 
-[(0.1, 0.1), (0.1, 0.2), (2.5, 5.0), (5.0, 5.0), (5.0, 0.1), (0.1, 0.1)], 
-[(1.3333333333333335, 5.0), (0.1, 1.3)], 
-[(0.1, 1.3), (0.1, 5.0), (1.3333333333333335, 5.0), (0.1, 1.3)]]
-
-
 def getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi):
-    """Takes as input a newick file in the form <filename>.newick, and low and high values
-    for costscape for both switches and losses. Returns a list of coordinates in the form of 
-    strings."""
+    """Takes as input a newick file in the form <filename>.newick, and low 
+    and high values for costscape for both switches and losses. Returns a 
+    list of strings, where each string contains all the verteces of one 
+    region from costscape."""
+
     hostTree, parasiteTree, phi = newickFormatReader(newickFile)
-    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, switchHi, lossLo, lossHi)
-    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, "", False, False)
+    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, \
+        switchHi, lossLo, lossHi)
+    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, \
+        switchHi, "", False, False)
     newCoordList = []
     for element in coordList:
         string = "POLYGON(("
@@ -66,15 +52,19 @@ def getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi):
     return newCoordList
 
 
-#['POINT (1.155097694723539 3.159479316404207)', 'POINT (3.070767123287671 2.28172602739726)', 'POINT (0.716666666667 3.15)', 'POINT (0.51111111111 3.766666666666667)']
-
-
 def findCenters(newickFile, switchLo, switchHi, lossLo, lossHi):
-    """Returns """
+    """This function takes as input a .newick file in the form 
+    <filename>.newick, and low and high values for costscape for both 
+    switches and losses. It returns a list of the centroids of each region in 
+    the costscape associated with the given .newick file."""
+
     hostTree, parasiteTree, phi = newickFormatReader(newickFile)
-    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, switchHi, lossLo, lossHi)
-    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, switchHi, "", False, False)
-    polygonList = getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi)
+    CVlist = reconcile.reconcile(parasiteTree, hostTree, phi, switchLo, \
+        switchHi, lossLo, lossHi)
+    coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, \
+        switchHi, "", False, False)
+    polygonList = getNewCoordList(newickFile, switchLo, switchHi, lossLo, \
+        lossHi)
     pointList = []
     for i in range(len(polygonList)):
         point = polygonList[i]
