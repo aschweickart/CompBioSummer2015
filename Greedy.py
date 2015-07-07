@@ -12,15 +12,6 @@ def findRoot(Tree):
         return Tree['pTop'][1]
     return Tree['hTop'][1] 
 
-def initializeMarkingDict(DTL):
-    """makes a marking dictionary with all the same keys as DTL, and with all values set to False."""
-
-    markingDict = {}
-    for key in DTL:
-        markingDict[key] = False
-    markingDict[(None, None)] = False
-    return markingDict
-
 
 def orderDTL(DTL, ParasiteRoot):
     """This function takes in a DTL graph and the ParasiteRoot. It outputs a list, keysL, that contains tuples. Each tuple 
