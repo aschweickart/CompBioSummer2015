@@ -1,5 +1,5 @@
 #plotRecon.py
-#Srinidhi Srinivasan, Juliet Forman
+#Srinidhi Srinivasan, Juliet Forman, Carter Slocum
 #July 2015
 
 # This file contains functions for plotting the percentage of points collected
@@ -40,8 +40,7 @@ def fileConversion(reconFile):
 			if foundTab1 == False:
 				indexTab1 += 1
 			indexTab2 += 1
-		print reconPoints
-	print reconPoints
+	return reconPoints
 
 def calcMinandMax(reconList):
 	"""This function takes in a list of the lists where each list contains
@@ -66,7 +65,7 @@ def plotRecon(reconList):
 
 	plt.ylabel('Percentage of points collected')
 	plt.xlabel('Gene Tree Size')
-	plt.axis([minSize-10, maxSize+10, 0, 101])
+	plt.axis([minSize-25, maxSize+25, 85, 101])
 
 	for reconPoints in reconList:
 		treeSize = reconPoints[0]
@@ -74,12 +73,13 @@ def plotRecon(reconList):
 			color = 'k')
 		currentPercentTotal = 0
 		for i in range(len(reconPoints[3:])):
+			random.seed(time.time())
 			totalPoints = reconPoints[2]
 			currentReconPoint = reconPoints[i+3]
 			percentReconPoint = currentReconPoint/totalPoints*100
 			currentPercentTotal += percentReconPoint
-			plt.hlines(currentPercentTotal, treeSize-1, treeSize+1, \
-				color = 'b')
+			plt.hlines(currentPercentTotal, treeSize-25, treeSize+25, \
+				color = (random.random(), random.random(), random.random()))
 
 	plt.show()
 
