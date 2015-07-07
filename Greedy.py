@@ -145,12 +145,14 @@ def TraceChildren(DTL, GreedyOnce, BSFHMap, key):
     child2 = GreedyOnce[key][2]
     if child1 != (None, None):
         GreedyOnce[child1] = BSFHMap[child1][0][0:3] #add event to greedyOnce
-        for i in range(len(DTL[child1]) - 1):       #this loop resets all the scores of events that have been used to 0 
+        #this loop resets all the scores of events that have been used to 0 
+        for i in range(len(DTL[child1]) - 1):       
             if DTL[child1][i] == BSFHMap[child1][0]:
                 newValue = DTL[child1]
                 newValue[i][-1] = 0
                 reset1DTL[child1] = newValue
-        newGreedyOnce, DTL1 = TraceChildren(DTL, GreedyOnce, BSFHMap, child1) #this recursive call updates GreedyOnce and the DTL graph
+        #this recursive call updates GreedyOnce and the DTL graph
+        newGreedyOnce, DTL1 = TraceChildren(DTL, GreedyOnce, BSFHMap, child1) 
         reset1DTL.update(DTL1) 
         GreedyOnce.update(newGreedyOnce)
     if child2 != (None, None):
