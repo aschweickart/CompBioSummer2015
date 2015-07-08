@@ -36,7 +36,6 @@ def Reconcile(argList):
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
-	hostOrder = orderGraph.date(hostv)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	hostBranchs = branch(hostv, hostOrder)
 	if freqType == "Frequency":
@@ -63,9 +62,12 @@ def Reconcile(argList):
 			currentOrder = ReconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
-		orderedGraphs += currentOrder
+		hostBranchs = branch(hostv,currentOrder)
+		if n == 0:
+			newickToVis.convert(fileName,hostBranchs, n, 1)
+		else:
+			newickToVis.convert(fileName,hostBranchs, n, 0)
 		ReconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
-	newickToVis.convert(fileName,hostBranchs)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 
