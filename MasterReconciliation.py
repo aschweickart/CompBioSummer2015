@@ -99,10 +99,18 @@ def branch(tree, treeOrder):
 
 def hOrder(hTree, orderMess):
 	hostOrder = {} 
-	messList = sorted(orderMess)
-	for item in len(messList):
-		if messList[item] in hTree:
-			hostOrder[messList[item]] = item
+	leaves = []
+	messList = sorted(orderMess, key=orderMess.get)
+	place = 0
+	for item in range(len(messList)):
+		if messList[item] in hTree and not hTree[messList[item]] == None:
+			hostOrder[messList[item]] = place
+			place++
+		elif messList[item] in hTree and hTree[messList[item]] == None:
+			leaves += messList[item]
+	for item in leaves:
+		if item in hTree:
+			hostOrder[item] = place
 	return hostOrder 
 
 
