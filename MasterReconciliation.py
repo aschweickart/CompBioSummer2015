@@ -32,12 +32,10 @@ def Reconcile(argList):
 	switchHi = float(argList[7])
 	lossLo = float(argList[8])
 	lossHi = float(argList[9])
-	orderedGraphs = []
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	hostBranchs = branch(hostv, hostOrder)
 	if freqType == "Frequency":
 		DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
 	elif freqType == "xscape":
@@ -62,7 +60,8 @@ def Reconcile(argList):
 			currentOrder = ReconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
-		hostBranchs = branch(hostv,currentOrder)
+		hostOrder = hOrder(hostv,currentOrder)
+		hostBranchs = branch(hostv,hostOrder)
 		if n == 0:
 			newickToVis.convert(fileName,hostBranchs, n, 1)
 		else:
@@ -97,6 +96,17 @@ def branch(tree, treeOrder):
 		if not key in branches:
 			branches[key] = 0
 	return branches
+
+def hOrder(hTree, orderMess):
+	hostOrder = {} 
+	messList = sorted(orderMess)
+	for item in len(messList):
+		if messList[item] in hTree:
+			hostOrder[messList[item]] = item
+	return hostOrder 
+
+
+
 
 def findRoot(Tree):
     """This function takes in a parasiteTree and returns a string with the 
