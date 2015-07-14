@@ -98,6 +98,8 @@ def branch(tree, treeOrder):
 
 
 def hOrder(hTree, orderMess):
+	"""takes in the host tree and the ordering of the reconciliation and returns
+	a dictionary reresentation of the host tree ordering for that reconciliation"""
 	hostOrder = {} 
 	leaves = []
 	messList = sorted(orderMess, key=orderMess.get)
@@ -105,8 +107,10 @@ def hOrder(hTree, orderMess):
 	for item in range(len(messList)):
 		if messList[item] in hTree and not hTree[messList[item]] == [None, None]:
 			hostOrder[messList[item]] = place
+
 			place+=1
 		elif messList[item] in hTree and hTree[messList[item]] == [None,None]:
+
 			leaves.append(messList[item])
 	for item in leaves:
 		hostOrder[item] = place
