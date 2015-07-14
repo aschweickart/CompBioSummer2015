@@ -68,7 +68,8 @@ def freqSummation(argList):
 	if freqType == "Frequency":
 		newDTL = DTL
 	elif freqType == "xscape":
-		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L)
+		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, \
+			switchHi, lossLo, lossHi, D, T, L)
 	elif freqType == "unit":
 		newDTL = MasterReconciliation.unitScoreDTL(host, paras, phi, D, T, L)
 	scoresList, reconciliation = Greedy.Greedy(newDTL, paras)

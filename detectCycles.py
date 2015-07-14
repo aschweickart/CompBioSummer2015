@@ -248,7 +248,6 @@ def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
 		if cycleNode in transfer:
 			guiltyTransfer = transfer
 			transferList.remove(transfer)
-			print "guiltyTransfer:", guiltyTransfer
 			removeChild(newReconGraph, transfer[1], transfer[0])
 			removeChild(newReconGraph, transfer[0], transfer[2])
 			removeChild(newReconGraph, transfer[0], transfer[4])

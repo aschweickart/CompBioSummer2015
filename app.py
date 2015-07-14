@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template, send_from_directory, flash, Markup
+from flask import Flask, request, render_template, send_from_directory, Markup
 from werkzeug import secure_filename
 import os
 from flask_bootstrap import Bootstrap
@@ -53,16 +53,26 @@ def reconcile(carousel = None):
 
     if file:
       filename = secure_filename(file.filename)
+      print filename
       Name = filename[:-7]
       os.system("mkdir "+Name)
       path2files = Name + '/' + Name
       svgFile = Name + "0.svg"
-      file.save('/Users/Annalise/GitHub/CompBioSummer2015/'+path2files + ".newick")
-      os.system("python /Users/Annalise/GitHub/CompBioSummer2015/MasterReconciliation.py "+path2files+".newick"+" "+ \
-        str(Dup)+" "+str(Trans)+" "+str(Loss)+" "+str(request.form["scoring"])+" "+str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+" "+str(lossHi))
-      # os.system("chmod ugo+r "+ svgFile)
-      os.system('python /Users/Annalise/GitHub/CompBioSummer2015/ReconConversion.py '+path2files+".newick"+" "+str(Dup)+ \
-        " "+str(Trans)+" "+str(Loss)+" "+str(request.form['scoring'])+" "+str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+" "+str(lossHi))
+      f = open(filename, 'w')
+      f.write(file.read())
+      f.close()
+      os.system("mv "+filename+" "+path2files+'.newick')
+     
+      os.system("python /Users/Annalise/GitHub/CompBioSummer2015/"+\
+        "MasterReconciliation.py "+path2files+".newick"+" "+ \
+        str(Dup)+" "+str(Trans)+" "+str(Loss)+" "+str(request.form["scoring"])\
+        +" "+str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+" "+str(lossHi))
+     
+      os.system('python /Users/Annalise/GitHub/CompBioSummer2015/'+\
+        'ReconConversion.py '+path2files+".newick"+" "+str(Dup)+ \
+        " "+str(Trans)+" "+str(Loss)+" "+str(request.form['scoring'])+" "\
+        +str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+" "+str(lossHi))
+      
       with open(path2files+"freqFile.txt") as f:
        lines = f.readlines()
       scoreList = string2List(lines[0])
@@ -76,34 +86,55 @@ def reconcile(carousel = None):
       else: scoreMethod = "Unit Scoring"
       carouselstr = ""
       carouselcap= ""
-      staticString = "<h4>Duplication Cost:"+str(Dup)+", Transfer Cost: "+str(Trans)+", Loss Cost: "+str(Loss)+"<br>Maximum Parsimony Cost: "+str(totalCost)+ \
-        "<br>Your scoring method: "+scoreMethod+", Total Sum of Scores: "+str(totalFreq)+"<br>Total Number of Optimal Reconciliations: "+str(totalRecon)+"</h4>"
+      staticString = "<h4>Duplication Cost:"+str(Dup)+", Transfer Cost: "+\
+      str(Trans)+", Loss Cost: "+str(Loss)+"<br>Maximum Parsimony Cost: "+\
+      str(totalCost)+ "<br>Your scoring method: "+scoreMethod+", Total Sum"+\
+      " of Scores: "+str(totalFreq)+"<br>Total Number of Optimal "+\
+      "Reconciliations: "+str(totalRecon)+"</h4>"
       for x in range(len(scoreList)):
-        os.system("./vistrans -t "+path2files+".tree -s "+path2files+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+str(x)+".svg")
+        os.system("python vistrans.py -t "+path2files+".tree -s "+path2files+\
+          str(x)+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+\
+          str(x)+".svg")
+        
         score = scoreList[x]
         percent = 100.0*score/totalFreq
         if x ==0:
           runningTot = percent
-          carouselstr+='<li data-target="#results" data-slide-to="0" class="active"></li>'+"\n"
-          carouselcap+="<div class='item active'><img src='/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'>"+ \
-            "<div class='carousel-caption'><font color='black'><h3>Reconciliation 1 of "+str(len(scoreList))+"</h3><p>Score = "+str(score)+\
-            "<br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"+"\n"
-          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+str(path2files)+str(x)+'.svg ' + UPLOAD_FOLDER)
+          
+          carouselstr+='<li data-target="#results" data-slide-to="0" '+\
+          'class="active"></li>'+"\n"
+          
+          carouselcap+="<div class='item active'><img src='/uploads/"+ Name+\
+          str(x)+".svg' alt='First slide' width='460' height='345'>"+ \
+            "<div class='carousel-caption'><font color='black'><h3>"+\
+            "Reconciliation 1 of "+str(len(scoreList))+"</h3><p>Score = "+\
+            str(score)+"<br>Percent of total = "+str(percent)+"%<br>Running"+\
+            " total = "+str(runningTot)+"%</font></p></div></div>"+"\n"
+          
+          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+\
+            str(path2files)+str(x)+'.svg ' + UPLOAD_FOLDER)
         else:
           runningTotScore = runningTotal(scoreList, x)
           runningTot = 100.0*runningTotScore/totalFreq
           if runningTot > 100:
             runningTot = 100
-          carouselstr+='<li data-target="#results" data-slide-to="'+str(x)+'"></li>'+"\n"
-          carouselcap+="<div class='item'><img src='/uploads/"+ Name+str(x)+".svg' alt='First slide' width='460' height='345'>"+ \
-            "<div class='carousel-caption'><font color='black'><h3>Reconciliation "+str(x+1)+" of "+str(len(scoreList))+"</h3><p>Score = "+ \
-            str(score)+" <br>Percent of total = "+str(percent)+"%<br>Running total = "+str(runningTot)+"%</font></p></div></div>"+"\n"
-          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+str(x)+'.svg ' + UPLOAD_FOLDER)
+          carouselstr+='<li data-target="#results" data-slide-to="'+str(x)+\
+          '"></li>'+"\n"
+          carouselcap+="<div class='item'><img src='/uploads/"+ Name+str(x)+\
+          ".svg' alt='First slide' width='460' height='345'>"+\
+           "<div class='carousel-caption'><font color='black'><h3>"+\
+           "Reconciliation "+str(x+1)+" of "+str(len(scoreList))+\
+           "</h3><p>Score = "+ str(score)+" <br>Percent of total = "+\
+           str(percent)+"%<br>Running total = "+str(runningTot)+\
+           "%</font></p></div></div>"+"\n"
+          os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/"+path2files+\
+            str(x)+'.svg ' + UPLOAD_FOLDER)
     staticString = Markup(staticString)
     carouselstr = Markup(carouselstr)
     carouselcap = Markup(carouselcap)
     os.system("rm -r "+Name)
-  return render_template("results.html", carouselstr = carouselstr, carouselcap = carouselcap, staticString = staticString)
+  return render_template("results.html", carouselstr = carouselstr, \
+    carouselcap = carouselcap, staticString = staticString)
 def runningTotal(scoresList, index):
   runningTot = 0
   for n in range(len(scoresList)):

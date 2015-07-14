@@ -103,7 +103,6 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	reconGraph = H
 	reconGraph.update(P) 
 	for key in reconciliation:
-		print "key:", key
 		#deal with transfer case:
 		if reconciliation[key][0] == 'T':
 			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], \
@@ -118,7 +117,7 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 			if parent != 'Top':
 				reconGraph[parent] = reconGraph[parent] + [key[1]]
 			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
-			del reconGraph[key[0]]
+
 		#deal with duplication case:
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]

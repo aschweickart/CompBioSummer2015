@@ -46,7 +46,7 @@ def draw_tree(tree, brecon, stree,
               font_size=12,
               stree_font_size=20,
               canvas=None, autoclose=True,
-              rmargin=10, lmargin=10, tmargin=0, bmargin=0,
+              rmargin=10, lmargin=100, tmargin=100, bmargin=100,
               tree_color=(0, 0, 0),
               tree_trans_color=(0, 0, 0),
               stree_color=(.3, .7, .3),
@@ -96,8 +96,9 @@ def draw_tree(tree, brecon, stree,
     ylists = defaultdict(lambda: [])
     yorders = {}
     # layout speciations and genes (y)
-    #losses = copy.copy(loss)
     for node in tree.preorder():
+        if node == list(tree.preorder())[0]:
+            rootNode = node.name
         yorders[node] = []
         for ev in brecon[node]:
             snode, event, frequency = ev
@@ -122,47 +123,68 @@ def draw_tree(tree, brecon, stree,
 
     # layout node (x)
     xorders = {}
-    xmax = defaultdict(lambda: 0)
-    #losses = copy.copy(loss)
+    branchFrac = {}
     for node in tree.postorder():
+        for n in range(len(brecon[node])):
+            snode, event, frequency = brecon[node][n]
+            if event == "spec" or event == "gene" or event == "loss":
+                if not node in branchFrac:
+                    branchFrac[node] = 0
+            else:
+                v = [branchFrac[child] for child in node.children]
+                if len(v) == 0:
+                    branchFrac[node] = 1
+                else:
+                    branchFrac[node] = max(v) + 1
+
+    for node in tree.preorder():
         xorders[node] = []
-        for ev in brecon[node]:
-            snode, event, frequency = ev
+        for n in range(len(brecon[node])):
+            snode, event, frequency = brecon[node][n]
             if event == "spec" or event == "gene" or event == "loss":
                     xorders[node].append(0)
-
-
             else:
-                v = [xorders[child] for child in node.children
-                    if brecon[child][-1][0] == snode]
-                if len(v) == 0:
+                if node.parent and containsTransOrDup(node.parent, brecon):
+                    branchFrac[node] = branchFrac[node.parent]
+                if containsLoss(node, brecon):
                     xorders[node].append(1)
+                elif not node.parent: xorders[node].append(0)
                 else:
-                    xorders[node].append(maxList(v) + 1)
-            xmax[snode] = max(xmax[snode], maxList([xorders[node]]))
-
+                    xorders[node].append(maxList(xorders[node.parent])+1)
+              
     # setup layout
     layout = {None: [slayout[brecon[tree.root][-1][0].parent]]}
-    for node in tree:
+    for node in tree.preorder():
         for n in range(len(brecon[node])):
             snode, event, frequency = brecon[node][n]
             nx, ny = slayout[snode]
             px, py = slayout[snode.parent]
+            (npx, npy) = layout[node.parent][-1]
+            frac = 50
+            while branchFrac[node]*frac >= nx-px:
+                frac = frac - 5
 
 
         # calc x
-            frac = (xorders[node][n]) / float(xmax[snode] + 1)
-            deltax = nx - px
-            x = nx - frac * deltax
-
+            if event == "trans" or event == "gtrans":
+                if npx> px:
+                    x = npx + frac
+                else: x = px + frac
+            elif event =="dup":
+                x = px + frac
+            else: x = nx
+            if frac == 45:
+                print x
         # calc y
+
             deltay = ny - py
-            slope = deltay / float(deltax)
+            slope = deltay / float(nx-px)
+
             deltax2 = x - px
             deltay2 = slope * deltax2
             offset = py + deltay2
             frac = (yorders[node][n] + 1) / float(max(len(ylists[snode]), 1) + 1)
-            y = offset + (frac - .5) * stree_width * yscale
+            y = offset  + (frac - .5) * stree_width * yscale
 
             if node in layout: layout[node].append((x, y))
             else:
@@ -181,7 +203,7 @@ def draw_tree(tree, brecon, stree,
             print brecon[node]
             print node, snode, layout[node]
 
-
+    
     # layout label sizes
     max_label_size = max(len(x.name)
         for x in tree.leaves()) * font_ratio * font_size
@@ -213,7 +235,7 @@ def draw_tree(tree, brecon, stree,
     
     xcoords, ycoords = zip(* slayout.values())
     maxwidth = max(xcoords) + max_label_size + max_slabel_size
-    maxheight = max(ycoords) + .5 * yscale
+    maxheight = max(ycoords) + yscale
     
     
     # initialize canvas
@@ -307,41 +329,50 @@ def draw_tree(tree, brecon, stree,
 
     # draw events
     for node in tree:
+        if node.name == rootNode:
+            x, y = layout[node][0]
+            canvas.polygon((x-20, y, x-50, y+30,x-50, y+15, x-90, y+15, x-90,\
+             y-15, x-50, y-15, x-50, y-30), strokeColor = (1,.7,.3), \
+             fillColor = (1,.7,.3))
+
+            canvas.text("Root Node", x-88, y+5, font_size+2,\
+                fillColor = (0,0,0))
         for n in range(len(brecon[node])):
             snode, event, frequency =  brecon[node][n]
+            frequency = float(frequency)
             x, y = layout[node][n]
             o = event_size / 2.0
             if event == "loss":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=loss_color,
                         strokeColor=loss_color_border)
-                canvas.text(frequency, x-o, y-o, font_size+2, fillColor = (1,1,1))
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = loss_color)
 
-	
+    
             if event == "spec":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=(0,0,0),
                         strokeColor=(0,0,0))
-                canvas.text(frequency, x-o, y-o, font_size+2, fillColor = (0,0,0))
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = (0,0,0))
 
 
             if event == "dup":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=dup_color,
                         strokeColor=dup_color_border)
-                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=dup_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=dup_color)
 
             elif event == "trans":
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
-                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=trans_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=trans_color)
             
             elif event == "gtrans":
                 canvas.rect(x-o, y-o, event_size, event_size,
                         fillColor=gtrans_color,
                         strokeColor=gtrans_color_border)
-                canvas.text(frequency, x-o, y-o, font_size+2, fillColor=gtrans_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=gtrans_color)
 
     # draw tree leaves
     for node in tree:
@@ -370,6 +401,14 @@ def containsLoss(node, brecon):
             containsL = True
     return containsL
 
+def containsTransOrDup(node, brecon):
+    '''Takes as input a node and a reconciliation, brecon, and returns a boolean
+    of whether that node leads to a transfer event or not'''
+    containsTOrD = False
+    for n in range(len(brecon[node])):
+        if brecon[node][n][1] == "trans" or brecon[node][n][1] == "gtrans" or brecon[node][n][1] == "dup":
+            containsTOrD = True
+    return containsTOrD
 
 def orderLoss(node, brecon, layout):
     '''Takes as input a node, a reconciliation, and a tree layout and changes the
@@ -390,9 +429,13 @@ def maxList(vList):
     of the lists'''
     maxVal = 0
     for item in vList:
-        for value in item:
-            if value >= maxVal:
-                maxVal = value
+        if type(item) != list:
+            if item >= maxVal:
+                maxVal = item
+        else:
+            for value in item:
+                if value >= maxVal:
+                    maxVal = value
     return maxVal
 
 def flatten(vList):

@@ -21,6 +21,7 @@ def convert(fileName, HostOrder, n, partoo):
     f.close()
     H,P,phi = contents.split(";")
     P = P.strip()
+    print P
     H = H.strip()
     H = H + ';'
     host = treelib1.parse_newick(H, HostOrder)

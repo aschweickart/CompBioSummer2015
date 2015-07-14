@@ -122,13 +122,15 @@ def biasedChoice(rootList, probList):
     """Takes in a list of vertex pairs and a correspondiing list of their 
     frequencies and returns a vertex pair randomly chosen but weighted by
     its frequency"""
-    num = 100
-    choices = []
+    scoreSum = 0
+    rangeList = []
     for n in range(len(rootList)):
-        currentProb = probList[n]
-        currentRoot = [rootList[n]]
-        currentEntry = int(currentProb*num)*currentRoot
-        choices.extend(currentEntry)
+        currentRange = [scoreSum, scoreSum + probList[n]]
+        rangeList.append((currentRange, rootList[n]))
+    choice = random.random()
+    for n in rangelist:
+        if choice in range(n[0]):
+            return n[1]
     return random.choice(choices)
 
 def makeProbList(DTL, root):
@@ -139,7 +141,7 @@ def makeProbList(DTL, root):
         probList.append(event[-1])
     return probList
 
-def randomReconGen(DTL, rootList, randomRecon):
+def biasedRecon(DTL, rootList, randomRecon):
     '''Takes in a DTL graph, a list of vertex pairs, and a dictionary of the
     growing reconciliation and recursively builds the reconciliation using 
     biasedChoice to decide which events will occur'''

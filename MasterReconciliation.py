@@ -9,15 +9,15 @@
 import DP
 import Greedy
 import newickToVis
-import ReconConversion
+import reconConversion
 import orderGraph
 import newickFormatReader
-import ReconciliationGraph
+import reconciliationGraph
 from sys import argv
 import copy
 import calcCostscapeScore
 import detectCycles
-import RandomGenerator
+import os
 
 def Reconcile(argList):
 	"""Takes command-line arguments of a .newick file, duplication, transfer, 
@@ -32,6 +32,7 @@ def Reconcile(argList):
 	switchHi = float(argList[7])
 	lossLo = float(argList[8])
 	lossHi = float(argList[9])
+
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
@@ -46,27 +47,25 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTL)
 	scoresList, rec = Greedy.Greedy(DTL, paras)
 	graph = []
-	if freqType == "random":
-		recon = RandomGenerator.randomReconGenWrapper(DTL, paras)
-		rec = [recon]
 	for item in rec:
-		graph.append(ReconciliationGraph.buildReconstruction\
+		graph.append(reconciliationGraph.buildReconstruction\
 			(host, paras, item))
 	for n in range(len(graph)):
 		currentOrder = orderGraph.date(graph[n])
 		if currentOrder == "timeTravel":
 			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
 			rec[n] = newOrder
-			currentOrder = ReconciliationGraph.buildReconstruction\
+			currentOrder = reconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
 		hostBranchs = branch(hostv,hostOrder)
+
 		if n == 0:
 			newickToVis.convert(fileName,hostBranchs, n, 1)
 		else:
 			newickToVis.convert(fileName,hostBranchs, n, 0)
-		ReconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
+		reconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 
@@ -97,21 +96,22 @@ def branch(tree, treeOrder):
 			branches[key] = 0
 	return branches
 
+
 def hOrder(hTree, orderMess):
 	hostOrder = {} 
 	leaves = []
 	messList = sorted(orderMess, key=orderMess.get)
 	place = 0
 	for item in range(len(messList)):
-		if messList[item] in hTree and not hTree[messList[item]] == None:
+		if messList[item] in hTree and not hTree[messList[item]] == [None, None]:
 			hostOrder[messList[item]] = place
-			place++
-		elif messList[item] in hTree and hTree[messList[item]] == None:
-			leaves += messList[item]
+			place+=1
+		elif messList[item] in hTree and hTree[messList[item]] == [None,None]:
+			leaves.append(messList[item])
 	for item in leaves:
-		if item in hTree:
-			hostOrder[item] = place
+		hostOrder[item] = place
 	return hostOrder 
+
 
 
 
