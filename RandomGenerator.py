@@ -15,13 +15,13 @@ import copy
 import Greedy
 
 
-def preorderDTLsort(DTL, ParasiteRoot):
+def preorderDTLsort(DTLReconGraph, ParasiteRoot):
     """This takes in a DTL dictionary and parasite root and returns a sorted
     list, orderedKeysL, that is ordered by level from smallest to largest,
     where level 0 is the root and the highest level has tips."""
 
-    keysL = Greedy.orderDTL(DTL, ParasiteRoot)
-    uniqueKeysL = Greedy.sortHelper(DTL, keysL)
+    keysL = Greedy.orderDTL(DTLReconGraph, ParasiteRoot)
+    uniqueKeysL = Greedy.sortHelper(DTLReconGraph, keysL)
     orderedKeysL = []
     levelCounter = 0
     while len(orderedKeysL) < len(uniqueKeysL):
@@ -41,16 +41,16 @@ def findTransfers(reconciliation):
     return numTrans
 
 
-def normalizer(DTL):
+def normalizer(DTLReconGraph):
     """Takes in a DTL graph and normalizes the scores within a key,
     returning a new DTL with normalized scores"""
-    for key in DTL.keys():
+    for key in DTLReconGraph.keys():
         totalScore = 0
-        for event in DTL[key][:-1]:
+        for event in DTLReconGraph[key][:-1]:
             totalScore += event[-1]
-        for event in DTL[key][:-1]:
+        for event in DTLReconGraph[key][:-1]:
             event[-1] = event[-1]/totalScore
-    return DTL
+    return DTLReconGraph
 
 def normalizeList(scoreList):
     """Takes in a list of scores and returns a new list with those scores
@@ -63,10 +63,10 @@ def normalizeList(scoreList):
         newScoreList.append(score/totalScore)
     return newScoreList
 
-def rootGenerator(DTL, parasiteTree):
+def rootGenerator(DTLReconGraph, parasiteTree):
     """Generates a list of the roots in a DTL graph"""
     parasiteRoot = Greedy.findRoot(parasiteTree)
-    preOrder = preorderDTLsort(DTL, parasiteRoot)
+    preOrder = preorderDTLsort(DTLReconGraph, parasiteRoot)
     rootList = []
     for key in preOrder:
         if key[1] == 0:
@@ -88,16 +88,16 @@ def biasedChoice(rootList, probList):
             return n[2]
 
 
-def makeProbList(DTL, root):
+def makeProbList(DTLReconGraph, root):
     """Takes as input a DTL graph and a root and returns the frequencies 
     associated with the events occuring at that root in a list"""
     probList = []
-    for event in DTL[root][:-1]:
+    for event in DTLReconGraph[root][:-1]:
         probList.append(event[-1])
     return probList
 
 
-def uniformRecon(DTL, rootList, randomRecon):
+def uniformRecon(DTLReconGraph, rootList, randomRecon):
     '''Takes as input a DTL graph, a rootList, and a growing reconciliation
     dictionary and recursively builds the reconciliation dictionary, choosing
     random events'''
@@ -105,7 +105,7 @@ def uniformRecon(DTL, rootList, randomRecon):
         return randomRecon  
     newRootL = []   
     for root in rootList:
-        newChild = random.choice(DTL[root][:-1])
+        newChild = random.choice(DTLReconGraph[root][:-1])
         randomRecon[root] = newChild
         if newChild[1] != (None, None) and not newChild[1] in randomRecon and\
         not newChild[1] in newRootL:
@@ -113,10 +113,10 @@ def uniformRecon(DTL, rootList, randomRecon):
         if newChild[2] != (None, None) and not newChild[2] in randomRecon and\
         not newChild[2] in newRootL:
             newRootL.append(newChild[2])
-    return uniformRecon(DTL, newRootL, randomRecon)
+    return uniformRecon(DTLReconGraph, newRootL, randomRecon)
 
 
-def biasedRecon(DTL, rootList, randomRecon):
+def biasedRecon(DTLReconGraph, rootList, randomRecon):
     '''Takes in a DTL graph, a list of vertex pairs, and a dictionary of the
     growing reconciliation and recursively builds the reconciliation using 
     biasedChoice to decide which events will occur'''
@@ -124,8 +124,8 @@ def biasedRecon(DTL, rootList, randomRecon):
         return randomRecon  
     newRootL = []   
     for root in rootList:
-        probList = makeProbList(DTL, root)
-        newChild = biasedChoice(DTL[root][:-1],probList)
+        probList = makeProbList(DTLReconGraph, root)
+        newChild = biasedChoice(DTLReconGraph[root][:-1],probList)
         randomRecon[root] = newChild
         if newChild[1] != (None, None) and not newChild[1] in randomRecon and\
         not newChild[1] in newRootL:
@@ -133,7 +133,7 @@ def biasedRecon(DTL, rootList, randomRecon):
         if newChild[2] != (None, None) and not newChild[2] in randomRecon and\
         not newChild[2] in newRootL:
             newRootL.append(newChild[2])
-    return biasedRecon(DTL, newRootL, randomRecon)
+    return biasedRecon(DTLReconGraph, newRootL, randomRecon)
 
 
 def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
@@ -155,16 +155,16 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
             # find size of parasite and host trees
             parasiteSize = len(parasiteTree)+1
             hostSize = len(hostTree)+1
-            DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
-            rootList = rootGenerator(DTL, parasiteTree)
+            DTLReconGraph, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
+            rootList = rootGenerator(DTLReconGraph, parasiteTree)
             randomReconList = []
             for n in range(numSamples):
                 timeTravelCount = 0
                 startRoot = random.choice(rootList)
                 if typeGen == "uniform":
-                    currentRecon = uniformRecon(DTL, [startRoot], {})
+                    currentRecon = uniformRecon(DTLReconGraph, [startRoot], {})
                 else: 
-                    normalizeDTL = normalizer(DTL)
+                    normalizeDTL = normalizer(DTLReconGraph)
                     currentRecon = biasedRecon(normalizeDTL, [startRoot], {})
                 for key in currentRecon.keys():
                     currentRecon[key] = currentRecon[key][:-1]
@@ -172,7 +172,7 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
             # make sure there are no duplicate reconciliations
             uniqueReconList = []
             for recon in randomReconList:
-                if not recon in reconList:
+                if not recon in uniqueReconList:
                     uniqueReconList.append(recon)
             outOf += len(uniqueReconList)
             for recon in uniqueReconList:
@@ -183,7 +183,7 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                     timeTravelCount += 1
                     totalTimeTravel += 1
             f.write(fileName+" contains "+str(timeTravelCount)+" temporal "+ \
-                "inconsistencies out of "+ str(numSamples)+ \
+                "inconsistencies out of "+ str(len(uniqueReconList))+ \
                 " reconciliations."+"\n"+"Total number of reconciliations: "+\
                 str(numRecon)+"\n"+"Host tree size: "+str(hostSize)+"\n"+\
                 "Parasite tree size: "+str(parasiteSize)+ "\n")

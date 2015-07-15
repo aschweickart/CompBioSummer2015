@@ -37,9 +37,7 @@ def Reconcile(argList):
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	if freqType == "Frequency":
-		DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	elif freqType == "xscape":
+	if freqType == "xscape":
 		DTL = calcCostscapeScore.newScoreWrapper(fileName, switchLo, \
 			switchHi, lossLo, lossHi, D, T, L)
 	elif freqType == "unit":
@@ -47,11 +45,12 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTL)
 	scoresList, rec = Greedy.Greedy(DTL, paras)
 	for n in range(len(rec)):
-		graph = reconciliationGraph.buildReconstruction(host, paras, rec[n])
+		currentRecon = rec[n]
+		graph = reconciliationGraph.buildReconstruction(host, paras, currentRecon)
 		currentOrder = orderGraph.date(graph)
 		if currentOrder == "timeTravel":
-			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
-			rec[n] = newOrder
+			newOrder = detectCycles.detectCyclesWrapper(host, paras, currentRecon)
+			currentRecon = newOrder
 			currentOrder = reconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)

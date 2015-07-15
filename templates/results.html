@@ -56,7 +56,33 @@
       <center>
             <img src="/static/key.png" height="45" width="800">
       <br><br></center>
-       <div id="results" class="carousel slide">
+      <style>
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  transition-property: opacity;
+}
+
+.carousel-fade .carousel-inner .active {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+  opacity: 1;
+}
+
+.carousel-fade .carousel-control {
+  z-index: 2;
+}
+    </style>
+       <div id="results" class="carousel slide carousel-fade">
         <ol class="carousel-indicators">
           {{ carouselstr }}
         </ol>
