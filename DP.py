@@ -236,8 +236,10 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 (min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]))
                 if oMin == 0:
                     oBest[(vp,vh)].append((vp, vh))
-                else:
-                    oBest.extend([oBest[(vp,hChild1)], oBest[(vp, hChild2)]][oMin -1])
+                if oMin == 1:
+                    oBest.extend(oBest[(vp,hChild1)])
+                if oMin == 2:
+                    oBest.extend(oBest[(vp,hChild2)])
             #finds Minimum Cost for O
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
 
