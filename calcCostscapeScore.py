@@ -88,31 +88,3 @@ def newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L):
 	DTLList = getCostscapeDTLs(DTLPairs, H, P, phi)
 	newDTL = changeDTLScores(originalDTL, DTLList)
 	return newDTL, numRecon, leaves
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

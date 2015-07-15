@@ -37,11 +37,11 @@ def date(recon):
 			del innerNodes[key]
 			LonerList.append(key)
 	while LonerList:
-		x = LonerList[0]
+		nodeZero = LonerList[0]
 		del LonerList[0]
-		order[x] = place
+		order[nodeZero] = place
 		place += 1
-		for child in recon[x]:
+		for child in recon[nodeZero]:
 			if child in innerNodes.keys():
 				innerNodes[child] -= 1
 				if innerNodes[child] == 0:

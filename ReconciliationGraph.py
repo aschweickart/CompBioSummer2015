@@ -133,16 +133,3 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 		reconGraph[key] = uniquify(reconGraph[key])
 
 	return reconGraph
-
-
-
-
-
-
-
-
-
-
-
-
-
