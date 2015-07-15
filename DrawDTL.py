@@ -11,8 +11,8 @@ NodeLocations = {}
 
 #tells a turtle to draw a line from start to end and returns to its position before the function call
 def connect(Turtle,Start,End,rad):
-	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End, 
-	and connects the two locations with a line and arrow"""
+	"""Takes as input a turtle, starting coordinates, Start, and ending coordinates, End,
+		as well as the radius of the nodes, and connects the two locations with a line and arrow"""
 	Turtle.speed(0)
 	Turtle.pen(pencolor  = "black")
 	loc = Turtle.pos()
