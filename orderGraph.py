@@ -29,7 +29,7 @@ def date(cycleGraph):
 		if key in innerNodes.keys():
 			del innerNodes[key]
 	for key in innerNodes.keys():
-		for child in recon[key]:
+		for child in cycleGraph[key]:
 			if child != None and child in innerNodes:
 				innerNodes[child] += 1
 	place = 0
