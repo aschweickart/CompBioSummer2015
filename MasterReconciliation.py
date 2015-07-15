@@ -48,11 +48,12 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTLReconGraph)
 	scoresList, rec = Greedy.Greedy(DTLGraph, paras)
 	for n in range(len(rec)):
-		graph = reconciliationGraph.buildReconstruction(host, paras, rec[n])
+		currentRecon = rec[n]
+		graph = reconciliationGraph.buildReconstruction(host, paras, currentRecon)
 		currentOrder = orderGraph.date(graph)
 		if currentOrder == "timeTravel":
-			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
-			rec[n] = newOrder
+			newOrder = detectCycles.detectCyclesWrapper(host, paras, currentRecon)
+			currentRecon = newOrder
 			currentOrder = reconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
