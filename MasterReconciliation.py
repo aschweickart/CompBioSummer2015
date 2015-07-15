@@ -35,8 +35,9 @@ def Reconcile(argList):
 	lossHi = float(argList[9]) # Loss upper boundary
 
 	host, paras, phi = newickFormatReader.getInput(fileName)
-	hostRoot = findRoot(host)
-	hostv = treeFormat(host)
+	hostRoot = reconciliationGraph.findRoot(host)
+	hostv = reconciliationGraph.treeFormat(host)
+	# Default scoring function (if freqtype== Frequency scoring)
 	DTLReconGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 	#uses xScape scoring function
 	if freqType == "xscape":
@@ -65,6 +66,7 @@ def Reconcile(argList):
 			newickToVis.convert(fileName,hostBranchs, n, 1)
 		else:
 			newickToVis.convert(fileName,hostBranchs, n, 0)
+		# filename[:-7] is the file name minus the .newick
 		reconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
@@ -116,57 +118,6 @@ def hOrder(hTree, orderMess):
 	return hostOrder 
 
 
-
-
-
-def findRoot(Tree):
-    """This function takes in a parasiteTree and returns a string with the 
-    name of the root vertex of the tree"""
-
-    if 'pTop' in Tree:
-    	return Tree['pTop'][1]
-    return Tree['hTop'][1]
-
-def InitDicts(tree):
-	"""This function takes as input a tree dictionary and returns a dictionary
-	with all of the bottom nodes of the edges as keys and empty lists as 
-	values."""
-	treeDict = {}
-	for key in tree:
-		if key == 'pTop':
-			treeDict[tree[key][1]] = [] 
-		elif key == 'hTop':
-			treeDict[tree[key][1]] = []
-		else:
-			treeDict[key[1]] = []
-	return treeDict
-
-def treeFormat(tree):
-	"""Takes a tree in the format that it comes out of newickFormatReader and
-	converts it into a dictionary with keys which are the bottom nodes of the
-	edge and values which are the children."""
-	treeDict = InitDicts(tree)
-	treeRoot = findRoot(tree)
-	for key in tree:
-		if key == 'hTop' or key == 'pTop':
-			if tree[key][-2] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1][1]]
-		else:
-			if tree[key][-2] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
-	return treeDict
 
 
 def main():
