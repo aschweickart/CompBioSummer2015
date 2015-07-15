@@ -4,9 +4,9 @@
 # July 2015
 
 # This file contains function for building the cycle checking graph, 
-# reconGrap, which is in the form of a dictionary. This dictionary has keys 
-# that are nodes and values that are a list of all the children. The 
-# reconGraph represents edges between nodes that show the temporal 
+# cycleCheckingGraph, which is in the form of a dictionary. This dictionary 
+# has keysthat are nodes and values that are a list of all the children. The 
+# cycleCheckingGraph represents edges between nodes that show the temporal 
 # relationship between the host tree and the parasite Tree. The main function
 # in this file is buildReconstruction and the rest of the functions are 
 # helper function that are used by buildReconstruction
@@ -91,6 +91,11 @@ def uniquify(list):
 		keys[e] = 1
 	return keys.keys()
 
+
+
+
+
+
 def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	"""Takes as input a host tree, a parasite tree, and a reconciliation, and
 	returns a graph where the keys are host or parasite nodes, and the values
@@ -100,40 +105,44 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 	parents = parentsDict(HostTree, ParasiteTree)
 	H = treeFormat(HostTree)
 	P = treeFormat(ParasiteTree)
-	reconGraph = H
-	reconGraph.update(P) 
+	cycleCheckingGraph = H
+	cycleCheckingGraph.update(P) 
 	for key in reconciliation:
 		print "key:", key
 		#deal with transfer case:
 		if reconciliation[key][0] == 'T':
-			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], \
-												reconciliation[key][2][1]]
+			cycleCheckingGraph[key[0]] = P[key[0]] + \
+				[reconciliation[key][1][1], reconciliation[key][2][1]]
 			parent1 = parents[reconciliation[key][1][1]]
 			parent2 = parents[reconciliation[key][2][1]]
-			reconGraph[parent1] = reconGraph[parent1] + [key[0]]
-			reconGraph[parent2] = reconGraph[parent2] + [key[0]]
+			cycleCheckingGraph[parent1] = cycleCheckingGraph[parent1] + [key[0]]
+			cycleCheckingGraph[parent2] = cycleCheckingGraph[parent2] + [key[0]]
+		
+
+
+
 		#deal with speciation case:
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
 			if parent != 'Top':
-				reconGraph[parent] = reconGraph[parent] + [key[1]]
-			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
-			del reconGraph[key[0]]
+				cycleCheckingGraph[parent] = cycleCheckingGraph[parent] + [key[1]]
+			cycleCheckingGraph[key[1]] = cycleCheckingGraph[key[1]] + cycleCheckingGraph[key[0]]
+			del cycleCheckingGraph[key[0]]
 		#deal with duplication case:
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]
 			if parent != 'Top':
-				reconGraph[parent] = reconGraph[parent] + [key[0]]
-			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
+				cycleCheckingGraph[parent] = cycleCheckingGraph[parent] + [key[0]]
+			cycleCheckingGraph[key[0]] = cycleCheckingGraph[key[0]] + [key[1]]
 		#deal with contemporary case:
 		elif reconciliation[key][0] == 'C':
-			reconGraph[key[1]] = [None]
-			reconGraph[key[0]] = [None]
+			cycleCheckingGraph[key[1]] = [None]
+			cycleCheckingGraph[key[0]] = [None]
 
-	for key in reconGraph:
-		reconGraph[key] = uniquify(reconGraph[key])
+	for key in cycleCheckingGraph:
+		cycleCheckingGraph[key] = uniquify(cycleCheckingGraph[key])
 
-	return reconGraph
+	return cycleCheckingGraph
 
 
 
