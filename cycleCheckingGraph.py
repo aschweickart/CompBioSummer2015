@@ -127,7 +127,6 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 			if parent != 'Top':
 				cycleCheckingGraph[parent] = cycleCheckingGraph[parent] + [key[1]]
 			cycleCheckingGraph[key[1]] = cycleCheckingGraph[key[1]] + cycleCheckingGraph[key[0]]
-			del cycleCheckingGraph[key[0]]
 		#deal with duplication case:
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]
