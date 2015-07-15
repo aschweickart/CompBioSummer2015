@@ -231,14 +231,14 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 O[(ep, eh)] = C[(ep, eh)]  
                 oBest[(vp, vh)] = [(vp, vh)]              
             else: 
+            #finds the minimum switch locations for O
                 oMin = [C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]].index\
                 (min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)]))
                 if oMin == 0:
                     oBest[(vp,vh)].append((vp, vh))
-                if oMin == 1:
-                    oBest[(vp,vh)].extend(oBest[(vp, hChild1)])
-                if oMin == 2:
-                    oBest[(vp,vh)].extend(oBest[(vp, hChild2)])
+                else:
+                    oBest.extend([oBest[(vp,hChild1)], oBest[(vp, hChild2)]][oMin -1])
+            #finds Minimum Cost for O
                 O[(ep, eh)] = min(C[(ep, eh)], O[(ep, eh1)], O[(ep, eh2)])
 
         # Compute bestSwitch values
@@ -267,8 +267,8 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 vhIsATip = False
                 hChild1 = hostTree[eh][2][1]
                 hChild2 = hostTree[eh][3][1]
-            # find best place for a switch to occur 
-            # and the location to which the edge switches    
+            # find best place for a switch to occur (bestSwitch)
+            # and the location to which the edge switches (bestSwitchLocations)   
             if eh1 != None and eh2 != None: # not a tip
                 bestSwitchLocations[(vp, hChild1)] = []
                 bestSwitchLocations[(vp, hChild2)] = []
