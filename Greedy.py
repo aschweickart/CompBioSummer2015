@@ -216,23 +216,19 @@ def Greedy(DTL, ParasiteTree):
     currentDTL = DTL
     counter = 0
     rec = [] #list of reconciliations
-    not0 = True
-    while not0:
+    collected = True
+    while collected:
         #call greedyOnce if all the points have not been collected yet
         oneTree, currentDTL, score = greedyOnce(currentDTL, ParasiteTree)
         scores.append(score) 
         rec.append(oneTree)
-        counter += 1
-        not0 = False #set not0 to False
+        collected = False #set not0 to False
         zeroes = 0
         events = 0
         #iterate to see if more points need to be collected
         for key in currentDTL:
             for i in range(len(currentDTL[key])-1):
                 if currentDTL[key][i][-1] != 0:
-                    not0 = True
-                else:
-                    zeroes += 1
-                events += 1
+                    collected = True
 
     return scores, rec
