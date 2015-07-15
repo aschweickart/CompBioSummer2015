@@ -32,4 +32,4 @@ def convert(fileName, HostOrder, n, partoo):
     if partoo:
         f = open(fileName[:-7] + '.tree', 'w')
         f.write(P + ";")
-        f.close
+        f.close()

@@ -36,16 +36,17 @@ def Reconcile(argList):
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)
 	hostv = treeFormat(host)
-	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	if freqType == "Frequency":
-		DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	elif freqType == "xscape":
-		DTL = calcCostscapeScore.newScoreWrapper(fileName, switchLo, \
+	DTLReconGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
+	#uses xScape scoring function
+	if freqType == "xscape":
+		DTLReconGraph = calcCostscapeScore.newScoreWrapper(fileName, switchLo, \
 			switchHi, lossLo, lossHi, D, T, L)
+	#uses Unit scoring function
 	elif freqType == "unit":
-		DTL = unitScoreDTL(host, paras, phi, D, T, L)
-	DTLGraph = copy.deepcopy(DTL)
-	scoresList, rec = Greedy.Greedy(DTL, paras)
+		DTLReconGraph = unitScoreDTL(host, paras, phi, D, T, L)
+
+	DTLGraph = copy.deepcopy(DTLReconGraph)
+	scoresList, rec = Greedy.Greedy(DTLGraph, paras)
 	for n in range(len(rec)):
 		graph = reconciliationGraph.buildReconstruction(host, paras, rec[n])
 		currentOrder = orderGraph.date(graph)
@@ -69,14 +70,14 @@ def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	duplication cost (D), transfer cost (T), and loss cost (L) and returns the
 	DTL graph in the form of a dictionary, with event scores set to 1. 
 	Cospeciation is assumed to cost 0. """
-	DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
+	DTLReconGraph, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
 	newDTL = {}
-	for vertex in DTL:
+	for vertex in DTLReconGraph:
 		newDTL[vertex] = []
-		for event in DTL[vertex][:-1]:
+		for event in DTLReconGraph[vertex][:-1]:
 			newEvent = event[:-1] + [1.0]
 			newDTL[vertex].append(newEvent)
-		newDTL[vertex].append(DTL[vertex][-1])
+		newDTL[vertex].append(DTLReconGraph[vertex][-1])
 	return newDTL
 
 def branch(tree, treeOrder):

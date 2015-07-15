@@ -5,12 +5,9 @@
 # This file contains a function for topologically ordering a tree graph and detecting cyclic graphs
 
 
-import copy
-
-
 def date(recon):
 	"""takes a Tree and returns a dictionary representation of the ordering of the tree. 
-	If there is a cycle, the function returns None"""
+	If there is a cycle, the function returns timeTravel"""
 	order = {}
 	dicto = {}
 	Leaves = {}
