@@ -46,12 +46,9 @@ def Reconcile(argList):
 		DTL = unitScoreDTL(host, paras, phi, D, T, L)
 	DTLGraph = copy.deepcopy(DTL)
 	scoresList, rec = Greedy.Greedy(DTL, paras)
-	graph = []
-	for item in rec:
-		graph.append(reconciliationGraph.buildReconstruction\
-			(host, paras, item))
-	for n in range(len(graph)):
-		currentOrder = orderGraph.date(graph[n])
+	for n in range(len(rec)):
+		graph = reconciliationGraph.buildReconstruction(host, paras, rec[n])
+		currentOrder = orderGraph.date(graph)
 		if currentOrder == "timeTravel":
 			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
 			rec[n] = newOrder
@@ -76,11 +73,10 @@ def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	newDTL = {}
 	for vertex in DTL:
 		newDTL[vertex] = []
-		for i in range(len(DTL[vertex]) - 1):
-			event = DTL[vertex][i]
-			event = event[:-1] + [1.0]
-			newDTL[vertex] = newDTL[vertex] + [event]
-		newDTL[vertex] = newDTL[vertex] + [DTL[vertex][-1]]
+		for event in DTL[vertex][:-1]:
+			newEvent = event[:-1] + [1.0]
+			newDTL[vertex].append(newEvent)
+		newDTL[vertex].append(DTL[vertex][-1])
 	return newDTL
 
 def branch(tree, treeOrder):

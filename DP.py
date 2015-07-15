@@ -24,7 +24,7 @@ def preorder(tree, rootEdgeName):
     """ Takes a tree as input (see format description above) and returns a 
     list of the edges in that tree in preorder (high edges to low edges)"""
 
-    value = Tree[rootEdgeName]
+    value = tree[rootEdgeName]
     _,_,leftChildEdgeName,rightChildEdgeName = value
 
     # base case
@@ -39,7 +39,7 @@ def postorder(tree, rootEdgeName):
     """ Takes a tree as input (see format description above) and returns a 
     list of the edges in that tree in postorder (low edges to high edges)"""
 
-    value = Tree[rootEdgeName]
+    value = tree[rootEdgeName]
     _,_,leftChildEdgeName,rightChildEdgeName = value
     # base case
     if leftChildEdgeName == None: # then rightChildEdgeName == None also
@@ -71,7 +71,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
     for ep in postorder(parasiteTree, "pTop"):
         for eh in postorder(hostTree, "hTop"):
             _,vp,ep1,ep2 = parasiteTree[ep]
-            _,vh,eh1,eh2 = parasiteTree[ep]
+            _,vh,eh1,eh2 = hostTree[eh]
             eventsDict[(vp, vh)] = []
             oBest[(vp, vh)] = []
             # is vp a tip?
@@ -220,7 +220,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                 mapScore = 0 # initialize frequency scoring for each event
                 for event in eventsDict[key]:
                     if type(event) is list:
-                        mapScore += event[3]
+                        mapScore += event[-1]
                 Score[key] = mapScore
             if Minimums[(vp, vh)] == Infinity:
                 del Minimums[(vp, vh)]
@@ -246,7 +246,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         bestSwitchLocations[(vp, hostTree["hTop"][1])] = [(None,None)]
         for eh in preorder(hostTree, "hTop"):
             _, vp, ep1, ep2 = parasiteTree[ep]
-            _, vh, eh1, eh2 = parasiteTree[ep]
+            _, vh, eh1, eh2 = hostTree[eh]
 
             #is vp a tip?
             if ep1 == None:
@@ -279,7 +279,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
                     bestSwitchLocations[(vp, hChild1)].extend\
                     (bestSwitchLocations[(vp, vh)])
                 if bestSwitch[(ep, eh1)] == O[(ep, eh2)] and \
-                findBestRoots[(vp, hChild2)]!= [(None, None)]:
+                oBest[(vp, hChild2)]!= [(None, None)]:
                     bestSwitchLocations[(vp, hChild1)].extend\
                     (oBest[(vp, hChild2)])
                 if bestSwitch[(ep, eh2)] == bestSwitch[(ep, eh)] and \
@@ -305,7 +305,7 @@ def DP(hostTree, parasiteTree, phi, D, T, L):
         if not key in DTL:
             del Score[key]
 
-    DTL, numRecon = addScores(treeMin, DTL, Score, newDTL)
+    DTL, numRecon = addScores(treeMin, DTL, Score)
 
     return DTL, numRecon
 
@@ -328,35 +328,37 @@ def preorderDTLsort(DTL, ParasiteRoot):
     lastLevel = orderedKeysL[-1][1]
     return orderedKeysL
 
-def addScores(treeMin, DTLDict, ScoreDict, newDTL):
+def addScores(treeMin, DTLDict, ScoreDict):
     """Takes the list of reconciliation roots, the DTL reconciliation graph, 
     a dictionary of parent nodes, and a dictionary of score values, and 
     returns the DTL with the normalized frequency scores calculated."""
+    newDTL = copy.deepcopy(DTLDict)
+    parentsDict = {}
     preOrder = preorderDTLsort(DTLDict, treeMin[0][0])
     for root in preOrder:
         if root != (None, None):
             vertices = root[0]
             if root[1] == 0:
-                ParentsDict[vertices] = ScoreDict[vertices]
+                parentsDict[vertices] = ScoreDict[vertices]
             for n in range(len(DTLDict[vertices])-1):
                 _,child1,child2,oldScore = DTLDict[vertices][n]
-                    newDTL[vertices][n][3] = ParentsDict[vertices] * \
-                    (1.0 * oldScore / ScoreDict[vertices])
-                    if child1!= (None, None):
-                        if child1 in ParentsDict:
-                            ParentsDict[DTLDict[vertices][n][1]] += \
-                            newDTL[vertices][n][3]
-                        else: 
-                            ParentsDict[child1] = newDTL[vertices][n][3] 
-                    if child2!=(None, None):
-                        if child2 in ParentsDict:
-                            ParentsDict[child2] += newDTL[vertices][n][3]
-                        else: 
-                            ParentsDict[child2] = newDTL[vertices][n][3]   
+                newDTL[vertices][n][3] = parentsDict[vertices] * \
+                (1.0 * oldScore / ScoreDict[vertices])
+                if child1!= (None, None):
+                    if child1 in parentsDict:
+                        parentsDict[DTLDict[vertices][n][1]] += \
+                        newDTL[vertices][n][3]
+                    else: 
+                        parentsDict[child1] = newDTL[vertices][n][3] 
+                if child2!=(None, None):
+                    if child2 in parentsDict:
+                        parentsDict[child2] += newDTL[vertices][n][3]
+                    else: 
+                        parentsDict[child2] = newDTL[vertices][n][3]
     normalize = newDTL[preOrder[-1][0]][0][-1]
     for key in newDTL:
-        for n in range(len(newDTL[key])-1):
-            newDTL[key][n][-1] = newDTL[key][n][-1]/normalize
+        for event in newDTL[key][:-1]:
+            event[-1] = event[-1]/normalize
     
     return newDTL, normalize
 
@@ -381,11 +383,10 @@ def findPath(tupleList, eventDict, uniqueDict):
     for vertexPair in tupleList:
         if not vertexPair in uniqueDict:
             uniqueDict[vertexPair] = eventDict[vertexPair]
-        for event in eventDict[vertexPair]:
-            if type(event) is list:
-                for location in event:
-                    if type(location) is tuple and location != (None, None):
-                        findPath([location], eventDict, uniqueDict)
+        for event in eventDict[vertexPair][:-1]:
+            for location in event:
+                if type(location) is tuple and location != (None, None):
+                    findPath([location], eventDict, uniqueDict)
     return uniqueDict
 
 def reconcile(fileName, D, T, L):

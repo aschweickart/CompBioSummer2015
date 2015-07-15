@@ -143,25 +143,22 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
     build a file containing the number of temporal inconsistencies found in 
     those randomly generated reconciliations as well as other information 
     relating to the file"""
-    totalTimeTravel = 0
-    outOf = 0
+    totalTimeTravel = 0 # To record total number of time travels in directory
+    outOf = 0 # To record total number of reconciliations made
+    # loop through files in directory
     for fileName in os.listdir(dirName):
         if fileName.endswith('.newick'):
             f = open(fileName[:7]+'.txt', 'w')
             f.write(typeGen+" random reconciliations"+"\n")
             hostTree, parasiteTree, phi = newickFormatReader.getInput\
                 (dirName+"/"+fileName)
+            # find size of parasite and host trees
             parasiteSize = len(parasiteTree)+1
             hostSize = len(hostTree)+1
             DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
             rootList = rootGenerator(DTL, parasiteTree)
             randomReconList = []
-            print int(numRecon)
-            if numRecon<numSamples:
-                sampleNum = int(numRecon)
-            else: sampleNum = numSamples
-            outOf+= sampleNum
-            for n in range(sampleNum):
+            for n in range(numSamples):
                 timeTravelCount = 0
                 startRoot = random.choice(rootList)
                 if typeGen == "uniform":
@@ -171,24 +168,22 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                     currentRecon = biasedRecon(normalizeDTL, [startRoot], {})
                 for key in currentRecon.keys():
                     currentRecon[key] = currentRecon[key][:-1]
-                # while currentRecon in randomReconList:
-                #     startRoot = random.choice(rootList)
-                #     if typeGen == "uniform":
-                #         currentRecon = uniformRecon(DTL, [startRoot], {})
-                #     else: 
-                #         normalizeDTL = normalizer(DTL)
-                #         currentRecon = biasedRecon(normalizeDTL, [startRoot], {})
-                #     for key in currentRecon.keys():
-                #         currentRecon[key] = currentRecon[key][:-1]
                 randomReconList.append(currentRecon)
+            # make sure there are no duplicate reconciliations
+            uniqueReconList = []
+            for recon in randomReconList:
+                if not recon in reconList:
+                    uniqueReconList.append(recon)
+            outOf += len(uniqueReconList)
+            for recon in uniqueReconList:
                 graph = reconciliationGraph.buildReconstruction\
-                    (hostTree, parasiteTree, randomReconList[n])
+                    (hostTree, parasiteTree, recon)
                 currentOrder = orderGraph.date(graph)
                 if currentOrder == 'timeTravel':
                     timeTravelCount += 1
                     totalTimeTravel += 1
             f.write(fileName+" contains "+str(timeTravelCount)+" temporal "+ \
-                "inconsistencies out of "+ str(sampleNum)+ \
+                "inconsistencies out of "+ str(numSamples)+ \
                 " reconciliations."+"\n"+"Total number of reconciliations: "+\
                 str(numRecon)+"\n"+"Host tree size: "+str(hostSize)+"\n"+\
                 "Parasite tree size: "+str(parasiteSize)+ "\n")
