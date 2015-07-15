@@ -56,8 +56,7 @@ def Reconcile(argList):
 		if currentOrder == "timeTravel":
 			newOrder = detectCycles.detectCyclesWrapper(host, paras, currentRecon)
 			currentRecon = newOrder
-			currentOrder = reconciliationGraph.buildReconstruction\
-			(host, paras, newOrder)
+			currentOrder = reconciliationGraph.buildReconstruction(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
 		hostBranchs = branch(hostv,hostOrder)
