@@ -12,7 +12,7 @@ import MasterReconciliation
 import newickFormatReader
 
 def convert(fileName, HostOrder, n, writeParasite):
-    """takes name of original file and the dictionary of host tree branch lengths
+    """takes name of original .newick file and the dictionary of host tree branch lengths
     and creates files for the host + parasite trees. Parasite tree can
     be ommited if desired"""
     f = open(fileName, 'r')

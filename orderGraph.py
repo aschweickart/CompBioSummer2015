@@ -5,9 +5,10 @@
 # This file contains a function for topologically ordering a tree graph and detecting cyclic graphs
 
 
-def date(recon):
-	"""takes a CycleCheckingGraph and returns a dictionary representation of the ordering of the tree. 
-	If there is a cycle, the function returns timeTravel"""
+def date(cycleGraph):
+	"""takes a CycleCheckingGraph (frankenstien graph compination 
+		of host and parasite tree)and returns a dictionary representation 
+		of the ordering of the tree. If there is a cycle, the function returns timeTravel"""
 	#ordering of the Nodes
 	order = {}
 	#InnerNodes
@@ -16,10 +17,10 @@ def date(recon):
 	Leaves = {}
 	#List of Nodes with In-degree zero
 	LonerList = []
-	for key in recon.keys():
+	for key in cycleGraph.keys():
 		if  key != None:
 			innerNodes[key] = 0
-		for child in recon[key]:
+		for child in cycleGraph[key]:
 			if child != None:
 				innerNodes[child] = 0
 			else:
@@ -41,7 +42,7 @@ def date(recon):
 		del LonerList[0]
 		order[nodeZero] = place
 		place += 1
-		for child in recon[nodeZero]:
+		for child in cycleGraph[nodeZero]:
 			if child in innerNodes.keys():
 				innerNodes[child] -= 1
 				if innerNodes[child] == 0:
@@ -50,6 +51,6 @@ def date(recon):
 	if len(innerNodes.keys()) > 0:
 		return "timeTravel"
 	else:
-		for item in Leaves:
-			order[item] = len(Leaves)
+		for leaf in Leaves:
+			order[leaf] = len(Leaves)
 		return order
