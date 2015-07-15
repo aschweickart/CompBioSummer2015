@@ -5,52 +5,51 @@
 # This file contains a function for topologically ordering a tree graph and detecting cyclic graphs
 
 
-import copy
-
-
 def date(recon):
-	"""takes a Tree and returns a dictionary representation of the ordering of the tree. 
-	If there is a cycle, the function returns None"""
+	"""takes a CycleCheckingGraph and returns a dictionary representation of the ordering of the tree. 
+	If there is a cycle, the function returns timeTravel"""
+	#ordering of the Nodes
 	order = {}
-	dicto = {}
+	#InnerNodes
+	innerNodes = {}
+	# dict of Leaves
 	Leaves = {}
+	#List of Nodes with In-degree zero
 	LonerList = []
 	for key in recon.keys():
 		if  key != None:
-			dicto[key] = 0
+			innerNodes[key] = 0
 		for child in recon[key]:
 			if child != None:
-				dicto[child] = 0
+				innerNodes[child] = 0
 			else:
 				Leaves[key] = True
 	for key in Leaves.keys():
-		if key in dicto.keys():
-			del dicto[key]
-	for key in dicto.keys():
+		if key in innerNodes.keys():
+			del innerNodes[key]
+	for key in innerNodes.keys():
 		for child in recon[key]:
-			if child != None and child in dicto:
-				dicto[child] += 1
+			if child != None and child in innerNodes:
+				innerNodes[child] += 1
 	place = 0
-	for key in dicto.keys():
-		if dicto[key] == 0:
-			del dicto[key]
+	for key in innerNodes.keys():
+		if innerNodes[key] == 0:
+			del innerNodes[key]
 			LonerList.append(key)
 	while LonerList:
-		x = LonerList[0]
+		nodeZero = LonerList[0]
 		del LonerList[0]
-		order[x] = place
+		order[nodeZero] = place
 		place += 1
-		for child in recon[x]:
-			if child in dicto.keys():
-				dicto[child] -= 1
-				if dicto[child] == 0:
-					del dicto[child]
+		for child in recon[nodeZero]:
+			if child in innerNodes.keys():
+				innerNodes[child] -= 1
+				if innerNodes[child] == 0:
+					del innerNodes[child]
 					LonerList.append(child)
-	if len(dicto.keys()) > 0:
+	if len(innerNodes.keys()) > 0:
 		return "timeTravel"
 	else:
 		for item in Leaves:
 			order[item] = len(Leaves)
 		return order
-
-	

@@ -55,7 +55,7 @@ def normalizer(DTLReconGraph):
 def normalizeList(scoreList):
     """Takes in a list of scores and returns a new list with those scores
     normalized"""
-    totalScore = 0
+    totalScore = 0.0
     newScoreList = []
     for score in scoreList:
         totalScore+=score

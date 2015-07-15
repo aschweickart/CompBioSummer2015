@@ -8,10 +8,7 @@
 # main function in this file is called plotRecon and the remaining functions
 # are helper functions that are used by plotRecon.py
 
-
 import matplotlib.pyplot as plt
-
-
 
 #file i/o stuff:
 def fileConversion(reconFile):
@@ -82,9 +79,3 @@ def plotRecon(reconList):
 				color = (random.random(), random.random(), random.random()))
 
 	plt.show()
-
-	
-
-
-
-		

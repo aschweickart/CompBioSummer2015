@@ -15,7 +15,7 @@ import newickFormatReader
 
 def deleteCommas(pointList):
 	"""This function takes as input a list of points, returns a new list 
-	which is the same as poitList but with all commas removed."""
+	which is the same as pointList but with all commas removed."""
 
 	newList = []
 	for point in pointList:
@@ -37,6 +37,7 @@ def getDTLVals(pointList):
 	for point in pointList:
 		coordList = point[7:-1].split()
 		pair = []
+		#pair = (float(coordList[0]),float(coordList[1])) ?
 		for i in coordList:
 			pair.append(float(i))
 		DTLPairs.append(tuple(pair))
@@ -87,31 +88,3 @@ def newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L):
 	DTLList = getCostscapeDTLs(DTLPairs, H, P, phi)
 	newDTL = changeDTLScores(originalDTL, DTLList)
 	return newDTL, numRecon, leaves
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

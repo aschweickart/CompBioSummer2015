@@ -2,8 +2,8 @@
 #July 2015
 #Carter Slocum
 
-#File contains function that creates separate newick files for the parasite tree and the ultra-metric 
-#host tree.
+#File contains function that creates separate newick files for the 
+#parasite tree and the ultra-metric host tree.
 
 from rasmus import treelib1, util
 import copy
@@ -11,9 +11,10 @@ import sys
 import MasterReconciliation
 import newickFormatReader
 
-def convert(fileName, HostOrder, n, partoo):
-    """takes name of origional file and the dictionary of host tree branch lengths
-    and creates files for the host + parasite trees"""
+def convert(fileName, HostOrder, n, writeParasite):
+    """takes name of original file and the dictionary of host tree branch lengths
+    and creates files for the host + parasite trees. Parasite tree can
+    be ommited if desired"""
     f = open(fileName, 'r')
     contents = f.read()
     host, paras, phi = newickFormatReader.getInput(fileName)
@@ -29,7 +30,7 @@ def convert(fileName, HostOrder, n, partoo):
     f = open(fileName[:-7]+ str(n) +".stree", 'w')
     treelib1.write_newick(host, f, root_data = True)
     f.close()
-    if partoo:
+    if writeParasite:
         f = open(fileName[:-7] + '.tree', 'w')
         f.write(P + ";")
-        f.close
+        f.close()
