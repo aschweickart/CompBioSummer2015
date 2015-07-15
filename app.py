@@ -11,18 +11,27 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/index')
 def index():
+  """ Returns the index page"""
   return render_template('index.html')
 
 @app.route('/form')
 def form():
+  """Returns the form page"""
   return render_template('formDTLRnB.html')
+
+@app.route('/documentation')
+def documentation():
+  """Returns the documentation page"""
+  return render_template('documentation.html')
 
 @app.route('/results')
 def results():
+  """Returns the results page"""
   return render_template('results.html')  
 
 @app.route('/reconcile', methods = ['GET', 'POST'])
 def reconcile(carousel = None):
+  """ Creates the results page using MasterReconciliation and vistrans"""
   if request.method == 'POST':
     file = request.files['newick']
     if request.form['dup'] != '':
@@ -53,7 +62,6 @@ def reconcile(carousel = None):
 
     if file:
       filename = secure_filename(file.filename)
-      print filename
       Name = filename[:-7]
       os.system("mkdir "+Name)
       path2files = Name + '/' + Name
@@ -93,8 +101,8 @@ def reconcile(carousel = None):
       "Reconciliations: "+str(totalRecon)+"</h4>"
       for x in range(len(scoreList)):
         os.system("python vistrans.py -t "+path2files+".tree -s "+path2files+\
-          str(x)+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+path2files+\
-          str(x)+".svg")
+          str(x)+".stree -b "+path2files+str(x)+".mowgli.brecon -o "+\
+          path2files+ str(x)+".svg")
         
         score = scoreList[x]
         percent = 100.0*score/totalFreq
@@ -135,7 +143,11 @@ def reconcile(carousel = None):
     os.system("rm -r "+Name)
   return render_template("results.html", carouselstr = carouselstr, \
     carouselcap = carouselcap, staticString = staticString)
+
+
 def runningTotal(scoresList, index):
+  """Takes in a list of scores and an integer, index, and returns the sum of 
+  the list's entries up to that index"""
   runningTot = 0
   for n in range(len(scoresList)):
     if n<=index:
@@ -143,6 +155,7 @@ def runningTotal(scoresList, index):
   return runningTot
 
 def string2List(string):
+  """Takes in a string of a list and returns the list"""
   newList = []
   commaList = []
   for n in range(len(string)):
@@ -157,14 +170,10 @@ def string2List(string):
   newList.append(float(string[commaList[-1]+2:-2]))
   return newList
 
-# @app.route('/show/<filename>')
-# def uploaded_file(filename):
-#   filename = 'http://127.0.0.1:5000/uploads/'+filename
-#   return render_template('index.html', filename = filename)
-# 
 
 @app.route('/uploads/<filename>')
 def send_file(filename):
+  """Takes in a filename and sends it from the directory to the results page"""
   return send_from_directory(UPLOAD_FOLDER, filename )
 @app.after_request
 def add_header(response):

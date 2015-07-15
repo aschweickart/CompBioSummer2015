@@ -1,6 +1,9 @@
 # RandomGenerator.py
 # Annalise Schweickart, July 2015
 
+# This file contains the functions for testing random reconciliations
+# and checking for temporal inconsistencies
+
 
 import random
 import newickFormatReader
@@ -8,68 +11,8 @@ import orderGraph
 import DP
 import reconciliationGraph
 import os
-
-def findRoot(Tree):
-    """This function takes in a Tree and returns a string with the name of
-    the root vertex of the tree"""
-
-    if 'pTop' in Tree:
-        return Tree['pTop'][1]
-    return Tree['hTop'][1] 
-
-
-def orderDTL(DTL, ParasiteRoot):
-    """This function takes in a DTL graph and the ParasiteRoot. It outputs a
-    list, keysL, that contains tuples. Each tuple has two elements. The first
-    is a mapping node of the form (p, h), where p is a parasite node and h is
-    a host node. The second element is a level representing the depth of that
-    mapping node within the tree."""
-
-    keysL = []
-    topNodes = []
-    for key in DTL:
-        if key[0] == ParasiteRoot:
-            topNodes.append(key)
-    for vertex in topNodes:
-        keysL.extend(orderDTLRoots(DTL, vertex, 0))
-    return keysL
-
-def orderDTLRoots(DTL, vertex, level):
-    """this function takes a DTL graph, one node, vertex, of the DTL graph, 
-    and a level, and returns a list, keysL, that contains tuples. Each tuple
-    has two elements. The first is a mapping node of the form (p, h), where p
-    is a parasite node and h is a host node. The second element is a level 
-    representing the depth of that mapping node within the tree. This function
-    adds the input vertex to keysL and recurses on its children."""
-
-    keysL = []
-    for i in range(len(DTL[vertex]) - 1):    # loop through each event of key
-        event = DTL[vertex][i]
-        child1 = event[1]
-        child2 = event[2]
-        keysL = keysL + [(vertex, level)]
-        if child1[0] != None:
-            keysL.extend(orderDTLRoots(DTL, child1, level + 1))
-        if child2[0] != None:
-            keysL.extend(orderDTLRoots(DTL, child2, level + 1)) 
-    return keysL
-
-
-def sortHelper(DTL, keysL):
-    """This function takes in a list orderedKeysL and deals with duplicate 
-    mapping nodes that could potentially have the same level or have two 
-    different levels, in which case we want to choose the highest level 
-    because we are using the bottom-up approach"""
-    
-    uniqueKeysL = []
-    for key in DTL:
-        maxLevel = float("-inf")
-        for element in keysL:
-            if key == element[0]:
-                if element[1] > maxLevel:
-                    maxLevel = element[1]
-        uniqueKeysL.append((key, maxLevel))
-    return uniqueKeysL
+import copy
+import Greedy
 
 
 def preorderDTLsort(DTL, ParasiteRoot):
@@ -77,8 +20,8 @@ def preorderDTLsort(DTL, ParasiteRoot):
     list, orderedKeysL, that is ordered by level from smallest to largest,
     where level 0 is the root and the highest level has tips."""
 
-    keysL = orderDTL(DTL, ParasiteRoot)
-    uniqueKeysL = sortHelper(DTL, keysL)
+    keysL = Greedy.orderDTL(DTL, ParasiteRoot)
+    uniqueKeysL = Greedy.sortHelper(DTL, keysL)
     orderedKeysL = []
     levelCounter = 0
     while len(orderedKeysL) < len(uniqueKeysL):
@@ -87,6 +30,16 @@ def preorderDTLsort(DTL, ParasiteRoot):
                 orderedKeysL = orderedKeysL + [mapping]
         levelCounter += 1
     return orderedKeysL
+
+def findTransfers(reconciliation):
+    """Takes in a reconciliation graph and returns the number of transfers
+    that occur in that reconciliation"""
+    numTrans = 0
+    for key in reconciliation.keys():
+        if reconciliation[key][0] == 'T':
+            numTrans +=1
+    return numTrans
+
 
 def normalizer(DTL):
     """Takes in a DTL graph and normalizes the scores within a key,
@@ -112,7 +65,7 @@ def normalizeList(scoreList):
 
 def rootGenerator(DTL, parasiteTree):
     """Generates a list of the roots in a DTL graph"""
-    parasiteRoot = findRoot(parasiteTree)
+    parasiteRoot = Greedy.findRoot(parasiteTree)
     preOrder = preorderDTLsort(DTL, parasiteRoot)
     rootList = []
     for key in preOrder:
@@ -171,10 +124,8 @@ def biasedRecon(DTL, rootList, randomRecon):
         return randomRecon  
     newRootL = []   
     for root in rootList:
-        print root
         probList = makeProbList(DTL, root)
         newChild = biasedChoice(DTL[root][:-1],probList)
-        print "newChild",newChild
         randomRecon[root] = newChild
         if newChild[1] != (None, None) and not newChild[1] in randomRecon and\
         not newChild[1] in newRootL:
@@ -186,20 +137,31 @@ def biasedRecon(DTL, rootList, randomRecon):
 
 
 def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
-    """Takes in a file and duplication, loss and transfer costs, and calls 
-    randomReconGen to build a random reconciliation"""
-    f = open('results.txt', 'w')
-    f.write(typeGen+" random reconciliations"+"/n")
+    """Takes in a directory of newick files, dirName, duplication, loss and 
+    transfer costs, the number of desired random reconciliations, and the type
+    of generator (biased or uniform), and calls those random generators to
+    build a file containing the number of temporal inconsistencies found in 
+    those randomly generated reconciliations as well as other information 
+    relating to the file"""
     totalTimeTravel = 0
     outOf = 0
-    for fileName in os.listdir("TreeLifeData"):
+    for fileName in os.listdir(dirName):
         if fileName.endswith('.newick'):
-            outOf += numSamples
-            hostTree, parasiteTree, phi = newickFormatReader.getInput("TreeLifeData/"+fileName)
+            f = open(fileName[:7]+'.txt', 'w')
+            f.write(typeGen+" random reconciliations"+"\n")
+            hostTree, parasiteTree, phi = newickFormatReader.getInput\
+                (dirName+"/"+fileName)
+            parasiteSize = len(parasiteTree)+1
+            hostSize = len(hostTree)+1
             DTL, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
             rootList = rootGenerator(DTL, parasiteTree)
             randomReconList = []
-            for n in range(numSamples):
+            print int(numRecon)
+            if numRecon<numSamples:
+                sampleNum = int(numRecon)
+            else: sampleNum = numSamples
+            outOf+= sampleNum
+            for n in range(sampleNum):
                 timeTravelCount = 0
                 startRoot = random.choice(rootList)
                 if typeGen == "uniform":
@@ -209,6 +171,15 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                     currentRecon = biasedRecon(normalizeDTL, [startRoot], {})
                 for key in currentRecon.keys():
                     currentRecon[key] = currentRecon[key][:-1]
+                # while currentRecon in randomReconList:
+                #     startRoot = random.choice(rootList)
+                #     if typeGen == "uniform":
+                #         currentRecon = uniformRecon(DTL, [startRoot], {})
+                #     else: 
+                #         normalizeDTL = normalizer(DTL)
+                #         currentRecon = biasedRecon(normalizeDTL, [startRoot], {})
+                #     for key in currentRecon.keys():
+                #         currentRecon[key] = currentRecon[key][:-1]
                 randomReconList.append(currentRecon)
                 graph = reconciliationGraph.buildReconstruction\
                     (hostTree, parasiteTree, randomReconList[n])
@@ -217,10 +188,13 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                     timeTravelCount += 1
                     totalTimeTravel += 1
             f.write(fileName+" contains "+str(timeTravelCount)+" temporal "+ \
-                "inconsistencies out of "+ str(len(randomReconList))+ \
-                " reconciliations."+"\n")
-    f.close()
-    print "Total fraction of temporal inconsistencies: ", totalTimeTravel, '/', outOf
+                "inconsistencies out of "+ str(sampleNum)+ \
+                " reconciliations."+"\n"+"Total number of reconciliations: "+\
+                str(numRecon)+"\n"+"Host tree size: "+str(hostSize)+"\n"+\
+                "Parasite tree size: "+str(parasiteSize)+ "\n")
+            f.close()
+    print "Total fraction of temporal inconsistencies in directory: ", \
+            totalTimeTravel, '/', outOf
 
 
 
