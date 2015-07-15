@@ -23,15 +23,16 @@ def Reconcile(argList):
 	"""Takes command-line arguments of a .newick file, duplication, transfer, 
 	and loss costs, the type of scoring desired and possible switch and loss 
 	ranges. Creates Files for the host, parasite, and reconciliations"""
-	fileName = argList[1]
-	D = float(argList[2])
-	T = float(argList[3])
-	L = float(argList[4])
-	freqType = argList[5]
-	switchLo = float(argList[6])
-	switchHi = float(argList[7])
-	lossLo = float(argList[8])
-	lossHi = float(argList[9])
+	fileName = argList[1] #.newick file
+	D = float(argList[2]) # Duplication cost
+	T = float(argList[3]) # Transfer cost
+	L = float(argList[4]) # Loss cost
+	freqType = argList[5] # Frequency type
+	# Optional inputs if freqType == xscape
+	switchLo = float(argList[6]) # Switch lower boundary
+	switchHi = float(argList[7]) # Switch upper boundary
+	lossLo = float(argList[8]) # Loss lower boundary
+	lossHi = float(argList[9]) # Loss upper boundary
 
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = findRoot(host)

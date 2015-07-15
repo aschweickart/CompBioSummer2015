@@ -113,6 +113,7 @@ def draw_tree(tree, brecon, stree,
         for ev in brecon[node]:
             snode, event, frequency = ev
             if event != "spec" and event != "gene" and event != "loss":
+                # Find number of nodes on a single branch for y-coord
                 v = [yorders[child]
                     for child in node.children
                     if brecon[child][-1][0] == snode]
@@ -122,15 +123,16 @@ def draw_tree(tree, brecon, stree,
                     yorders[node].append(stats.mean(flatten(v)))
 
     # layout node (x)
-    xorders = {}
-    branchFrac = {}
+    xorders = {} #Dictionary to record number of nodes on a single branch for x-coord
+    branchFrac = {} #Dictionary to record the placement of a node on a branch
     for node in tree.postorder():
         for n in range(len(brecon[node])):
             snode, event, frequency = brecon[node][n]
             if event == "spec" or event == "gene" or event == "loss":
+                # Speciation, gene, and loss events happen at host vertices
                 if not node in branchFrac:
                     branchFrac[node] = 0
-            else:
+            else: # Transfers and duplications occur on branches
                 v = [branchFrac[child] for child in node.children]
                 if len(v) == 0:
                     branchFrac[node] = 1
@@ -142,13 +144,18 @@ def draw_tree(tree, brecon, stree,
         for n in range(len(brecon[node])):
             snode, event, frequency = brecon[node][n]
             if event == "spec" or event == "gene" or event == "loss":
+                # Speciation, gene, and loss events happen on vertices, not branches
                     xorders[node].append(0)
             else:
                 if node.parent and containsTransOrDup(node.parent, brecon):
+                    # set branchFrac to the branch Frac of the parent, they are
+                    # on the same branch
                     branchFrac[node] = branchFrac[node.parent]
                 if containsLoss(node, brecon):
+                    # if following a loss, first transfer/duplication event on branch
                     xorders[node].append(1)
-                elif not node.parent: xorders[node].append(0)
+                elif not node.parent: # Root of tree
+                    xorders[node].append(0)
                 else:
                     xorders[node].append(maxList(xorders[node.parent])+1)
               
@@ -160,21 +167,20 @@ def draw_tree(tree, brecon, stree,
             nx, ny = slayout[snode]
             px, py = slayout[snode.parent]
             (npx, npy) = layout[node.parent][-1]
+            # set spacing between nodes on the same branch
             frac = 50
-            while branchFrac[node]*frac >= nx-px:
+            while branchFrac[node] * frac >= nx - px:
                 frac = frac - 5
 
 
         # calc x
             if event == "trans" or event == "gtrans":
-                if npx> px:
+                if npx > px: # transfer parent is farther forward in time than host parent
                     x = npx + frac
                 else: x = px + frac
             elif event =="dup":
                 x = px + frac
             else: x = nx
-            if frac == 45:
-                print x
         # calc y
 
             deltay = ny - py
@@ -312,14 +318,14 @@ def draw_tree(tree, brecon, stree,
                     y2 = (y*.5 + py*.5)
                     x3 = (x*.5 + px*.5) - arch
                     y3 = (y*.5 + py*.5)
-                    
+                    # draw regular transfer dashed line
                     if pevent == "trans":
                         canvas.write("<path d='M%f %f C%f %f %f %f %f %f' %s />\n " %
                             (x, y, x2, y2,
                              x3, y3, px, py,
                             " style='stroke-dasharray: 4, 2' " +
                             svg.colorFields(tree_trans_color, (0,0,0,0))))
-                    # draw guilty transfer line
+                    # draw guilty transfer dashed line
                     else: canvas.write("<path d='M%f %f C%f %f %f %f %f %f' %s />\n " %
                             (x, y, x2, y2,
                              x3, y3, px, py,
@@ -342,33 +348,33 @@ def draw_tree(tree, brecon, stree,
             frequency = float(frequency)
             x, y = layout[node][n]
             o = event_size / 2.0
-            if event == "loss":
+            if event == "loss": # draw boxes, frequencies of loss events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=loss_color,
                         strokeColor=loss_color_border)
                 canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = loss_color)
 
     
-            if event == "spec":
+            if event == "spec": # draw boxes, frequencies of speciation events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=(0,0,0),
                         strokeColor=(0,0,0))
                 canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = (0,0,0))
 
 
-            if event == "dup":
+            if event == "dup": # draw boxes, frequencies of duplication events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=dup_color,
                         strokeColor=dup_color_border)
                 canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=dup_color)
 
-            elif event == "trans":
+            elif event == "trans": # draw boxes, frequencies of transfer events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
                 canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=trans_color)
             
-            elif event == "gtrans":
+            elif event == "gtrans": # draw boxes, frequencies of guilty transfer events
                 canvas.rect(x-o, y-o, event_size, event_size,
                         fillColor=gtrans_color,
                         strokeColor=gtrans_color_border)

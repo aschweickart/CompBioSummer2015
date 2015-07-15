@@ -83,6 +83,7 @@ def reconcile(carousel = None):
       
       with open(path2files+"freqFile.txt") as f:
        lines = f.readlines()
+      print type(lines[0]), lines[0]
       scoreList = string2List(lines[0])
       totalFreq = float(lines[1][:-2])
       totalRecon = float(lines[3])
@@ -156,19 +157,16 @@ def runningTotal(scoresList, index):
 
 def string2List(string):
   """Takes in a string of a list and returns the list"""
-  newList = []
-  commaList = []
-  for n in range(len(string)):
-    if string[n:n+2]== ', ':
-      commaList.append(n)
-  if commaList == []:
-    return [float(string[1:-3])]
-  newList.append(float(string[1:commaList[0]]))
-  for n in range(len(commaList)):
-    if commaList[n] != commaList[-1]:
-      newList.append(float(string[commaList[n]+2:commaList[n+1]]))
-  newList.append(float(string[commaList[-1]+2:-2]))
-  return newList
+  newString = string.strip('[')
+  print newString
+  newerString = newString.strip(']\n')
+  print newerString
+  stringList = newerString.split(',')
+  print stringList
+  for n in range(len(stringList)):
+    stringList[n] = float(stringList[n])
+  print stringList
+  return stringList
 
 
 @app.route('/uploads/<filename>')
