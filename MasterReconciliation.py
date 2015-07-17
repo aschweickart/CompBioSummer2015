@@ -57,6 +57,7 @@ def Reconcile(argList):
 			rec[n] = newOrder
 			currentOrder = ReconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
+
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
 		hostBranchs = branch(hostv,hostOrder)
