@@ -9,10 +9,10 @@
 import DP
 import Greedy
 import newickToVis
-import reconConversion
+import ReconConversion
 import orderGraph
 import newickFormatReader
-import reconciliationGraph
+import ReconciliationGraph
 from sys import argv
 import copy
 import calcCostscapeScore
@@ -35,8 +35,8 @@ def Reconcile(argList):
 	lossHi = float(argList[9]) # Loss upper boundary
 
 	host, paras, phi = newickFormatReader.getInput(fileName)
-	hostRoot = reconciliationGraph.findRoot(host)
-	hostv = reconciliationGraph.treeFormat(host)
+	hostRoot = ReconciliationGraph.findRoot(host)
+	hostv = ReconciliationGraph.treeFormat(host)
 	# Default scoring function (if freqtype== Frequency scoring)
 	DTLReconGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 	#uses xScape scoring function
@@ -50,13 +50,12 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTLReconGraph)
 	scoresList, rec = Greedy.Greedy(DTLGraph, paras)
 	for n in range(len(rec)):
-		currentRecon = rec[n]
-		graph = reconciliationGraph.buildReconstruction(host, paras, currentRecon)
+		graph = ReconciliationGraph.buildReconstruction(host, paras, rec[n])
 		currentOrder = orderGraph.date(graph)
 		if currentOrder == "timeTravel":
-			newOrder = detectCycles.detectCyclesWrapper(host, paras, currentRecon)
-			currentRecon = newOrder
-			currentOrder = reconciliationGraph.buildReconstruction\
+			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
+			rec[n] = newOrder
+			currentOrder = ReconciliationGraph.buildReconstruction\
 			(host, paras, newOrder)
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
@@ -67,7 +66,7 @@ def Reconcile(argList):
 		else:
 			newickToVis.convert(fileName,hostBranchs, n, 0)
 		# filename[:-7] is the file name minus the .newick
-		reconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
+		ReconConversion.convert(rec[n], DTLReconGraph, paras, fileName[:-7], n)
 
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 

@@ -204,7 +204,6 @@ def untick(markingDict, node):
 def check(markingDict, node):
 	"""This function takes as input markingDict and a node, and checks the 
 	node in markingDict."""
-
 	markingDict[node] = ['check']
 
 
@@ -297,4 +296,5 @@ def detectCyclesWrapper(HostTree, ParasiteTree, reconciliation):
 		reconciliation)
 	newReconciliation = updateReconciliation(guiltyTransferList, HostTree, \
 		ParasiteTree, reconciliation)
+	print newReconciliation
 	return newReconciliation
