@@ -10,91 +10,8 @@
 # temporal inconsistencies. The main function in this file is 
 # detectCyclesWrapper, and the rest of the functions are helper functions 
 # that are used by detectCyclesWrapper.
-
+import ReconciliationGraph
 import copy
-
-def findRoot(Tree):
-	"""This function takes in a tree and returns a string with the name of 
-	the root vertex of the tree. This function may cause problems if the 
-	input tree doesn't come from the output of newickFormatReader."""
-
-	if 'pTop' in Tree:
-		return Tree['pTop'][1]
-	return Tree['hTop'][1]
-
-
-def InitDicts(tree):
-	"""This function takes as input a tree and returns a dictionary with the 
-	bottom node of each edge as a key and empty lists as the values."""
-
-	treeDict = {}
-	for key in tree:
-		if key == 'pTop':
-			treeDict[tree[key][1]] = [] 
-		elif key == 'hTop':
-			treeDict[tree[key][1]] = []
-		else:
-			treeDict[key[1]] = []
-	return treeDict
-
-
-def treeFormat(tree):
-	"""Takes a tree in the format that it comes out of newickFormatReader and 
-	returns a dictionary with keys which are the bottom nodes of each edge in 
-	the tree and values which are the children of that node."""
-
-	treeDict = InitDicts(tree)
-	treeRoot = findRoot(tree)
-	for key in tree:
-		if key == 'hTop' or key == 'pTop':
-			if tree[key][-2] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1][1]]
-		else:
-			if tree[key][-2] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
-	return treeDict
-
-
-def parentsDict(H, P):
-	"""Takes a host and a parasite tree and returns a dictionary with keys 
-	which are the bottom nodes of each edge and values which are the top 
-	nodes of those edges."""
-
-	parentsDict = {}
-	for key in H:
-		if key == 'hTop':
-			parentsDict[H[key][1]] = H[key][0]
-		else:
-			parentsDict[key[1]] = H[key][0]
-	for key in P:
-		if key == 'pTop':
-			parentsDict[P[key][1]] = P[key][0]
-		else:
-			parentsDict[key[1]] = P[key][0]
-	return parentsDict
-
-
-def uniquify(list):
-	"""Takes as input a list and returns a list containing only the unique 
-	elements of the input list."""
-
-	keys = {}
-	for e in list:
-		keys[e] = 1
-	return keys.keys()
-
 
 def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 	"""Takes as input a host tree, a parasite tree, and a reconciliation, 
@@ -102,9 +19,9 @@ def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 	values are a list of the children of a particular node. The graph 
 	represents temporal relationships between events."""
 
-	parents = parentsDict(HostTree, ParasiteTree)
-	H = treeFormat(HostTree)
-	P = treeFormat(ParasiteTree)
+	parents = ReconciliationGraph.parentsDict(HostTree, ParasiteTree)
+	H = ReconciliationGraph.treeFormat(HostTree)
+	P = ReconciliationGraph.treeFormat(ParasiteTree)
 	reconGraph = H
 	reconGraph.update(P) 
 	transferList = []
@@ -120,7 +37,6 @@ def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 			transferEdge2 = reconciliation[key][2][1]
 			transferList.append([key[0], parent1, transferEdge1, parent2, \
 				transferEdge2])
-
 
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
@@ -139,52 +55,56 @@ def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 			reconGraph[key[0]] = [None]
 
 	for key in reconGraph:
-		reconGraph[key] = uniquify(reconGraph[key])
+		reconGraph[key] = ReconciliationGraph.uniquify(reconGraph[key])
 
 	return reconGraph, transferList
-
 
 def detectCycles(HostTree, ParasiteTree, reconciliation):
 	"""This function takes as input the cycle checking graph, reconGraph. 
 	It returns a new version of reconGraph, newReconGraph, from which the 
 	transfer events responsible for the cycles have been removed. It also 
 	returns a list, guiltyTransferList, of the guilty transfers."""
-
+	hostTree = ReconciliationGraph.treeFormat(HostTree)
+	parasiteTree = ReconciliationGraph.treeFormat(ParasiteTree)
 	guiltyTransferList = []
 	markingDict = {}
 	reconGraph, transferList = buildReconciliation(HostTree, ParasiteTree, \
 		reconciliation)
-	Hroot = findRoot(HostTree)
+	Hroot = ReconciliationGraph.findRoot(HostTree)
 	markingDict[Hroot] = ['check']
-	cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
+	cycleNode = recurseChildren(reconGraph, markingDict, Hroot, parasiteTree)
+	markingDict = {}
 	newReconGraph, guiltyTransfer, transferList = deleteTransfer(reconGraph, \
-		markingDict, transferList, cycleNode)
+		transferList, cycleNode)
 	if guiltyTransfer != []:
 		guiltyTransferList.append(guiltyTransfer)
 	while cycleNode != None:
-		cycleNode = None
-		markingDict = {}
-		cycleNode = recurseChildren(newReconGraph, {Hroot: ['check']}, Hroot)
+		markingDict = {Hroot: ['check']}
+		cycleNode = recurseChildren(newReconGraph, markingDict, Hroot, parasiteTree)
+		if cycleNode == None:  
+			for node in newReconGraph:
+				if not checked(markingDict, node):
+					check(markingDict, node)
+					cycleNode = recurseChildren(newReconGraph, markingDict, node, parasiteTree)
 		newReconGraph, guiltyTransfer, transferList = deleteTransfer(\
-			newReconGraph, markingDict, transferList, cycleNode)
+			newReconGraph, transferList, cycleNode)
 		if guiltyTransfer != []:
 			guiltyTransferList.append(guiltyTransfer)
-
-	return newReconGraph, guiltyTransferList
+	return newReconGraph, guiltyTransferList, newReconGraph
 
 
 def checked(markingDict, node):
 	"""This function takes as input a markingDict and a node, and checks the 
 	node in markingDict, marking it as visited."""
 
-	return node in markingDict
+	return node in markingDict and 'check' in markingDict[node]
 
 
 def ticked(markingDict, node):
 	"""This function takes as input a markingDict and a checked node, and 
 	returns True if the node is already ticked, False if it is not."""
 
-	return node in markingDict and len(markingDict[node]) == 2
+	return node in markingDict and 'tick' in markingDict[node]
 
 
 def tick(markingDict, node):
@@ -207,7 +127,7 @@ def check(markingDict, node):
 	markingDict[node] = ['check']
 
 
-def recurseChildren(reconGraph, markingDict, node):
+def recurseChildren(reconGraph, markingDict, node, parasiteTree):
 	"""This function takes as input the cycle checking graph reconGraph, 
 	markingDict, a dictionary that keeps track of all the childNodes that are 
 	marked or ticked, and node, the node that we will recurse on. The 
@@ -218,13 +138,13 @@ def recurseChildren(reconGraph, markingDict, node):
 	for child in reconGraph[node]:
 		if not checked(markingDict, child) and child != None:
 			check(markingDict, child)
-			cycleNode = recurseChildren(reconGraph, markingDict, child)
+			cycleNode = recurseChildren(reconGraph, markingDict, child, parasiteTree)
 
 			if cycleNode != None:
 				return cycleNode
 
-		elif child != None:
-			if ticked(markingDict, child):
+		elif child != None and ticked(markingDict, child):
+			if child in parasiteTree:
 				return child
 
 	untick(markingDict, node)
@@ -232,14 +152,12 @@ def recurseChildren(reconGraph, markingDict, node):
 	return None
 
 
-def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
+def deleteTransfer(newReconGraph, transferList, cycleNode):
 	"""This function takes as input the cycle checking graph reconGraph, a 
 	dictionary markingDict, a list transferList of all transfers in the 
 	reconciliation, and a node cycleNode which is either a node in a cycle or 
 	None. The function returns a new cycle checking graph newReconGraph, 
 	from which the guilty transfers have been removed."""
-
-	newReconGraph = copy.deepcopy(reconGraph)
 	guiltyTransfer = []
 	if cycleNode == None:
 		return newReconGraph, guiltyTransfer, transferList
@@ -273,16 +191,13 @@ def updateReconciliation(guiltyTransferList, HostTree, ParasiteTree, \
 	original reconciliation of host and parasite. It returns a new 
 	reconciliation in which all of the guilty transfers have been marked as a 
 	new event 'GT'."""
-
-	parents = parentsDict(HostTree, ParasiteTree)
+	parents = ReconciliationGraph.parentsDict(HostTree, ParasiteTree)
 	newReconciliation = copy.deepcopy(reconciliation)
 	for transfer in guiltyTransferList:
-		for key in newReconciliation:
+		for key in newReconciliation.keys():
 			if reconciliation[key][0] == 'T':
-				if transfer[0] == key[0] and (transfer[2] == key[1] or \
-						transfer[4] == key[1]):
-					newValue = ['GT'] + newReconciliation[key][1:]
-					newReconciliation[key] = newValue
+				if transfer[0] == key[0]:
+					newReconciliation[key] = ['GT'] + reconciliation[key][1:]
 	return newReconciliation
 
 
@@ -292,9 +207,8 @@ def detectCyclesWrapper(HostTree, ParasiteTree, reconciliation):
 	marked."""
 
 	markingDict = {}
-	newReconGraph, guiltyTransferList = detectCycles(HostTree, ParasiteTree, \
+	newReconGraph, guiltyTransferList, newRec = detectCycles(HostTree, ParasiteTree, \
 		reconciliation)
 	newReconciliation = updateReconciliation(guiltyTransferList, HostTree, \
 		ParasiteTree, reconciliation)
-	print newReconciliation
-	return newReconciliation
+	return newReconciliation, newRec

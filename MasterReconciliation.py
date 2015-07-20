@@ -51,26 +51,21 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTLReconGraph)
 	scoresList, rec = Greedy.Greedy(DTLGraph, paras)
 	for n in range(len(rec)):
-	 	graph = ReconciliationGraph.buildReconstruction(host, paras, rec[n])
-	 	currentOrder = orderGraph.date(graph)
-	 	if currentOrder == "timeTravel":
-	 		newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
-	 		rec[n] = newOrder
-	 		print rec[n]
-	 		currentOrder = ReconciliationGraph.buildReconstruction\
-	 		(host, paras, newOrder)
-
+		graph = ReconciliationGraph.buildReconstruction(host, paras, rec[n])
+		currentOrder = orderGraph.date(graph)
+		if currentOrder == "timeTravel":
+			rec[n], currentOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
 		hostBranchs = branch(hostv,hostOrder)
-
 		if n == 0:
 			newickToVis.convert(fileName,hostBranchs, n, 1)
 		else:
 			newickToVis.convert(fileName,hostBranchs, n, 0)
-		#filename[:-7] is the file name minus the .newick
-	ReconConversion.convert(currentOrder, DTLReconGraph, paras, fileName[:-7], 0)
-	newickToVis.convert(fileName,hostBranchs, 0, 1)
+		# filename[:-7] is the file name minus the .newick
+		ReconConversion.convert(rec[n], DTLGraph, paras, fileName[:-7], n)
+
+
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 
 	duplication cost (D), transfer cost (T), and loss cost (L) and returns the
@@ -117,7 +112,7 @@ def hOrder(hTree, orderMess):
 			leaves.append(messList[item])
 	for item in leaves:
 		hostOrder[item] = place
-	return hostOrder 
+	return hostOrder
 
 
 
