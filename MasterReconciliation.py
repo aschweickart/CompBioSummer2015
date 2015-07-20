@@ -14,6 +14,7 @@ import orderGraph
 import newickFormatReader
 import ReconciliationGraph
 from sys import argv
+import sys
 import copy
 import calcCostscapeScore
 import detectCycles
@@ -98,8 +99,10 @@ def branch(tree, treeOrder):
 def hOrder(hTree, orderMess):
 	"""takes in the host tree and the ordering of the reconciliation and returns
 	a dictionary reresentation of the host tree ordering for that reconciliation"""
-	hostOrder = {} 
+	hostOrder = {}
 	leaves = []
+	if type(orderMess) == str:
+		sys.exit("Something is wrong with the cycle detection!!!")
 	messList = sorted(orderMess, key=orderMess.get)
 	place = 0
 	for item in range(len(messList)):
