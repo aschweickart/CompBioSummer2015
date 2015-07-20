@@ -7,32 +7,37 @@
   </div>
   <div class = "row">
     <div class = "col-lg-12">
-      <div class = "panel panel-info">
-        <div class = "panel-heading">
-          <h3> What is <font face="futura">DTL-RnB</font></h3>
+      <div class = "alert alert-info">
+          <h3> What is <font face="futura">DTL-RnB</font>?</h3>
             <font color="black">
-            <p>
-            DTL-RnB (Reconciliation Browser) is a tool for browsing the potentially large landscape of maximum parsimony reconciliations (MPRs) of pairs of phylogenetic trees (e.g., species tree and gene trees or host and parasite trees).  This tool is based on algorithms and techniques described in the paper “DTL-RnB: Algorithms and Tools for Summarizing the Space of DTL Reconciliations” by Weiyun Ma, Dmitriy Smirnov, Juliet Forman,  Annalise Schweickart,  Carter Slocum, Srinidhi Srinivasan, and 
+            <style>
+            
+            p.big {
+              line-height: 160%;
+            }
+            </style>
+            <p class="big">
+           <font face="futura">DTL-RnB</font> (Reconciliation Browser) is a tool for browsing the potentially large landscape of maximum parsimony reconciliations (MPRs) of pairs of phylogenetic trees (e.g., species tree and gene trees or host and parasite trees).  This tool is based on algorithms and techniques described in the paper “DTL-RnB: Algorithms and Tools for Summarizing the Space of DTL Reconciliations” by Weiyun Ma, Dmitriy Smirnov, Juliet Forman,  Annalise Schweickart,  Carter Slocum, Srinidhi Srinivasan, and 
             Ran Libeskind-Hadas.
             </p>
-            <p>
-            DTL-RnB takes as input a pair of undated phylogenetic trees in <a href="/documentation">newick format along with their tip associations </a>.  DTL-RnB prompts the user for non-negative costs for  duplication, transfer, and loss costs (speciations are assumed to be null events and are set to cost zero) and a method for scoring events (see “Event Scoring Below”).  The tool then displays a sequence of maximum parsimony reconciliations that, collectively, come close to maximizing the total sum of the scores of the events with respect to the given scoring function.  For example, if all events have unit scores, then the tool seeks to find a small set of maximum parsimony reconciliations that include as many events as possible from the set of events found in all maximum parsimony reconciliations for the given input.
+            <p class="big">
+            <font face="futura">DTL-RnB</font> takes as input a pair of undated phylogenetic trees in <a href="/documentation">newick format along with their tip associations </a>.  <font face="futura">DTL-RnB</font> prompts the user for non-negative costs for  duplication, transfer, and loss costs (speciations are assumed to be null events and are set to cost zero) and a method for scoring events (see “Event Scoring Below”).  The tool then displays a sequence of maximum parsimony reconciliations that, collectively, come close to maximizing the total sum of the scores of the events with respect to the given scoring function.  For example, if all events have unit scores, then the tool seeks to find a small set of maximum parsimony reconciliations that include as many events as possible from the set of events found in all maximum parsimony reconciliations for the given input.
             </p>
-            <p> More formally, DTL-RnB seeks to solve the following <em>k-Reconciliations Cover Problem</em>:  
+            <p class="big"> More formally, <font face="futura">DTL-RnB</font> seeks to solve the following <em>k-Reconciliations Cover Problem</em>:  
             <br>
             <b>Input:</b>  A pair of phylogenetic trees, a mapping between the tips of the trees, DTL event costs, a scoring function that assigns a non-negative score to each event in found in any maximum parsimony reconciliation, and a parameter <em>k</em>.
             <br>
             <b>Output:</b> A set of <em>k</em> maximum parsimony reconciliations that maximize the sum of the event scores. (Note that an event score is only counted once in this sum, but the same event may still appear in more than of the <em>k</em> maximum parsimony reconciliations.) 
             <br>
             </p>
-            <p> 
-            Although we have shown that this problem is NP-complete, DTL-RnB uses a polynomial-time approximation algorithm that is guaranteed to find solutions that are within 1 - 1/e (approximately 0.632) times optimal.  In other words, if the optimal solution could “collect” OPT points using <em>k</em> maximum parsimony reconciliations, our algorithm will collect at least 0.632 OPT points.  The algorithm is based on an existing approximation algorithm for the Maximum Coverage Problem.
+            <p class="big"> 
+            Although we have shown that this problem is NP-complete, <font face="futura">DTL-RnB</font> uses a polynomial-time approximation algorithm that is guaranteed to find solutions that are within 1 - 1/e (approximately 0.632) times optimal.  In other words, if the optimal solution could “collect” OPT points using <em>k</em> maximum parsimony reconciliations, our algorithm will collect at least 0.632 OPT points.  The algorithm is based on an existing approximation algorithm for the Maximum Coverage Problem.
             </p>
             </font>
           <h3> Scoring Functions </h3>
             <font color = "black">
-            <p>
-            DTL-RnB currently supports three scoring functions, although many others are possible and can be added by modifying the available source code.
+            <p class="big">
+            <font face="futura">DTL-RnB</font> currently supports three scoring functions, although many others are possible and can be added by modifying the available source code.
             </p>
             <UL>
               <li> 
@@ -49,17 +54,17 @@
             </font>
           <h3> Acknowledgements </h3>
             <font color="black">
-            <p>
-            The authors thank Yi-Chieh Wu for her generous assistance and advice on numerous aspects of this project, Mukul Bansal for useful conversations, and Matthew D. Rasmussen for the development of the vistrans software that is used in DTL-RnB.
+            <p class="big">
+            The authors thank Yi-Chieh Wu for her generous assistance and advice on numerous aspects of this project, Mukul Bansal for useful conversations, and Matthew D. Rasmussen for the development of the vistrans software that is used in <font face="futura">DTL-RnB</font>.
             </p>
-            <p>
+            <p class="big">
             This work was funded by the National Science Foundation under Grant Number IIS-1419739. Any opinions, findings, and conclusions or recommendations 
             expressed in this material are those of the author(s) and do not necessarily
              reflect the views of the National Science Foundation.
             </p>
             </font>
         </div>
-      </div>
+
     </div>
   </div>
 {% endblock %}

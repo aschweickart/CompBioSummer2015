@@ -37,6 +37,7 @@ def Reconcile(argList):
 	host, paras, phi = newickFormatReader.getInput(fileName)
 	hostRoot = ReconciliationGraph.findRoot(host)
 	hostv = ReconciliationGraph.treeFormat(host)
+	Order = orderGraph.date(hostv)
 	# Default scoring function (if freqtype== Frequency scoring)
 	DTLReconGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 	#uses xScape scoring function
@@ -50,13 +51,14 @@ def Reconcile(argList):
 	DTLGraph = copy.deepcopy(DTLReconGraph)
 	scoresList, rec = Greedy.Greedy(DTLGraph, paras)
 	for n in range(len(rec)):
-		graph = ReconciliationGraph.buildReconstruction(host, paras, rec[n])
-		currentOrder = orderGraph.date(graph)
-		if currentOrder == "timeTravel":
-			newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
-			rec[n] = newOrder
-			currentOrder = ReconciliationGraph.buildReconstruction\
-			(host, paras, newOrder)
+	 	graph = ReconciliationGraph.buildReconstruction(host, paras, rec[n])
+	 	currentOrder = orderGraph.date(graph)
+	 	if currentOrder == "timeTravel":
+	 		newOrder = detectCycles.detectCyclesWrapper(host, paras, rec[n])
+	 		rec[n] = newOrder
+	 		print rec[n]
+	 		currentOrder = ReconciliationGraph.buildReconstruction\
+	 		(host, paras, newOrder)
 
 			currentOrder = orderGraph.date(currentOrder)
 		hostOrder = hOrder(hostv,currentOrder)
@@ -66,9 +68,9 @@ def Reconcile(argList):
 			newickToVis.convert(fileName,hostBranchs, n, 1)
 		else:
 			newickToVis.convert(fileName,hostBranchs, n, 0)
-		# filename[:-7] is the file name minus the .newick
-		ReconConversion.convert(rec[n], DTLReconGraph, paras, fileName[:-7], n)
-
+		#filename[:-7] is the file name minus the .newick
+	ReconConversion.convert(currentOrder, DTLReconGraph, paras, fileName[:-7], 0)
+	newickToVis.convert(fileName,hostBranchs, 0, 1)
 def unitScoreDTL(hostTree, parasiteTree, phi, D, T, L):
 	""" Takes a hostTree, parasiteTree, tip mapping function phi, and 
 	duplication cost (D), transfer cost (T), and loss cost (L) and returns the

@@ -65,6 +65,7 @@ def freqSummation(argList):
 	f = open(fileName+"freqFile.txt", 'w')
 	host, paras, phi = newickFormatReader.getInput(newickFile)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
+	print numRecon
 	if freqType == "Frequency":
 		newDTL = DTL
 	elif freqType == "xscape":
