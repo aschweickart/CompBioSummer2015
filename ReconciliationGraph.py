@@ -128,8 +128,8 @@ def buildReconstruction(HostTree, ParasiteTree, reconciliation):
 		elif reconciliation[key][0] == 'C':
 			reconGraph[key[1]] = [None]
 			reconGraph[key[0]] = [None]
+		#deak with guilty transfers:
 
 	for key in reconGraph:
 		reconGraph[key] = uniquify(reconGraph[key])
-
 	return reconGraph
