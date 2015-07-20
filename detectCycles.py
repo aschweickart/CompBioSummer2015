@@ -12,165 +12,112 @@
 # that are used by detectCyclesWrapper.
 
 import copy
-
-def findRoot(Tree):
-	"""This function takes in a tree and returns a string with the name of 
-	the root vertex of the tree. This function may cause problems if the 
-	input tree doesn't come from the output of newickFormatReader."""
-
-	if 'pTop' in Tree:
-		return Tree['pTop'][1]
-	return Tree['hTop'][1]
-
-
-def InitDicts(tree):
-	"""This function takes as input a tree and returns a dictionary with the 
-	bottom node of each edge as a key and empty lists as the values."""
-
-	treeDict = {}
-	for key in tree:
-		if key == 'pTop':
-			treeDict[tree[key][1]] = [] 
-		elif key == 'hTop':
-			treeDict[tree[key][1]] = []
-		else:
-			treeDict[key[1]] = []
-	return treeDict
-
-
-def treeFormat(tree):
-	"""Takes a tree in the format that it comes out of newickFormatReader and 
-	returns a dictionary with keys which are the bottom nodes of each edge in 
-	the tree and values which are the children of that node."""
-
-	treeDict = InitDicts(tree)
-	treeRoot = findRoot(tree)
-	for key in tree:
-		if key == 'hTop' or key == 'pTop':
-			if tree[key][-2] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1]]
-			else:
-				treeDict[treeRoot] = treeDict[treeRoot] + [tree[key][-1][1]]
-		else:
-			if tree[key][-2] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-2][1]]
-			if tree[key][-1] == None:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1]]
-			else:
-				treeDict[key[1]] = treeDict[key[1]] + [tree[key][-1][1]]
-	return treeDict
-
-
-def parentsDict(H, P):
-	"""Takes a host and a parasite tree and returns a dictionary with keys 
-	which are the bottom nodes of each edge and values which are the top 
-	nodes of those edges."""
-
-	parentsDict = {}
-	for key in H:
-		if key == 'hTop':
-			parentsDict[H[key][1]] = H[key][0]
-		else:
-			parentsDict[key[1]] = H[key][0]
-	for key in P:
-		if key == 'pTop':
-			parentsDict[P[key][1]] = P[key][0]
-		else:
-			parentsDict[key[1]] = P[key][0]
-	return parentsDict
-
-
-def uniquify(list):
-	"""Takes as input a list and returns a list containing only the unique 
-	elements of the input list."""
-
-	keys = {}
-	for e in list:
-		keys[e] = 1
-	return keys.keys()
+from cycleCheckingGraph import *
+import DP
+import Greedy
+import newickFormatReader
 
 
 def buildReconciliation(HostTree, ParasiteTree, reconciliation):
-	"""Takes as input a host tree, a parasite tree, and a reconciliation, 
-	and returns a graph where the keys are host or parasite nodes, and the 
-	values are a list of the children of a particular node. The graph 
-	represents temporal relationships between events."""
+	"""Takes as input a host tree, a parasite tree, and a reconciliation, and
+	returns a graph where the keys are host or parasite nodes, and the values
+	are a list of the children of a particular node. The graph represents 
+	temporal relationships between events. The function also returns a list 
+	transferList containing all the transfers in the reconciliation in the 
+	form """
 
-	parents = parentsDict(HostTree, ParasiteTree)
+	#create a dictionary with a list of parents of each host and parasite node
+	parents = createParentsDict(HostTree, ParasiteTree)
 	H = treeFormat(HostTree)
 	P = treeFormat(ParasiteTree)
-	reconGraph = H
-	reconGraph.update(P) 
-	transferList = []
+	cycleCheckingGraph = H
+	cycleCheckingGraph.update(P)
+	transferList = [] 
 	for key in reconciliation:
+		#deal with transfer case:
 		if reconciliation[key][0] == 'T':
-			reconGraph[key[0]] = P[key[0]] + [reconciliation[key][1][1], \
-				reconciliation[key][2][1]]
+			#add the children of the parasite node to the list of children
+			#of the host node in cycleCheckingGraph
+			cycleCheckingGraph[key[0]] = P[key[0]] + \
+				[reconciliation[key][1][1], reconciliation[key][2][1]]
+			#find the parents of the take-off and landing host nodes
 			parent1 = parents[reconciliation[key][1][1]]
 			parent2 = parents[reconciliation[key][2][1]]
-			reconGraph[parent1] = reconGraph[parent1] + [key[0]]
-			reconGraph[parent2] = reconGraph[parent2] + [key[0]]
+			#add the parasite node as a child of parent1 and parent2
+			cycleCheckingGraph[parent1] = cycleCheckingGraph[parent1] + \
+				[key[0]]
+			cycleCheckingGraph[parent2] = cycleCheckingGraph[parent2] + \
+				[key[0]]
 			transferEdge1 = reconciliation[key][1][1]
 			transferEdge2 = reconciliation[key][2][1]
 			transferList.append([key[0], parent1, transferEdge1, parent2, \
 				transferEdge2])
 
-
+		#deal with speciation case:
 		elif reconciliation[key][0] == 'S':
 			parent = parents[key[0]]
 			if parent != 'Top':
-				reconGraph[parent] = reconGraph[parent] + [key[1]]
-			reconGraph[key[1]] = reconGraph[key[1]] + reconGraph[key[0]]
+				cycleCheckingGraph[parent] = cycleCheckingGraph[parent] + \
+					[key[1]]
+			cycleCheckingGraph[key[1]] = cycleCheckingGraph[key[1]] + \
+				cycleCheckingGraph[key[0]]
 
+		#deal with duplication case:
 		elif reconciliation[key][0] == 'D':
 			parent = parents[key[1]]
 			if parent != 'Top':
-				reconGraph[parent] = reconGraph[parent] + [key[0]]
-			reconGraph[key[0]] = reconGraph[key[0]] + [key[1]]
+				cycleCheckingGraph[parent] = cycleCheckingGraph[parent] + \
+					[key[0]]
+			cycleCheckingGraph[key[0]] = cycleCheckingGraph[key[0]] + [key[1]]
 
+		#deal with contemporary case:
 		elif reconciliation[key][0] == 'C':
-			reconGraph[key[1]] = [None]
-			reconGraph[key[0]] = [None]
+			cycleCheckingGraph[key[1]] = [None]
+			cycleCheckingGraph[key[0]] = [None]
 
-	for key in reconGraph:
-		reconGraph[key] = uniquify(reconGraph[key])
+	for key in cycleCheckingGraph:
+		cycleCheckingGraph[key] = uniquify(cycleCheckingGraph[key])
 
-	return reconGraph, transferList
+	return cycleCheckingGraph, transferList
 
 
 def detectCycles(HostTree, ParasiteTree, reconciliation):
-	"""This function takes as input the cycle checking graph, reconGraph. 
-	It returns a new version of reconGraph, newReconGraph, from which the 
-	transfer events responsible for the cycles have been removed. It also 
-	returns a list, guiltyTransferList, of the guilty transfers."""
+	"""This function takes as input the cycle checking graph, 
+	cycleCheckingGraph. It returns a new version of cycleCheckingGraph, 
+	newCycleCheckingGraph, from which the transfer events responsible for the 
+	cycles have been removed. It also returns a list, guiltyTransferList, of 
+	the guilty transfers."""
 
 	guiltyTransferList = []
 	markingDict = {}
-	reconGraph, transferList = buildReconciliation(HostTree, ParasiteTree, \
-		reconciliation)
+	cycleCheckingGraph, transferList = buildReconciliation(HostTree, \
+		ParasiteTree, reconciliation)
 	Hroot = findRoot(HostTree)
 	markingDict[Hroot] = ['check']
-	cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
-	newReconGraph, guiltyTransfer, transferList = deleteTransfer(reconGraph, \
-		markingDict, transferList, cycleNode)
+	cycleEdge = recurseChildren(cycleCheckingGraph, markingDict, Hroot)
+	newCycleCheckingGraph, guiltyTransfer, transferList = deleteTransfer(\
+		cycleCheckingGraph, markingDict, transferList, cycleEdge)
 	if guiltyTransfer != []:
 		guiltyTransferList.append(guiltyTransfer)
-	while cycleNode != None:
-		cycleNode = None
+	while cycleEdge != None:
+		cycleEdge = None
 		markingDict = {}
-		cycleNode = recurseChildren(newReconGraph, {Hroot: ['check']}, Hroot)
-		newReconGraph, guiltyTransfer, transferList = deleteTransfer(\
-			newReconGraph, markingDict, transferList, cycleNode)
+		cycleEdge = recurseChildren(newCycleCheckingGraph, \
+			{Hroot: ['check']}, Hroot)
+		if cycleEdge == None:
+			for node in newCycleCheckingGraph:
+				if not checked(markingDict, node):
+					check(markingDict, node)
+					cycleEdge = recurseChildren(newCycleCheckingGraph, \
+						markingDict, node)
+					if cycleEdge != None:
+						break
+		newCycleCheckingGraph, guiltyTransfer, transferList = deleteTransfer(\
+			newCycleCheckingGraph, markingDict, transferList, cycleEdge)
 		if guiltyTransfer != []:
 			guiltyTransferList.append(guiltyTransfer)
 
-	return newReconGraph, guiltyTransferList
+	return newCycleCheckingGraph, guiltyTransferList
 
 
 def checked(markingDict, node):
@@ -208,64 +155,89 @@ def check(markingDict, node):
 	markingDict[node] = ['check']
 
 
-def recurseChildren(reconGraph, markingDict, node):
-	"""This function takes as input the cycle checking graph reconGraph, 
-	markingDict, a dictionary that keeps track of all the childNodes that are 
-	marked or ticked, and node, the node that we will recurse on. The 
-	function updates markingDict and returns the name of a node it finds is 
-	in a cycle, or None if it finds no cycles."""
+def recurseChildren(cycleCheckingGraph, markingDict, node):
+	"""This function takes as input the cycle checking graph 
+	cycleCheckingGraph, markingDict, a dictionary that keeps track of all the 
+	childNodes that are marked or ticked, and node, the node that we will 
+	recurse on. Nodes are marked permanently as soon as a recursive call is 
+	made on them. Ticks are added to a node when a recursive call is made on 
+	them, and then removed as soon as the recursive call is finished. A cycle 
+	is detected whenever a child of the current node is already ticked. The 
+	function updates markingDict and returns a tuple where the first element 
+	is the parent of the ticked child and the second element is that child. 
+	If the function finds no cycles, it returns None."""
 
 	tick(markingDict, node)
-	for child in reconGraph[node]:
+	for child in cycleCheckingGraph[node]:
 		if not checked(markingDict, child) and child != None:
 			check(markingDict, child)
-			cycleNode = recurseChildren(reconGraph, markingDict, child)
+			cycleEdge = recurseChildren(cycleCheckingGraph, markingDict, \
+				child)
 
-			if cycleNode != None:
-				return cycleNode
+			if cycleEdge != None:
+				return cycleEdge
 
 		elif child != None:
 			if ticked(markingDict, child):
-				return child
+				return (node, child)
 
 	untick(markingDict, node)
 
 	return None
 
 
-def deleteTransfer(reconGraph, markingDict, transferList, cycleNode):
-	"""This function takes as input the cycle checking graph reconGraph, a 
-	dictionary markingDict, a list transferList of all transfers in the 
-	reconciliation, and a node cycleNode which is either a node in a cycle or 
-	None. The function returns a new cycle checking graph newReconGraph, 
-	from which the guilty transfers have been removed."""
+def deleteTransfer(cycleCheckingGraph, markingDict, transferList, cycleEdge):
+	"""This function takes as input the cycle checking graph 
+	cycleCheckingGraph, a dictionary markingDict, a list transferList of all 
+	transfers in the reconciliation, and cycleEdge, which is either a tuple 
+	with two elements, or None. The function returns a new cycle checking 
+	graph newCycleCheckingGraph, from which the guilty transfer has been 
+	removed. It also returns the guilty transfer and transferList with the 
+	guilty transfer removed."""
 
-	newReconGraph = copy.deepcopy(reconGraph)
+	newCycleCheckingGraph = copy.deepcopy(cycleCheckingGraph)
 	guiltyTransfer = []
-	if cycleNode == None:
-		return newReconGraph, guiltyTransfer, transferList
+	if cycleEdge == None:
+		return newCycleCheckingGraph, guiltyTransfer, transferList
+	node, cycleNode = cycleEdge
+	# for transfer in transferList:
+
+	# 	if cycleNode in transfer and node in transfer:
+
+	# 		guiltyTransfer = transfer
+	# 		transferList.remove(transfer)
+	# 		#remove all the edges that were added due to the guilty transfer
+	# 		removeChild(newCycleCheckingGraph, transfer[1], transfer[0])
+	# 		removeChild(newCycleCheckingGraph, transfer[0], transfer[2])
+	# 		removeChild(newCycleCheckingGraph, transfer[0], transfer[4])
+	# 		if transfer[1] != transfer[3]:
+	# 			removeChild(newCycleCheckingGraph, transfer[3], transfer[0])
+	# 		break
 	for transfer in transferList:
+
 		if cycleNode in transfer:
+
 			guiltyTransfer = transfer
 			transferList.remove(transfer)
-			print "guiltyTransfer:", guiltyTransfer
-			removeChild(newReconGraph, transfer[1], transfer[0])
-			removeChild(newReconGraph, transfer[0], transfer[2])
-			removeChild(newReconGraph, transfer[0], transfer[4])
+			#remove all the edges that were added due to the guilty transfer
+			removeChild(newCycleCheckingGraph, transfer[1], transfer[0])
+			removeChild(newCycleCheckingGraph, transfer[0], transfer[2])
+			removeChild(newCycleCheckingGraph, transfer[0], transfer[4])
 			if transfer[1] != transfer[3]:
-				removeChild(newReconGraph, transfer[3], transfer[0])
+				removeChild(newCycleCheckingGraph, transfer[3], transfer[0])
 			break
-	return newReconGraph, guiltyTransfer, transferList
+
+	return newCycleCheckingGraph, guiltyTransfer, transferList
 
 
-def removeChild(reconGraph, parent, child):
-	"""This function takes as input a graph reconGraph, a parent, and its 
-	child. It removes the child from the list of children that is the value 
-	associated with parent in reconGraph."""
+def removeChild(cycleCheckingGraph, parent, child):
+	"""This function takes as input a graph cycleCheckingGraph, a parent, and 
+	its child. It removes the edge between the parent and child in 
+	cycleCheckingGraph."""
 
-	childList = reconGraph[parent]
+	childList = cycleCheckingGraph[parent]
 	childList.remove(child)
-	reconGraph[parent] = childList
+	cycleCheckingGraph[parent] = childList
 
 
 def updateReconciliation(guiltyTransferList, HostTree, ParasiteTree, \
@@ -276,29 +248,33 @@ def updateReconciliation(guiltyTransferList, HostTree, ParasiteTree, \
 	reconciliation in which all of the guilty transfers have been marked as a 
 	new event 'GT'."""
 
-	parents = parentsDict(HostTree, ParasiteTree)
+	parents = createParentsDict(HostTree, ParasiteTree)
 	newReconciliation = copy.deepcopy(reconciliation)
 	for transfer in guiltyTransferList:
 		for key in newReconciliation:
 			if reconciliation[key][0] == 'T':
+				#check if transfer and key are the same event
 				if transfer[0] == key[0] and (transfer[2] == key[1] or \
 						transfer[4] == key[1]):
+					#create a new event 'GT' instead of 'T'
 					newValue = ['GT'] + newReconciliation[key][1:]
+					#replace the old event with newValue in the reconciliation
 					newReconciliation[key] = newValue
 	return newReconciliation
 
 
 def detectCyclesWrapper(HostTree, ParasiteTree, reconciliation):
-	"""This function takes in a host tree, parasite tree, and reconciliation, 
-	and returns a new reconciliation where the guilty transfers have been 
-	marked."""
+	"""This function takes in a host tree, parasite tree, and reconciliation. 
+	It returns an updated cycle checking graph where the edges that came from 
+	the guilty transfers have been removed, and it returns a new 
+	reconciliation where the guilty transfers have been marked."""
 
 	markingDict = {}
-	newReconGraph, guiltyTransferList = detectCycles(HostTree, ParasiteTree, \
-		reconciliation)
+	newCycleCheckingGraph, guiltyTransferList = detectCycles(HostTree, \
+		ParasiteTree, reconciliation)
 	newReconciliation = updateReconciliation(guiltyTransferList, HostTree, \
 		ParasiteTree, reconciliation)
-	return newReconciliation
+	return newCycleCheckingGraph, newReconciliation
 
 
 
@@ -314,7 +290,7 @@ def detectCyclesWrapper(HostTree, ParasiteTree, reconciliation):
 
 #R = {('n50', 'm117'): ['C', (None, None), (None, None)], ('n122', 'm100'): ['T', ('n123', 'm100'), ('n126', 'm129')], ('n2', 'm60'): ['S', ('n8', 'm61'), ('n3', 'm62')], ('n6', 'm64'): ['C', (None, None), (None, None)], ('n135', 'm16'): ['C', (None, None), (None, None)], ('n55', 'm178'): ['C', (None, None), (None, None)], ('n80', 'm80'): ['T', ('n81', 'm80'), ('n86', 'm147')], ('n121', 'm100'): ['T', ('n122', 'm100'), ('n127', 'm120')], ('n45', 'm116'): ['S', ('n46', 'm117'), ('n51', 'm118')], ('n154', 'm102'): ['S', ('n155', 'm103'), ('n160', 'm104')], ('n12', 'm86'): ['L', ('n12', 'm87'), (None, None)], ('n21', 'm83'): ['T', ('n57', 'm83'), ('n22', 'm122')], ('n168', 'm111'): ['C', (None, None), (None, None)], ('n67', 'm169'): ['S', ('n69', 'm170'), ('n68', 'm171')], ('n63', 'm167'): ['T', ('n65', 'm167'), ('n64', 'm168')], ('n84', 'm81'): ['C', (None, None), (None, None)], ('n134', 'm12'): ['S', ('n136', 'm13'), ('n135', 'm14')], ('n164', 'm167'): ['T', ('n165', 'm167'), ('n166', 'm198')], ('n108', 'm62'): ['S', ('n109', 'm63'), ('n114', 'm66')], ('n23', 'm122'): ['S', ('n53', 'm123'), ('n24', 'm124')], ('n137', 'm6'): ['S', ('n139', 'm7'), ('n138', 'm8')], ('n113', 'm64'): ['C', (None, None), (None, None)], ('n158', 'm118'): ['C', (None, None), (None, None)], ('n82', 'm81'): ['T', ('n84', 'm81'), ('n83', 'm188')], ('n33', 'm141'): ['C', (None, None), (None, None)], ('n46', 'm117'): ['T', ('n50', 'm117'), ('n47', 'm119')], ('n144', 'm23'): ['C', (None, None), (None, None)], ('n118', 'm100'): ['T', ('n119', 'm100'), ('n130', 'm22')], ('n4', 'm63'): ['S', ('n6', 'm64'), ('n5', 'm65')], ('n138', 'm10'): ['C', (None, None), (None, None)], ('n124', 'm100'): ['C', (None, None), (None, None)], ('n35', 'm133'): ['T', ('n36', 'm133'), ('n39', 'm131')], ('n59', 'm161'): ['S', ('n73', 'm162'), ('n60', 'm163')], ('n70', 'm32'): ['D', ('n71', 'm32'), ('n72', 'm32')], ('n90', 'm190'): ['S', ('n96', 'm191'), ('n91', 'm194')], ('n39', 'm131'): ['C', (None, None), (None, None)], ('n28', 'm138'): ['L', ('n28', 'm139'), (None, None)], ('n44', 'm113'): ['S', ('n52', 'm114'), ('n45', 'm115')], ('n115', 'm59'): ['C', (None, None), (None, None)], ('n111', 'm65'): ['C', (None, None), (None, None)], ('n78', 'm78'): ['T', ('n79', 'm78'), ('n88', 'm172')], ('n49', 'm120'): ['C', (None, None), (None, None)], ('n138', 'm8'): ['L', ('n138', 'm10'), (None, None)], ('n14', 'm90'): ['S', ('n16', 'm91'), ('n15', 'm92')], ('n103', 'm157'): ['S', ('n105', 'm158'), ('n104', 'm159')], ('n145', 'm22'): ['C', (None, None), (None, None)], ('n61', 'm163'): ['S', ('n62', 'm164'), ('n67', 'm169')], ('n90', 'm182'): ['L', ('n90', 'm190'), (None, None)], ('n148', 'm101'): ['S', ('n152', 'm102'), ('n149', 'm105')], ('n162', 'm104'): ['C', (None, None), (None, None)], ('n98', 'm179'): ['T', ('n99', 'm179'), ('n102', 'm153')], ('n94', 'm197'): ['C', (None, None), (None, None)], ('n27', 'm132'): ['S', ('n35', 'm133'), ('n28', 'm136')], ('n85', 'm154'): ['C', (None, None), (None, None)], ('n77', 'm84'): ['C', (None, None), (None, None)], ('n56', 'm82'): ['C', (None, None), (None, None)], ('n17', 'm89'): ['C', (None, None), (None, None)], ('n142', 'm18'): ['L', ('n142', 'm20'), (None, None)], ('n28', 'm139'): ['S', ('n29', 'm140'), ('n34', 'm145')], ('n163', 'm108'): ['C', (None, None), (None, None)], ('n91', 'm194'): ['L', ('n91', 'm195'), (None, None)], ('n120', 'm100'): ['T', ('n121', 'm100'), ('n128', 'm129')], ('n73', 'm162'): ['C', (None, None), (None, None)], ('n12', 'm87'): ['S', ('n13', 'm88'), ('n18', 'm93')], ('n112', 'm61'): ['C', (None, None), (None, None)], ('n37', 'm135'): ['C', (None, None), (None, None)], ('n5', 'm65'): ['C', (None, None), (None, None)], ('n167', 'm198'): ['C', (None, None), (None, None)], ('n40', 'm129'): ['C', (None, None), (None, None)], ('n64', 'm168'): ['C', (None, None), (None, None)], ('n165', 'm167'): ['C', (None, None), (None, None)], ('n123', 'm100'): ['T', ('n124', 'm100'), ('n125', 'm107')], ('n134', 'm11'): ['L', ('n134', 'm12'), (None, None)], ('n142', 'm20'): ['S', ('n143', 'm21'), ('n146', 'm24')], ('n62', 'm165'): ['S', ('n66', 'm166'), ('n63', 'm167')], ('n135', 'm14'): ['L', ('n135', 'm16'), (None, None)], ('n143', 'm21'): ['S', ('n145', 'm22'), ('n144', 'm23')], ('n60', 'm163'): ['T', ('n61', 'm163'), ('n70', 'm32')], ('n52', 'm114'): ['C', (None, None), (None, None)], ('n79', 'm78'): ['S', ('n87', 'm79'), ('n80', 'm80')], ('n69', 'm170'): ['C', (None, None), (None, None)], ('n82', 'm80'): ['L', ('n82', 'm81'), (None, None)], ('n28', 'm136'): ['L', ('n28', 'm138'), (None, None)], ('n146', 'm24'): ['C', (None, None), (None, None)], ('n31', 'm144'): ['C', (None, None), (None, None)], ('n98', 'm173'): ['L', ('n98', 'm179'), (None, None)], ('n66', 'm166'): ['C', (None, None), (None, None)], ('n81', 'm80'): ['T', ('n82', 'm80'), ('n85', 'm154')], ('n48', 'm121'): ['C', (None, None), (None, None)], ('n20', 'm77'): ['S', ('n78', 'm78'), ('n21', 'm83')], ('n131', 'm2'): ['S', ('n132', 'm3'), ('n141', 'm18')], ('n108', 'm60'): ['L', ('n108', 'm62'), (None, None)], ('n141', 'm18'): ['T', ('n142', 'm18'), ('n147', 'm15')], ('n58', 'm189'): ['T', ('n74', 'm189'), ('n59', 'm161')], ('n75', 'm83'): ['S', ('n77', 'm84'), ('n76', 'm85')], ('n74', 'm189'): ['C', (None, None), (None, None)], ('n150', 'm111'): ['C', (None, None), (None, None)], ('n129', 'm85'): ['C', (None, None), (None, None)], ('n42', 'm127'): ['C', (None, None), (None, None)], ('n157', 'm111'): ['C', (None, None), (None, None)], ('n0', 'm58'): ['S', ('n1', 'm59'), ('n2', 'm60')], ('n156', 'm118'): ['T', ('n158', 'm118'), ('n157', 'm111')], ('n106', 'm58'): ['T', ('n107', 'm58'), ('n116', 'm99')], ('n110', 'm65'): ['T', ('n111', 'm65'), ('n112', 'm61')], ('n88', 'm172'): ['T', ('n89', 'm172'), ('n106', 'm58')], ('n36', 'm133'): ['S', ('n38', 'm134'), ('n37', 'm135')], ('n126', 'm129'): ['C', (None, None), (None, None)], ('n3', 'm62'): ['S', ('n4', 'm63'), ('n7', 'm66')], ('n47', 'm119'): ['S', ('n49', 'm120'), ('n48', 'm121')], ('n116', 'm99'): ['S', ('n117', 'm100'), ('n148', 'm101')], ('n76', 'm85'): ['C', (None, None), (None, None)], ('n96', 'm193'): ['C', (None, None), (None, None)], ('n147', 'm15'): ['C', (None, None), (None, None)], ('n92', 'm197'): ['T', ('n94', 'm197'), ('n93', 'm198')], ('n19', 'm50'): ['C', (None, None), (None, None)], ('n32', 'm143'): ['C', (None, None), (None, None)], ('n68', 'm171'): ['C', (None, None), (None, None)], ('n87', 'm79'): ['C', (None, None), (None, None)], ('n91', 'm195'): ['S', ('n95', 'm196'), ('n92', 'm197')], ('n161', 'm104'): ['T', ('n162', 'm104'), ('n163', 'm108')], ('n72', 'm32'): ['C', (None, None), (None, None)], ('n133', 'm5'): ['S', ('n137', 'm6'), ('n134', 'm11')], ('n86', 'm147'): ['C', (None, None), (None, None)], ('n149', 'm109'): ['S', ('n151', 'm110'), ('n150', 'm111')], ('n29', 'm140'): ['S', ('n33', 'm141'), ('n30', 'm142')], ('n105', 'm158'): ['C', (None, None), (None, None)], ('n18', 'm93'): ['C', (None, None), (None, None)], ('n62', 'm164'): ['L', ('n62', 'm165'), (None, None)], ('n166', 'm198'): ['T', ('n167', 'm198'), ('n168', 'm111')], ('n26', 'm128'): ['S', ('n40', 'm129'), ('n27', 'm130')], ('n97', 'm173'): ['T', ('n98', 'm173'), ('n103', 'm157')], ('n152', 'm102'): ['T', ('n154', 'm102'), ('n153', 'm9')], ('n10', 'm76'): ['S', ('n20', 'm77'), ('n11', 'm86')], ('n43', 'm126'): ['C', (None, None), (None, None)], ('n153', 'm9'): ['C', (None, None), (None, None)], ('n45', 'm115'): ['L', ('n45', 'm116'), (None, None)], ('n114', 'm66'): ['C', (None, None), (None, None)], ('n83', 'm188'): ['C', (None, None), (None, None)], ('n16', 'm91'): ['C', (None, None), (None, None)], ('n95', 'm196'): ['C', (None, None), (None, None)], ('n101', 'm180'): ['C', (None, None), (None, None)], ('n125', 'm107'): ['C', (None, None), (None, None)], ('n9', 'm61'): ['C', (None, None), (None, None)], ('n1', 'm59'): ['C', (None, None), (None, None)], ('n71', 'm32'): ['C', (None, None), (None, None)], ('n104', 'm159'): ['C', (None, None), (None, None)], ('n155', 'm103'): ['T', ('n159', 'm103'), ('n156', 'm118')], ('n140', 'm4'): ['C', (None, None), (None, None)], ('n15', 'm92'): ['C', (None, None), (None, None)], ('n102', 'm153'): ['C', (None, None), (None, None)], ('n57', 'm83'): ['T', ('n75', 'm83'), ('n58', 'm189')], ('n99', 'm179'): ['S', ('n101', 'm180'), ('n100', 'm181')], ('n139', 'm7'): ['C', (None, None), (None, None)], ('n22', 'm122'): ['T', ('n23', 'm122'), ('n54', 'm178')], ('n11', 'm86'): ['T', ('n12', 'm86'), ('n19', 'm50')], ('n53', 'm123'): ['C', (None, None), (None, None)], ('n127', 'm120'): ['C', (None, None), (None, None)], ('n65', 'm167'): ['C', (None, None), (None, None)], ('n160', 'm104'): ['T', ('n161', 'm104'), ('n164', 'm167')], ('n89', 'm172'): ['S', ('n97', 'm173'), ('n90', 'm182')], ('n34', 'm145'): ['C', (None, None), (None, None)], ('n7', 'm66'): ['C', (None, None), (None, None)], ('n109', 'm63'): ['S', ('n113', 'm64'), ('n110', 'm65')], ('n149', 'm105'): ['L', ('n149', 'm109'), (None, None)], ('n151', 'm110'): ['C', (None, None), (None, None)], ('n13', 'm88'): ['S', ('n17', 'm89'), ('n14', 'm90')], ('n38', 'm134'): ['C', (None, None), (None, None)], ('n8', 'm61'): ['T', ('n9', 'm61'), ('n10', 'm76')], ('n136', 'm13'): ['C', (None, None), (None, None)], ('n27', 'm130'): ['L', ('n27', 'm132'), (None, None)], ('n51', 'm118'): ['C', (None, None), (None, None)], ('n54', 'm178'): ['T', ('n55', 'm178'), ('n56', 'm82')], ('n93', 'm198'): ['C', (None, None), (None, None)], ('n25', 'm124'): ['S', ('n41', 'm125'), ('n26', 'm128')], ('n41', 'm125'): ['S', ('n43', 'm126'), ('n42', 'm127')], ('n24', 'm124'): ['T', ('n25', 'm124'), ('n44', 'm113')], ('n130', 'm22'): ['C', (None, None), (None, None)], ('n159', 'm103'): ['C', (None, None), (None, None)], ('n132', 'm3'): ['S', ('n140', 'm4'), ('n133', 'm5')], ('n117', 'm100'): ['T', ('n118', 'm100'), ('n131', 'm2')], ('n96', 'm191'): ['L', ('n96', 'm193'), (None, None)], ('n119', 'm100'): ['T', ('n120', 'm100'), ('n129', 'm85')], ('n100', 'm181'): ['C', (None, None), (None, None)], ('n107', 'm58'): ['S', ('n115', 'm59'), ('n108', 'm60')], ('n128', 'm129'): ['C', (None, None), (None, None)], ('n30', 'm142'): ['S', ('n32', 'm143'), ('n31', 'm144')]}
 
-# reconGraph = 
+# cycleCheckingGraph = 
 #{'m168': [None], 'm169': ['m171', 'm170', 'n69', 'n68'], 'm160': [None], 'm161': ['n73', 'm162', 'm163', 'n60'], 'm162': [None], 'm163': ['n67', 'm169', 'm164', 'n62'], 'm164': ['m168', 'n63', 'm165'], 'm165': ['n66', 'n63', 'n164', 'n160', 'm166', 'm167'], 'm166': [None], 'm167': [None], 'n38': [None], 'n39': [None], 'n30': ['n31', 'n32'], 'n31': [None], 'n32': [None], 'n33': [None], 'n34': [None], 'n35': ['n39', 'm133', 'm131', 'n36'], 'n36': ['n38', 'n37'], 'n37': [None], 'm195': ['n92', 'm197', 'm196', 'n95'], 'm194': ['m195', 'n92', 'n166', 'm198', 'n164'], 'm57': ['n106', 'n88', 'm58', 'm67'], 'm56': [None], 'm51': ['m57', 'm52'], 'm190': ['m194', 'n91', 'm191', 'n96'], 'm53': [None], 'm192': [None], 'm59': [None], 'm58': ['m60', 'm59', 'n115', 'n1', 'n2', 'n108'], 'm130': ['m132', 'm131', 'n35'], 'n85': [None], 'n84': [None], 'n87': [None], 'n86': [None], 'n81': ['n85', 'm154', 'm80', 'n82'], 'n80': ['m147', 'n86', 'n81', 'm80'], 'n83': [None], 'n82': ['n84', 'm188', 'n83', 'm81'], 'n89': ['n90', 'n97', 'm190'], 'n88': ['n106', 'n89', 'm58', 'm172'], 'n129': [None], 'n128': [None], 'n125': [None], 'n124': [None], 'n127': [None], 'n126': [None], 'n121': ['n127', 'm120', 'm100', 'n122'], 'n120': ['m100', 'n121', 'n128', 'm129'], 'n123': ['n125', 'n124', 'm100', 'm107'], 'n122': ['m100', 'n126', 'm129', 'n123'], 'n12': ['n13', 'n18', 'm88'], 'n13': ['m90', 'n17', 'n14'], 'n10': ['n11', 'm77', 'n20'], 'n11': ['n12', 'm86', 'n19', 'm50', 'm87'], 'n16': [None], 'n17': [None], 'n14': ['n16', 'n15'], 'n15': [None], 'n18': [None], 'n19': [None], 'm39': ['m40', 'm41'], 'm38': [None], 'm37': ['m39', 'm38'], 'm36': [None], 'm35': ['m37', 'm36'], 'm34': [None], 'm33': ['m35', 'm34'], 'm32': [None], 'm31': ['n70', 'm33', 'm32', 'n60'], 'm30': [None], 'n8': ['n9', 'n10', 'm76', 'm61'], 'm55': [None], 'm54': ['m55', 'm56'], 'm197': [None], 'm196': [None], 'm191': ['m193', 'm192'], 'm50': [None], 'm193': [None], 'm52': ['m54', 'm53'], 'm146': ['m147', 'n80', 'm148'], 'm147': [None], 'm144': [None], 'm145': [None], 'm142': ['n31', 'm144', 'n32', 'm143'], 'm143': [None], 'm140': ['n30', 'n33', 'm142', 'm141'], 'm141': [None], 'n143': ['n145', 'n144'], 'n142': ['n143', 'n146', 'm21'], 'n141': ['n142', 'n147', 'm15', 'm18'], 'n140': [None], 'n147': [None], 'n146': [None], 'm148': [None], 'm149': ['m150', 'm155'], 'n74': [None], 'n75': ['n76', 'n77'], 'n76': [None], 'n77': [None], 'n70': ['n71', 'n72', 'm32'], 'n71': [None], 'n72': [None], 'n73': [None], 'n109': ['n110', 'n113'], 'n78': ['m172', 'm78', 'n79', 'n88'], 'n79': ['n87', 'n80'], 'm198': [None], 'm11': ['m12', 'm17'], 'm10': [None], 'm13': [None], 'm12': ['m13', 'n136', 'm14', 'n135'], 'm15': [None], 'm14': ['n141', 'm15', 'm16'], 'm17': [None], 'm16': [None], 'm19': [None], 'm18': ['m19', 'm20'], 'n108': ['n114', 'm63', 'n109'], 'm5': ['m11', 'm12', 'm6', 'n137', 'n134'], 'm4': [None], 'm7': [None], 'm6': ['n139', 'm7', 'n138', 'm8'], 'm1': ['m25', 'n117', 'm2'], 'm0': ['m46', 'm1'], 'm3': ['m5', 'm4', 'n140', 'n133'], 'm2': ['n132', 'm18', 'n141', 'm3'], 'm9': [None], 'm8': ['m10', 'n152', 'm9'], 'm137': [None], 'm136': ['m137', 'm138'], 'm135': [None], 'm134': [None], 'm133': ['n38', 'm135', 'm134', 'n37'], 'm132': ['m136', 'n28', 'm133', 'n35'], 'm131': [None], 'm89': [None], 'm86': ['m87', 'm94'], 'm87': ['n13', 'm93', 'n18', 'm88'], 'm84': [None], 'm85': [None], 'm82': [None], 'm83': ['n77', 'm84', 'm85', 'n76', 'n119'], 'm80': ['n54', 'n82', 'm82', 'm81'], 'm138': ['m146', 'm139'], 'n161': ['n163', 'n162', 'm108', 'm104'], 'n160': ['n161', 'n164', 'm104', 'm167'], 'n163': [None], 'n162': [None], 'n165': [None], 'n164': ['m167', 'n165', 'm198', 'n166'], 'n167': [None], 'n166': ['n168', 'm111', 'm198', 'n167'], 'n168': [None], 'n9': [None], 'n58': ['n74', 'm161', 'm189', 'n59'], 'n59': ['n73', 'n60'], 'n56': [None], 'n57': ['n75', 'm189', 'm83', 'n58'], 'n54': ['n56', 'm178', 'n55', 'm82'], 'n55': [None], 'n52': [None], 'n53': [None], 'n50': [None], 'n51': [None], 'n149': ['n150', 'n151'], 'n114': [None], 'n115': [None], 'n116': ['n117', 'm101', 'n148'], 'n148': ['n149', 'm109', 'n152'], 'n110': ['m61', 'n111', 'n112', 'm65'], 'n111': [None], 'n112': [None], 'n113': [None], 'n118': ['m22', 'n130', 'n119', 'm100'], 'n119': ['m100', 'm85', 'n129', 'n120'], 'm119': ['n49', 'n121', 'm120', 'm121', 'n48'], 'm118': [None], 'm115': ['m116', 'm119', 'n46'], 'm114': [None], 'm117': [None], 'm116': ['m118', 'm117', 'n51', 'n46', 'n155', 'n156'], 'm111': [None], 'm110': [None], 'm113': ['m115', 'm114', 'n52', 'n45'], 'm112': ['n22', 'n21', 'm122', 'm113', 'n24'], 'n29': ['n30', 'n33', 'm142'], 'n28': ['n29', 'n34', 'm140'], 'n23': ['n53', 'n24'], 'n22': ['n23', 'n54', 'm178', 'm122'], 'n21': ['n22', 'm83', 'm122', 'n57'], 'm174': ['n22', 'n54', 'm178', 'm175'], 'n27': ['n28', 'n35', 'm139'], 'n26': ['n40', 'n27', 'm132'], 'n25': ['n41', 'm125', 'm128', 'n26'], 'm76': ['m86', 'n11', 'm77', 'n20'], 'm60': ['n8', 'm61', 'm62', 'n3', 'n110'], 'm61': [None], 'm62': ['m63', 'm66', 'n114', 'n4', 'n109', 'n7'], 'm63': ['m64', 'm65', 'n110', 'n113', 'n5', 'n6'], 'm64': [None], 'm65': [None], 'm66': [None], 'm67': ['m68', 'm69'], 'm68': [None], 'm69': ['m71', 'm70'], 'm188': [None], 'm189': [None], 'n145': [None], 'm182': ['m183', 'm190'], 'm183': ['n57', 'm189', 'n58', 'm184'], 'm180': [None], 'm181': [None], 'm186': [None], 'm187': [None], 'm184': ['m188', 'n82', 'm185'], 'm185': ['m186', 'm187'], 'm99': ['m100', 'm101', 'n148', 'n118', 'n120', 'n117', 'n121', 'n119', 'n123', 'n122'], 'm98': [None], 'n117': ['m100', 'n131', 'n118', 'm2'], 'n132': ['m5', 'n133', 'n140'], 'n133': ['m6', 'm12', 'n137', 'n134'], 'n130': [None], 'n131': ['n132', 'n141', 'm3'], 'n136': [None], 'n137': ['n138', 'n139'], 'n134': ['n136', 'n135'], 'n135': [None], 'n138': [None], 'n139': [None], 'm179': ['m180', 'm181', 'n101', 'n100'], 'm178': [None], 'm173': ['m179', 'n98', 'm174'], 'm172': ['m173', 'm182', 'n90', 'n97', 'm190'], 'm171': [None], 'm170': [None], 'm177': [None], 'm176': [None], 'm175': ['m177', 'm176'], 'm129': [None], 'm48': ['m49', 'n11', 'm50'], 'm49': [None], 'm42': ['m43', 'm44'], 'm43': [None], 'm40': [None], 'm41': ['m42', 'm45'], 'm46': ['m47', 'm74'], 'm47': ['m48', 'm51'], 'm44': [None], 'm45': [None], 'n98': ['m153', 'm179', 'n99', 'n102'], 'n99': ['n101', 'n100'], 'n92': ['n93', 'm197', 'm198', 'n94'], 'n93': [None], 'n90': ['m195', 'n91', 'n96'], 'n91': ['n92', 'n95'], 'n96': [None], 'n97': ['m173', 'n98', 'n103', 'm157'], 'n94': [None], 'n95': [None], 'n158': [None], 'n159': [None], 'n150': [None], 'n151': [None], 'n152': ['m102', 'm9', 'n153', 'n154'], 'n153': [None], 'n154': ['n160', 'n155'], 'n155': ['n159', 'm118', 'n156', 'm103'], 'n156': ['n158', 'm111', 'm118', 'n157'], 'n157': [None], 'n67': ['n69', 'n68'], 'n66': [None], 'n65': [None], 'n64': [None], 'n63': ['m168', 'n65', 'n64', 'm167'], 'n62': ['n66', 'n63'], 'n61': ['n67', 'm169', 'n62', 'm165'], 'n60': ['m163', 'n70', 'm32', 'n61'], 'n69': [None], 'n68': [None], 'm28': ['m29', 'm30'], 'm29': [None], 'm24': [None], 'm25': ['m26', 'm27'], 'm26': [None], 'm27': ['m28', 'm31'], 'm20': ['m24', 'n143', 'm21', 'n146'], 'm21': ['n144', 'n118', 'n145', 'm22', 'm23'], 'm22': [None], 'm23': [None], 'm124': ['n41', 'm125', 'm128', 'n26'], 'm125': ['m126', 'm127', 'n43', 'n42'], 'm126': [None], 'm127': [None], 'm120': [None], 'm121': [None], 'm122': ['m124', 'n24', 'n53', 'm123'], 'm123': [None], 'm91': [None], 'm90': ['m91', 'm92', 'n16', 'n15'], 'm93': [None], 'm92': [None], 'm95': ['m99', 'n106', 'm96'], 'm94': ['m95', 'm112'], 'm97': [None], 'm96': ['m98', 'm97'], 'n20': ['n21', 'n78'], 'm151': ['m153', 'm152', 'n98'], 'm150': ['m151', 'n81', 'm154'], 'm153': [None], 'm152': [None], 'm155': ['m161', 'n58', 'm156'], 'm154': [None], 'm157': ['m159', 'm158', 'n105', 'n104'], 'm156': ['m160', 'n97', 'm157'], 'm159': [None], 'm158': [None], 'n24': ['m124', 'm113', 'n44', 'n25'], 'n49': [None], 'n48': [None], 'm128': ['m132', 'm130', 'n40', 'm129', 'n27', 'n120', 'n122'], 'n41': ['n43', 'n42'], 'n40': [None], 'n43': [None], 'n42': [None], 'n45': ['n51', 'n46'], 'n44': ['n52', 'm116', 'n45'], 'n47': ['n49', 'n48'], 'n46': ['m117', 'm119', 'n50', 'n47'], 'n144': [None], 'm102': ['n161', 'm103', 'n155', 'm104', 'n160'], 'm103': [None], 'm100': [None], 'm101': ['m102', 'n152', 'm109', 'n149', 'm105'], 'm106': ['n161', 'm108', 'm107', 'n123'], 'm107': [None], 'm104': [None], 'm105': ['m109', 'm106'], 'm108': [None], 'm109': ['n166', 'm111', 'm110', 'n150', 'n151', 'n156'], 'm73': [None], 'm72': [None], 'm71': ['m73', 'm72'], 'm70': [None], 'm77': ['n57', 'n21', 'm78', 'n78', 'm83'], 'm88': ['m90', 'n17', 'n14', 'm89'], 'm75': ['n8', 'm76', 'm149'], 'm74': ['m172', 'n78', 'n88', 'm75'], 'm79': [None], 'm78': ['n87', 'm79', 'n81', 'n80', 'm80'], 'm139': ['n29', 'm145', 'n34', 'm140'], 'm81': [None], 'n107': ['n115', 'm62', 'n108'], 'n106': ['n107', 'm99', 'n116', 'm58'], 'n105': [None], 'n104': [None], 'n103': ['n105', 'n104'], 'n102': [None], 'n101': [None], 'n100': [None], 'n0': ['m60', 'n1', 'n2'], 'n1': [None], 'n2': ['n8', 'm62', 'n3'], 'n3': ['m63', 'n4', 'n7'], 'n4': ['n5', 'n6'], 'n5': [None], 'n6': [None], 'n7': [None]}
 
 
@@ -364,11 +340,11 @@ def detectCyclesWrapper(HostTree, ParasiteTree, reconciliation):
 # [['p5', 'h5', 'h10', 'h2', 'h4'], ['p6', 'h6', 'h13', 'h3', 'h7']]
 
 # markingDict = {}
-# reconGraph, transferList = buildReconciliation(H, P, R)
+# cycleCheckingGraph, transferList = buildReconciliation(H, P, R)
 # Hroot = findRoot(H)
 # markingDict[Hroot] = ['check']
-# cycleNode = recurseChildren(reconGraph, markingDict, Hroot)
-# newReconGraph, guiltyTransfer = deleteTransfer(reconGraph, markingDict, transferList, cycleNode)
+# cycleNode = recurseChildren(cycleCheckingGraph, markingDict, Hroot)
+# newcycleCheckingGraph, guiltyTransfer = deleteTransfer(cycleCheckingGraph, markingDict, transferList, cycleNode)
 
 #R = {('n3', 'm61'): ['T', ('n9', 'm61'), ('n4', 'm69')], ('n45', 'm116'): ['S', ('n49', 'm117'), ('n46', 'm118')], ('n2', 'm60'): ['S', ('n3', 'm61'), ('n10', 'm62')], ('n11', 'm65'): ['C', (None, None), (None, None)], ('n117', 'm191'): ['T', ('n151', 'm191'), ('n118', 'm27')], ('n179', 'm35'): ['T', ('n195', 'm35'), ('n180', 'm103')], ('n81', 'm111'): ['C', (None, None), (None, None)], ('n33', 'm136'): ['S', ('n41', 'm137'), ('n34', 'm138')], ('n107', 'm16'): ['C', (None, None), (None, None)], ('n44', 'm115'): ['S', ('n45', 'm116'), ('n50', 'm119')], ('n148', 'm32'): ['C', (None, None), (None, None)], ('n205', 'm42'): ['S', ('n207', 'm43'), ('n206', 'm44')], ('n168', 'm193'): ['T', ('n170', 'm193'), ('n169', 'm198')], ('n204', 'm41'): ['S', ('n205', 'm42'), ('n208', 'm45')], ('n182', 'm139'): ['T', ('n183', 'm139'), ('n190', 'm133')], ('n17', 'm50'): ['C', (None, None), (None, None)], ('n156', 'm164'): ['S', ('n157', 'm165'), ('n160', 'm168')], ('n201', 'm45'): ['C', (None, None), (None, None)], ('n110', 'm9'): ['C', (None, None), (None, None)], ('n80', 'm109'): ['S', ('n82', 'm110'), ('n81', 'm111')], ('n8', 'm70'): ['C', (None, None), (None, None)], ('n150', 'm29'): ['C', (None, None), (None, None)], ('n79', 'm105'): ['S', ('n83', 'm106'), ('n80', 'm109')], ('n77', 'm99'): ['S', ('n89', 'm100'), ('n78', 'm101')], ('n20', 'm150'): ['S', ('n24', 'm151'), ('n21', 'm154')], ('n108', 'm13'): ['C', (None, None), (None, None)], ('n38', 'm143'): ['C', (None, None), (None, None)], ('n177', 'm61'): ['C', (None, None), (None, None)], ('n196', 'm36'): ['T', ('n202', 'm36'), ('n197', 'm41')], ('n75', 'm183'): ['L', ('n75', 'm189'), (None, None)], ('n58', 'm92'): ['C', (None, None), (None, None)], ('n112', 'm4'): ['T', ('n114', 'm4'), ('n113', 'm22')], ('n154', 'm161'): ['L', ('n154', 'm163'), (None, None)], ('n71', 'm83'): ['S', ('n73', 'm84'), ('n72', 'm85')], ('n131', 'm45'): ['C', (None, None), (None, None)], ('n155', 'm164'): ['T', ('n156', 'm164'), ('n161', 'm162')], ('n190', 'm133'): ['S', ('n192', 'm134'), ('n191', 'm135')], ('n52', 'm95'): ['L', ('n52', 'm96'), (None, None)], ('n51', 'm123'): ['C', (None, None), (None, None)], ('n158', 'm167'): ['C', (None, None), (None, None)], ('n64', 'm151'): ['S', ('n66', 'm152'), ('n65', 'm153')], ('n143', 'm34'): ['C', (None, None), (None, None)], ('n145', 'm188'): ['C', (None, None), (None, None)], ('n159', 'm166'): ['C', (None, None), (None, None)], ('n105', 'm14'): ['S', ('n109', 'm15'), ('n106', 'm16')], ('n144', 'm35'): ['L', ('n144', 'm36'), (None, None)], ('n90', 'm190'): ['T', ('n92', 'm190'), ('n91', 'm158')], ('n153', 'm155'): ['S', ('n165', 'm156'), ('n154', 'm161')], ('n151', 'm191'): ['T', ('n152', 'm191'), ('n175', 'm61')], ('n121', 'm34'): ['T', ('n139', 'm34'), ('n122', 'm37')], ('n44', 'm113'): ['L', ('n44', 'm115'), (None, None)], ('n202', 'm36'): ['C', (None, None), (None, None)], ('n180', 'm103'): ['T', ('n194', 'm103'), ('n181', 'm138')], ('n199', 'm44'): ['C', (None, None), (None, None)], ('n161', 'm162'): ['C', (None, None), (None, None)], ('n23', 'm177'): ['C', (None, None), (None, None)], ('n95', 'm191'): ['S', ('n97', 'm192'), ('n96', 'm193')], ('n174', 'm196'): ['C', (None, None), (None, None)], ('n18', 'm49'): ['T', ('n19', 'm49'), ('n20', 'm150')], ('n34', 'm139'): ['S', ('n35', 'm140'), ('n40', 'm145')], ('n101', 'm196'): ['C', (None, None), (None, None)], ('n103', 'm3'): ['S', ('n111', 'm4'), ('n104', 'm5')], ('n62', 'm151'): ['T', ('n63', 'm151'), ('n68', 'm182')], ('n144', 'm36'): ['T', ('n146', 'm36'), ('n145', 'm188')], ('n70', 'm77'): ['S', ('n74', 'm78'), ('n71', 'm83')], ('n15', 'm64'): ['C', (None, None), (None, None)], ('n100', 'm197'): ['C', (None, None), (None, None)], ('n84', 'm108'): ['C', (None, None), (None, None)], ('n189', 'm145'): ['C', (None, None), (None, None)], ('n83', 'm106'): ['S', ('n85', 'm107'), ('n84', 'm108')], ('n122', 'm37'): ['S', ('n138', 'm38'), ('n123', 'm39')], ('n43', 'm147'): ['C', (None, None), (None, None)], ('n104', 'm5'): ['S', ('n110', 'm6'), ('n105', 'm11')], ('n193', 'm148'): ['C', (None, None), (None, None)], ('n165', 'm156'): ['L', ('n165', 'm160'), (None, None)], ('n209', 'm40'): ['C', (None, None), (None, None)], ('n213', 'm198'): ['C', (None, None), (None, None)], ('n115', 'm17'): ['C', (None, None), (None, None)], ('n210', 'm195'): ['S', ('n211', 'm196'), ('n212', 'm197')], ('n167', 'm191'): ['S', ('n171', 'm192'), ('n168', 'm193')], ('n149', 'm32'): ['C', (None, None), (None, None)], ('n68', 'm182'): ['S', ('n69', 'm183'), ('n76', 'm190')], ('n194', 'm103'): ['C', (None, None), (None, None)], ('n50', 'm119'): ['L', ('n50', 'm120'), (None, None)], ('n69', 'm183'): ['T', ('n75', 'm183'), ('n70', 'm77')], ('n162', 'm169'): ['S', ('n164', 'm170'), ('n163', 'm171')], ('n54', 'm97'): ['C', (None, None), (None, None)], ('n35', 'm140'): ['S', ('n39', 'm141'), ('n36', 'm142')], ('n137', 'm43'): ['C', (None, None), (None, None)], ('n87', 'm104'): ['C', (None, None), (None, None)], ('n139', 'm34'): ['D', ('n140', 'm34'), ('n143', 'm34')], ('n10', 'm62'): ['L', ('n10', 'm63'), (None, None)], ('n192', 'm134'): ['C', (None, None), (None, None)], ('n130', 'm41'): ['S', ('n132', 'm42'), ('n131', 'm45')], ('n132', 'm42'): ['L', ('n132', 'm43'), (None, None)], ('n4', 'm69'): ['S', ('n8', 'm70'), ('n5', 'm71')], ('n163', 'm171'): ['C', (None, None), (None, None)], ('n166', 'm191'): ['T', ('n167', 'm191'), ('n172', 'm195')], ('n30', 'm113'): ['T', ('n44', 'm113'), ('n31', 'm131')], ('n126', 'm40'): ['D', ('n127', 'm40'), ('n128', 'm40')], ('n105', 'm12'): ['L', ('n105', 'm14'), (None, None)], ('n74', 'm79'): ['C', (None, None), (None, None)], ('n73', 'm84'): ['C', (None, None), (None, None)], ('n34', 'm138'): ['L', ('n34', 'm139'), (None, None)], ('n56', 'm88'): ['S', ('n60', 'm89'), ('n57', 'm90')], ('n88', 'm103'): ['C', (None, None), (None, None)], ('n134', 'm40'): ['D', ('n135', 'm40'), ('n136', 'm40')], ('n193', 'm146'): ['L', ('n193', 'm148'), (None, None)], ('n26', 'm151'): ['T', ('n62', 'm151'), ('n27', 'm86')], ('n206', 'm44'): ['C', (None, None), (None, None)], ('n135', 'm40'): ['C', (None, None), (None, None)], ('n211', 'm196'): ['C', (None, None), (None, None)], ('n39', 'm141'): ['C', (None, None), (None, None)], ('n60', 'm89'): ['C', (None, None), (None, None)], ('n136', 'm40'): ['C', (None, None), (None, None)], ('n0', 'm58'): ['S', ('n1', 'm59'), ('n2', 'm60')], ('n49', 'm117'): ['C', (None, None), (None, None)], ('n106', 'm16'): ['T', ('n107', 'm16'), ('n108', 'm13')], ('n47', 'm114'): ['C', (None, None), (None, None)], ('n46', 'm118'): ['T', ('n48', 'm118'), ('n47', 'm114')], ('n92', 'm190'): ['S', ('n102', 'm191'), ('n93', 'm194')], ('n93', 'm194'): ['S', ('n99', 'm195'), ('n94', 'm198')], ('n29', 'm112'): ['S', ('n30', 'm113'), ('n51', 'm122')], ('n191', 'm135'): ['C', (None, None), (None, None)], ('n6', 'm73'): ['C', (None, None), (None, None)], ('n67', 'm81'): ['C', (None, None), (None, None)], ('n48', 'm118'): ['C', (None, None), (None, None)], ('n28', 'm94'): ['S', ('n52', 'm95'), ('n29', 'm112')], ('n96', 'm193'): ['C', (None, None), (None, None)], ('n132', 'm43'): ['C', (None, None), (None, None)], ('n120', 'm33'): ['S', ('n121', 'm34'), ('n144', 'm35')], ('n97', 'm192'): ['C', (None, None), (None, None)], ('n141', 'm34'): ['C', (None, None), (None, None)], ('n50', 'm120'): ['C', (None, None), (None, None)], ('n119', 'm31'): ['S', ('n147', 'm32'), ('n120', 'm33')], ('n160', 'm168'): ['C', (None, None), (None, None)], ('n123', 'm39'): ['D', ('n124', 'm39'), ('n133', 'm39')], ('n21', 'm154'): ['T', ('n22', 'm154'), ('n23', 'm177')], ('n41', 'm137'): ['C', (None, None), (None, None)], ('n55', 'm87'): ['S', ('n56', 'm88'), ('n61', 'm93')], ('n197', 'm41'): ['S', ('n198', 'm42'), ('n201', 'm45')], ('n37', 'm144'): ['C', (None, None), (None, None)], ('n170', 'm193'): ['C', (None, None), (None, None)], ('n99', 'm195'): ['S', ('n101', 'm196'), ('n100', 'm197')], ('n176', 'm176'): ['C', (None, None), (None, None)], ('n171', 'm192'): ['C', (None, None), (None, None)], ('n195', 'm35'): ['S', ('n196', 'm36'), ('n203', 'm37')], ('n147', 'm32'): ['D', ('n148', 'm32'), ('n149', 'm32')], ('n212', 'm197'): ['T', ('n214', 'm197'), ('n213', 'm198')], ('n178', 'm195'): ['T', ('n210', 'm195'), ('n179', 'm35')], ('n110', 'm6'): ['L', ('n110', 'm8'), (None, None)], ('n12', 'm64'): ['T', ('n13', 'm64'), ('n16', 'm48')], ('n203', 'm37'): ['L', ('n203', 'm39'), (None, None)], ('n54', 'm96'): ['L', ('n54', 'm97'), (None, None)], ('n27', 'm86'): ['S', ('n55', 'm87'), ('n28', 'm94')], ('n114', 'm4'): ['C', (None, None), (None, None)], ('n110', 'm8'): ['L', ('n110', 'm9'), (None, None)], ('n52', 'm96'): ['T', ('n54', 'm96'), ('n53', 'm82')], ('n183', 'm139'): ['S', ('n184', 'm140'), ('n189', 'm145')], ('n118', 'm27'): ['S', ('n150', 'm28'), ('n119', 'm31')], ('n165', 'm160'): ['C', (None, None), (None, None)], ('n175', 'm61'): ['T', ('n177', 'm61'), ('n176', 'm176')], ('n124', 'm39'): ['S', ('n125', 'm40'), ('n130', 'm41')], ('n102', 'm191'): ['T', ('n116', 'm191'), ('n103', 'm3')], ('n137', 'm42'): ['L', ('n137', 'm43'), (None, None)], ('n63', 'm151'): ['T', ('n64', 'm151'), ('n67', 'm81')], ('n98', 'm198'): ['C', (None, None), (None, None)], ('n10', 'm63'): ['S', ('n12', 'm64'), ('n11', 'm65')], ('n76', 'm190'): ['T', ('n90', 'm190'), ('n77', 'm99')], ('n113', 'm22'): ['C', (None, None), (None, None)], ('n140', 'm34'): ['D', ('n141', 'm34'), ('n142', 'm34')], ('n89', 'm100'): ['C', (None, None), (None, None)], ('n61', 'm93'): ['C', (None, None), (None, None)], ('n154', 'm163'): ['S', ('n155', 'm164'), ('n162', 'm169')], ('n198', 'm42'): ['S', ('n200', 'm43'), ('n199', 'm44')], ('n72', 'm85'): ['C', (None, None), (None, None)], ('n146', 'm36'): ['C', (None, None), (None, None)], ('n82', 'm110'): ['C', (None, None), (None, None)], ('n24', 'm151'): ['T', ('n26', 'm151'), ('n25', 'm178')], ('n9', 'm61'): ['C', (None, None), (None, None)], ('n1', 'm59'): ['C', (None, None), (None, None)], ('n150', 'm28'): ['L', ('n150', 'm29'), (None, None)], ('n105', 'm11'): ['L', ('n105', 'm12'), (None, None)], ('n74', 'm78'): ['L', ('n74', 'm79'), (None, None)], ('n152', 'm191'): ['T', ('n166', 'm191'), ('n153', 'm155')], ('n137', 'm41'): ['L', ('n137', 'm42'), (None, None)], ('n186', 'm144'): ['C', (None, None), (None, None)], ('n214', 'm197'): ['C', (None, None), (None, None)], ('n40', 'm145'): ['C', (None, None), (None, None)], ('n7', 'm72'): ['C', (None, None), (None, None)], ('n19', 'm49'): ['C', (None, None), (None, None)], ('n14', 'm66'): ['C', (None, None), (None, None)], ('n109', 'm15'): ['C', (None, None), (None, None)], ('n31', 'm131'): ['T', ('n32', 'm131'), ('n43', 'm147')], ('n200', 'm43'): ['C', (None, None), (None, None)], ('n51', 'm122'): ['L', ('n51', 'm123'), (None, None)], ('n184', 'm140'): ['S', ('n188', 'm141'), ('n185', 'm142')], ('n157', 'm165'): ['S', ('n159', 'm166'), ('n158', 'm167')], ('n85', 'm107'): ['C', (None, None), (None, None)], ('n127', 'm40'): ['C', (None, None), (None, None)], ('n181', 'm138'): ['S', ('n182', 'm139'), ('n193', 'm146')], ('n208', 'm45'): ['C', (None, None), (None, None)], ('n173', 'm197'): ['C', (None, None), (None, None)], ('n78', 'm101'): ['S', ('n86', 'm102'), ('n79', 'm105')], ('n185', 'm142'): ['S', ('n187', 'm143'), ('n186', 'm144')], ('n203', 'm39'): ['S', ('n209', 'm40'), ('n204', 'm41')], ('n142', 'm34'): ['C', (None, None), (None, None)], ('n169', 'm198'): ['C', (None, None), (None, None)], ('n187', 'm143'): ['C', (None, None), (None, None)], ('n32', 'm131'): ['T', ('n42', 'm131'), ('n33', 'm136')], ('n94', 'm198'): ['T', ('n98', 'm198'), ('n95', 'm191')], ('n116', 'm191'): ['T', ('n117', 'm191'), ('n178', 'm195')], ('n129', 'm40'): ['C', (None, None), (None, None)], ('n5', 'm71'): ['S', ('n7', 'm72'), ('n6', 'm73')], ('n111', 'm4'): ['T', ('n112', 'm4'), ('n115', 'm17')], ('n207', 'm43'): ['C', (None, None), (None, None)], ('n25', 'm178'): ['C', (None, None), (None, None)], ('n172', 'm195'): ['S', ('n174', 'm196'), ('n173', 'm197')], ('n53', 'm82'): ['C', (None, None), (None, None)], ('n91', 'm158'): ['C', (None, None), (None, None)], ('n133', 'm39'): ['S', ('n134', 'm40'), ('n137', 'm41')], ('n164', 'm170'): ['C', (None, None), (None, None)], ('n86', 'm102'): ['S', ('n88', 'm103'), ('n87', 'm104')], ('n36', 'm142'): ['S', ('n38', 'm143'), ('n37', 'm144')], ('n65', 'm153'): ['C', (None, None), (None, None)], ('n57', 'm90'): ['S', ('n59', 'm91'), ('n58', 'm92')], ('n13', 'm64'): ['T', ('n15', 'm64'), ('n14', 'm66')], ('n188', 'm141'): ['C', (None, None), (None, None)], ('n75', 'm189'): ['C', (None, None), (None, None)], ('n128', 'm40'): ['C', (None, None), (None, None)], ('n42', 'm131'): ['C', (None, None), (None, None)], ('n22', 'm154'): ['C', (None, None), (None, None)], ('n138', 'm38'): ['C', (None, None), (None, None)], ('n16', 'm48'): ['S', ('n18', 'm49'), ('n17', 'm50')], ('n59', 'm91'): ['C', (None, None), (None, None)], ('n125', 'm40'): ['D', ('n126', 'm40'), ('n129', 'm40')], ('n66', 'm152'): ['C', (None, None), (None, None)]}
 #P = {('n90', 'n91'): ('n90', 'n91', None, None), ('n183', 'n184'): ('n183', 'n184', ('n184', 'n185'), ('n184', 'n188')), ('n86', 'n88'): ('n86', 'n88', None, None), ('n155', 'n156'): ('n155', 'n156', ('n156', 'n157'), ('n156', 'n160')), ('n83', 'n85'): ('n83', 'n85', None, None), ('n106', 'n108'): ('n106', 'n108', None, None), ('n92', 'n93'): ('n92', 'n93', ('n93', 'n94'), ('n93', 'n99')), ('n210', 'n212'): ('n210', 'n212', ('n212', 'n213'), ('n212', 'n214')), ('n13', 'n14'): ('n13', 'n14', None, None), ('n56', 'n60'): ('n56', 'n60', None, None), ('n112', 'n113'): ('n112', 'n113', None, None), ('n123', 'n124'): ('n123', 'n124', ('n124', 'n125'), ('n124', 'n130')), ('n151', 'n175'): ('n151', 'n175', ('n175', 'n176'), ('n175', 'n177')), ('n106', 'n107'): ('n106', 'n107', None, None), ('n21', 'n22'): ('n21', 'n22', None, None), ('n70', 'n74'): ('n70', 'n74', None, None), ('n31', 'n43'): ('n31', 'n43', None, None), ('n44', 'n45'): ('n44', 'n45', ('n45', 'n46'), ('n45', 'n49')), ('n2', 'n3'): ('n2', 'n3', ('n3', 'n4'), ('n3', 'n9')), ('n27', 'n55'): ('n27', 'n55', ('n55', 'n56'), ('n55', 'n61')), ('n190', 'n191'): ('n190', 'n191', None, None), ('n116', 'n178'): ('n116', 'n178', ('n178', 'n179'), ('n178', 'n210')), ('n157', 'n158'): ('n157', 'n158', None, None), ('n183', 'n189'): ('n183', 'n189', None, None), ('n119', 'n147'): ('n119', 'n147', ('n147', 'n148'), ('n147', 'n149')), ('n31', 'n32'): ('n31', 'n32', ('n32', 'n33'), ('n32', 'n42')), ('n34', 'n35'): ('n34', 'n35', ('n35', 'n36'), ('n35', 'n39')), ('n117', 'n151'): ('n117', 'n151', ('n151', 'n152'), ('n151', 'n175')), ('n28', 'n52'): ('n28', 'n52', ('n52', 'n53'), ('n52', 'n54')), ('n124', 'n130'): ('n124', 'n130', ('n130', 'n131'), ('n130', 'n132')), ('n33', 'n34'): ('n33', 'n34', ('n34', 'n35'), ('n34', 'n40')), ('n35', 'n39'): ('n35', 'n39', None, None), ('n64', 'n65'): ('n64', 'n65', None, None), ('n117', 'n118'): ('n117', 'n118', ('n118', 'n119'), ('n118', 'n150')), ('n126', 'n128'): ('n126', 'n128', None, None), ('n35', 'n36'): ('n35', 'n36', ('n36', 'n37'), ('n36', 'n38')), ('n195', 'n196'): ('n195', 'n196', ('n196', 'n197'), ('n196', 'n202')), ('n32', 'n42'): ('n32', 'n42', None, None), ('n36', 'n38'): ('n36', 'n38', None, None), ('n103', 'n104'): ('n103', 'n104', ('n104', 'n105'), ('n104', 'n110')), ('n195', 'n203'): ('n195', 'n203', ('n203', 'n204'), ('n203', 'n209')), ('n68', 'n69'): ('n68', 'n69', ('n69', 'n70'), ('n69', 'n75')), ('n105', 'n109'): ('n105', 'n109', None, None), ('n77', 'n78'): ('n77', 'n78', ('n78', 'n79'), ('n78', 'n86')), ('n55', 'n56'): ('n55', 'n56', ('n56', 'n57'), ('n56', 'n60')), ('n125', 'n126'): ('n125', 'n126', ('n126', 'n127'), ('n126', 'n128')), ('n64', 'n66'): ('n64', 'n66', None, None), ('n111', 'n112'): ('n111', 'n112', ('n112', 'n113'), ('n112', 'n114')), ('n210', 'n211'): ('n210', 'n211', None, None), ('n94', 'n95'): ('n94', 'n95', ('n95', 'n96'), ('n95', 'n97')), ('n26', 'n62'): ('n26', 'n62', ('n62', 'n63'), ('n62', 'n68')), ('n134', 'n135'): ('n134', 'n135', None, None), ('n86', 'n87'): ('n86', 'n87', None, None), ('n5', 'n7'): ('n5', 'n7', None, None), ('n29', 'n30'): ('n29', 'n30', ('n30', 'n31'), ('n30', 'n44')), ('n140', 'n141'): ('n140', 'n141', None, None), ('n122', 'n138'): ('n122', 'n138', None, None), ('n172', 'n174'): ('n172', 'n174', None, None), ('n184', 'n185'): ('n184', 'n185', ('n185', 'n186'), ('n185', 'n187')), ('n153', 'n165'): ('n153', 'n165', None, None), ('n70', 'n71'): ('n70', 'n71', ('n71', 'n72'), ('n71', 'n73')), ('n78', 'n86'): ('n78', 'n86', ('n86', 'n87'), ('n86', 'n88')), ('n118', 'n150'): ('n118', 'n150', None, None), ('n90', 'n92'): ('n90', 'n92', ('n92', 'n93'), ('n92', 'n102')), ('n28', 'n29'): ('n28', 'n29', ('n29', 'n30'), ('n29', 'n51')), ('n203', 'n209'): ('n203', 'n209', None, None), ('n156', 'n157'): ('n156', 'n157', ('n157', 'n158'), ('n157', 'n159')), ('n68', 'n76'): ('n68', 'n76', ('n76', 'n77'), ('n76', 'n90')), ('n78', 'n79'): ('n78', 'n79', ('n79', 'n80'), ('n79', 'n83')), ('n168', 'n170'): ('n168', 'n170', None, None), ('n83', 'n84'): ('n83', 'n84', None, None), ('n76', 'n90'): ('n76', 'n90', ('n90', 'n91'), ('n90', 'n92')), ('n79', 'n83'): ('n79', 'n83', ('n83', 'n84'), ('n83', 'n85')), ('n154', 'n155'): ('n154', 'n155', ('n155', 'n156'), ('n155', 'n161')), ('n99', 'n100'): ('n99', 'n100', None, None), ('n152', 'n166'): ('n152', 'n166', ('n166', 'n167'), ('n166', 'n172')), ('n52', 'n54'): ('n52', 'n54', None, None), ('n125', 'n129'): ('n125', 'n129', None, None), ('n179', 'n180'): ('n179', 'n180', ('n180', 'n181'), ('n180', 'n194')), ('n57', 'n59'): ('n57', 'n59', None, None), ('n126', 'n127'): ('n126', 'n127', None, None), ('n93', 'n94'): ('n93', 'n94', ('n94', 'n95'), ('n94', 'n98')), ('n190', 'n192'): ('n190', 'n192', None, None), ('n185', 'n187'): ('n185', 'n187', None, None), ('n29', 'n51'): ('n29', 'n51', None, None), ('n69', 'n70'): ('n69', 'n70', ('n70', 'n71'), ('n70', 'n74')), ('n180', 'n194'): ('n180', 'n194', None, None), ('n93', 'n99'): ('n93', 'n99', ('n99', 'n100'), ('n99', 'n101')), ('n0', 'n2'): ('n0', 'n2', ('n2', 'n3'), ('n2', 'n10')), ('n172', 'n173'): ('n172', 'n173', None, None), ('n62', 'n68'): ('n62', 'n68', ('n68', 'n69'), ('n68', 'n76')), ('n130', 'n131'): ('n130', 'n131', None, None), ('n122', 'n123'): ('n122', 'n123', ('n123', 'n124'), ('n123', 'n133')), ('n147', 'n148'): ('n147', 'n148', None, None), ('n212', 'n214'): ('n212', 'n214', None, None), ('n45', 'n49'): ('n45', 'n49', None, None), ('n156', 'n160'): ('n156', 'n160', None, None), ('n196', 'n197'): ('n196', 'n197', ('n197', 'n198'), ('n197', 'n201')), ('n71', 'n73'): ('n71', 'n73', None, None), ('n139', 'n143'): ('n139', 'n143', None, None), ('n2', 'n10'): ('n2', 'n10', ('n10', 'n11'), ('n10', 'n12')), ('n30', 'n31'): ('n30', 'n31', ('n31', 'n32'), ('n31', 'n43')), ('n69', 'n75'): ('n69', 'n75', None, None), ('n162', 'n163'): ('n162', 'n163', None, None), ('n116', 'n117'): ('n116', 'n117', ('n117', 'n118'), ('n117', 'n151')), ('n153', 'n154'): ('n153', 'n154', ('n154', 'n155'), ('n154', 'n162')), ('n26', 'n27'): ('n26', 'n27', ('n27', 'n28'), ('n27', 'n55')), ('n144', 'n146'): ('n144', 'n146', None, None), ('n77', 'n89'): ('n77', 'n89', None, None), ('n178', 'n179'): ('n178', 'n179', ('n179', 'n180'), ('n179', 'n195')), ('n4', 'n8'): ('n4', 'n8', None, None), ('n5', 'n6'): ('n5', 'n6', None, None), ('n121', 'n122'): ('n121', 'n122', ('n122', 'n123'), ('n122', 'n138')), ('n46', 'n48'): ('n46', 'n48', None, None), ('n198', 'n200'): ('n198', 'n200', None, None), ('n36', 'n37'): ('n36', 'n37', None, None), ('n94', 'n98'): ('n94', 'n98', None, None), ('n102', 'n116'): ('n102', 'n116', ('n116', 'n117'), ('n116', 'n178')), ('n144', 'n145'): ('n144', 'n145', None, None), ('n162', 'n164'): ('n162', 'n164', None, None), ('n167', 'n168'): ('n167', 'n168', ('n168', 'n169'), ('n168', 'n170')), ('n0', 'n1'): ('n0', 'n1', None, None), ('n104', 'n105'): ('n104', 'n105', ('n105', 'n106'), ('n105', 'n109')), ('n196', 'n202'): ('n196', 'n202', None, None), ('n167', 'n171'): ('n167', 'n171', None, None), ('n133', 'n137'): ('n133', 'n137', None, None), ('n175', 'n177'): ('n175', 'n177', None, None), ('n124', 'n125'): ('n124', 'n125', ('n125', 'n126'), ('n125', 'n129')), ('n80', 'n82'): ('n80', 'n82', None, None), ('n112', 'n114'): ('n112', 'n114', None, None), ('n12', 'n16'): ('n12', 'n16', ('n16', 'n17'), ('n16', 'n18')), ('n55', 'n61'): ('n55', 'n61', None, None), ('n16', 'n18'): ('n16', 'n18', ('n18', 'n19'), ('n18', 'n20')), ('n120', 'n121'): ('n120', 'n121', ('n121', 'n122'), ('n121', 'n139')), ('n95', 'n97'): ('n95', 'n97', None, None), ('n205', 'n206'): ('n205', 'n206', None, None), ('n16', 'n17'): ('n16', 'n17', None, None), ('n179', 'n195'): ('n179', 'n195', ('n195', 'n196'), ('n195', 'n203')), ('n79', 'n80'): ('n79', 'n80', ('n80', 'n81'), ('n80', 'n82')), ('n181', 'n182'): ('n181', 'n182', ('n182', 'n183'), ('n182', 'n190')), ('n205', 'n207'): ('n205', 'n207', None, None), ('n10', 'n11'): ('n10', 'n11', None, None), ('n155', 'n161'): ('n155', 'n161', None, None), ('n20', 'n24'): ('n20', 'n24', ('n24', 'n25'), ('n24', 'n26')), ('n46', 'n47'): ('n46', 'n47', None, None), ('n57', 'n58'): ('n57', 'n58', None, None), ('n12', 'n13'): ('n12', 'n13', ('n13', 'n14'), ('n13', 'n15')), ('n45', 'n46'): ('n45', 'n46', ('n46', 'n47'), ('n46', 'n48')), ('n119', 'n120'): ('n119', 'n120', ('n120', 'n121'), ('n120', 'n144')), ('n99', 'n101'): ('n99', 'n101', None, None), ('n103', 'n111'): ('n103', 'n111', ('n111', 'n112'), ('n111', 'n115')), ('n80', 'n81'): ('n80', 'n81', None, None), ('n130', 'n132'): ('n130', 'n132', None, None), ('n18', 'n20'): ('n18', 'n20', ('n20', 'n21'), ('n20', 'n24')), ('n63', 'n64'): ('n63', 'n64', ('n64', 'n65'), ('n64', 'n66')), ('n13', 'n15'): ('n13', 'n15', None, None), ('n111', 'n115'): ('n111', 'n115', None, None), ('n181', 'n193'): ('n181', 'n193', None, None), ('n21', 'n23'): ('n21', 'n23', None, None), ('n20', 'n21'): ('n20', 'n21', ('n21', 'n22'), ('n21', 'n23')), ('n140', 'n142'): ('n140', 'n142', None, None), ('n18', 'n19'): ('n18', 'n19', None, None), ('n203', 'n204'): ('n203', 'n204', ('n204', 'n205'), ('n204', 'n208')), ('n147', 'n149'): ('n147', 'n149', None, None), ('n71', 'n72'): ('n71', 'n72', None, None), ('n168', 'n169'): ('n168', 'n169', None, None), ('n92', 'n102'): ('n92', 'n102', ('n102', 'n103'), ('n102', 'n116')), ('n212', 'n213'): ('n212', 'n213', None, None), ('n105', 'n106'): ('n105', 'n106', ('n106', 'n107'), ('n106', 'n108')), ('n157', 'n159'): ('n157', 'n159', None, None), ('n56', 'n57'): ('n56', 'n57', ('n57', 'n58'), ('n57', 'n59')), ('n133', 'n134'): ('n133', 'n134', ('n134', 'n135'), ('n134', 'n136')), ('n197', 'n198'): ('n197', 'n198', ('n198', 'n199'), ('n198', 'n200')), ('n24', 'n25'): ('n24', 'n25', None, None), ('n197', 'n201'): ('n197', 'n201', None, None), ('n104', 'n110'): ('n104', 'n110', None, None), 'pTop': ('Top', 'n0', ('n0', 'n1'), ('n0', 'n2')), ('n27', 'n28'): ('n27', 'n28', ('n28', 'n29'), ('n28', 'n52')), ('n63', 'n67'): ('n63', 'n67', None, None), ('n166', 'n172'): ('n166', 'n172', ('n172', 'n173'), ('n172', 'n174')), ('n152', 'n153'): ('n152', 'n153', ('n153', 'n154'), ('n153', 'n165')), ('n166', 'n167'): ('n166', 'n167', ('n167', 'n168'), ('n167', 'n171')), ('n198', 'n199'): ('n198', 'n199', None, None), ('n44', 'n50'): ('n44', 'n50', None, None), ('n204', 'n205'): ('n204', 'n205', ('n205', 'n206'), ('n205', 'n207')), ('n4', 'n5'): ('n4', 'n5', ('n5', 'n6'), ('n5', 'n7')), ('n175', 'n176'): ('n175', 'n176', None, None), ('n121', 'n139'): ('n121', 'n139', ('n139', 'n140'), ('n139', 'n143')), ('n33', 'n41'): ('n33', 'n41', None, None), ('n204', 'n208'): ('n204', 'n208', None, None), ('n185', 'n186'): ('n185', 'n186', None, None), ('n62', 'n63'): ('n62', 'n63', ('n63', 'n64'), ('n63', 'n67')), ('n24', 'n26'): ('n24', 'n26', ('n26', 'n27'), ('n26', 'n62')), ('n134', 'n136'): ('n134', 'n136', None, None), ('n118', 'n119'): ('n118', 'n119', ('n119', 'n120'), ('n119', 'n147')), ('n102', 'n103'): ('n102', 'n103', ('n103', 'n104'), ('n103', 'n111')), ('n154', 'n162'): ('n154', 'n162', ('n162', 'n163'), ('n162', 'n164')), ('n3', 'n9'): ('n3', 'n9', None, None), ('n30', 'n44'): ('n30', 'n44', ('n44', 'n45'), ('n44', 'n50')), ('n178', 'n210'): ('n178', 'n210', ('n210', 'n211'), ('n210', 'n212')), ('n180', 'n181'): ('n180', 'n181', ('n181', 'n182'), ('n181', 'n193')), ('n95', 'n96'): ('n95', 'n96', None, None), ('n184', 'n188'): ('n184', 'n188', None, None), ('n182', 'n190'): ('n182', 'n190', ('n190', 'n191'), ('n190', 'n192')), ('n32', 'n33'): ('n32', 'n33', ('n33', 'n34'), ('n33', 'n41')), ('n139', 'n140'): ('n139', 'n140', ('n140', 'n141'), ('n140', 'n142')), ('n120', 'n144'): ('n120', 'n144', ('n144', 'n145'), ('n144', 'n146')), ('n34', 'n40'): ('n34', 'n40', None, None), ('n151', 'n152'): ('n151', 'n152', ('n152', 'n153'), ('n152', 'n166')), ('n10', 'n12'): ('n10', 'n12', ('n12', 'n13'), ('n12', 'n16')), ('n123', 'n133'): ('n123', 'n133', ('n133', 'n134'), ('n133', 'n137')), ('n76', 'n77'): ('n76', 'n77', ('n77', 'n78'), ('n77', 'n89')), ('n182', 'n183'): ('n182', 'n183', ('n183', 'n184'), ('n183', 'n189')), ('n3', 'n4'): ('n3', 'n4', ('n4', 'n5'), ('n4', 'n8')), ('n52', 'n53'): ('n52', 'n53', None, None)}

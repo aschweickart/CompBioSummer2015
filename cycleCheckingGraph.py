@@ -99,7 +99,7 @@ def uniquify(list):
 		holdDict[thing] = 1
 	return holdDict.keys()
 
-def buildReconstruction(HostTree, ParasiteTree, reconciliation):
+def buildReconciliation(HostTree, ParasiteTree, reconciliation):
 	"""Takes as input a host tree, a parasite tree, and a reconciliation, and
 	returns a graph where the keys are host or parasite nodes, and the values
 	are a list of the children of a particular node. The graph represents 
