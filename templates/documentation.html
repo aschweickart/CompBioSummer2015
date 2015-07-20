@@ -1,45 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {% block styles %}
-      <link rel="stylesheet" href="{{url_for('.static', filename = 'customize.min.css')}}">
-    {% endblock %}
-    {% block scripts %} 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    {% endblock %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DTL-RnB Home</title>
-  </head>
-  <body role = "document" background = "static/Green.jpg" width="100%" height="100%">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/index">Navigate <font face="futura">DTL-RnB</font></a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="/index">Home</a></li>
-            <li><a href="/form">Upload Files</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+{% extends "layout.html" %}
 
-    <br>
-    <div class="container">
+{% block content %}
       <div class="alert alert-success" role="alert">
       <br>
         <h1>Documentation</h1>
-        <p>The <font face="courier">.newick</font> file submitted should contain the name of a file containing the species (host) $
-        format gene:species).</p></div>
+        <p>The <font face="courier">.newick</font> file submitted should contain the name of a file containing the species (host) tree and the gene (parasite) tree in newick format, followed by the associations between their leaves (one line per association in the format gene:species).</p></div>
         <pre>
         Example:       
         ((h6, h7) h1, (h8, (h10, (h12, (h14, (h16, h17) h15) h13) h11) h9) h2) h0;
@@ -66,5 +31,4 @@
         </div>
     </div>
     
-  </body>
-</html>
+{% endblock %}

@@ -124,7 +124,6 @@ def untick(markingDict, node):
 def check(markingDict, node):
 	"""This function takes as input markingDict and a node, and checks the 
 	node in markingDict."""
-
 	markingDict[node] = ['check']
 
 

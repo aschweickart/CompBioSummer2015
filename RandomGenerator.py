@@ -55,7 +55,7 @@ def normalizer(DTLReconGraph):
 def normalizeList(scoreList):
     """Takes in a list of scores and returns a new list with those scores
     normalized"""
-    totalScore = 0.0
+    totalScore = 0
     newScoreList = []
     for score in scoreList:
         totalScore+=score
@@ -80,11 +80,11 @@ def biasedChoice(rootList, probList):
     scoreSum = 0
     rangeList = []
     for n in range(len(rootList)):
-        rangeList.append((scoreSum, scoreSum + probList[n], rootList[n]))
+        rangeList.append((scoreSum, scoreSum+probList[n], rootList[n]))
         scoreSum += probList[n]
     choice = random.random()
     for n in rangeList:
-        if n[0] <= choice < n[1]:
+        if n[0]<=choice<n[1]:
             return n[2]
 
 
@@ -148,15 +148,14 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
     # loop through files in directory
     for fileName in os.listdir(dirName):
         if fileName.endswith('.newick'):
-            f = open(fileName[:-7] + '.txt', 'w')
-            f.write(typeGen + " random reconciliations" + "\n")
+            f = open(fileName[:-7]+'.txt', 'w')
+            f.write(typeGen+" random reconciliations"+"\n")
             hostTree, parasiteTree, phi = newickFormatReader.getInput\
-                (dirName + "/" + fileName)
+                (dirName+"/"+fileName)
             # find size of parasite and host trees
-            parasiteSize = len(parasiteTree) + 1
-            hostSize = len(hostTree) + 1
-            DTLReconGraph, numRecon = DP.DP(hostTree, parasiteTree, phi,\
-             D, T, L)
+            parasiteSize = len(parasiteTree)+1
+            hostSize = len(hostTree)+1
+            DTLReconGraph, numRecon = DP.DP(hostTree, parasiteTree, phi, D, T, L)
             rootList = rootGenerator(DTLReconGraph, parasiteTree)
             randomReconList = []
             for n in range(numSamples):
@@ -182,22 +181,19 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                 currentOrder = orderGraph.date(graph)
                 numTrans = findTransfers(recon)
                 if currentOrder == 'timeTravel':
-                    f.write("Temporal Inconsistency, reconciliation has " +\
-                     str(numTrans) + " transfers"+"\n")
+                    f.write("Temporal Inconsistency, reconciliation has "+str(numTrans)+" transfers"+"\n")
                     timeTravelCount += 1
                     totalTimeTravel += 1
                 else: 
-                    f.write("No temporal inconsistencies, reconciliation has " \
-                        + str(numTrans) + " transfers" + "\n")
-            f.write(fileName + " contains " + str(timeTravelCount) + \
-                " temporal " + "inconsistencies out of "+ \
-                str(len(uniqueReconList)) + " reconciliations."+"\n"+ \
-                "Total number of reconciliations: " + str(numRecon) + "\n" + \
-                "Host tree size: " + str(hostSize) + "\n" + \
-                "Parasite tree size: " + str(parasiteSize) + "\n")
+                    f.write("No temporal inconsistencies, reconciliation has "+str(numTrans)+" transfers"+"\n")
+            f.write(fileName+" contains "+str(timeTravelCount)+" temporal "+ \
+                "inconsistencies out of "+ str(len(uniqueReconList))+ \
+                " reconciliations."+"\n"+"Total number of reconciliations: "+\
+                str(numRecon)+"\n"+"Host tree size: "+str(hostSize)+"\n"+\
+                "Parasite tree size: "+str(parasiteSize)+ "\n")
             f.close()
-    print "Total fraction of temporal inconsistencies in directory: %s/%s", \
-            % (totalTimeTravel, outOf)
+    print "Total fraction of temporal inconsistencies in directory: ", \
+            totalTimeTravel, '/', outOf
 
 
 

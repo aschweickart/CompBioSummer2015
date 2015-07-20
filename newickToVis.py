@@ -10,6 +10,7 @@ import copy
 import sys
 import ReconciliationGraph
 import newickFormatReader
+import ReconciliationGraph
 
 def convert(fileName, HostOrder, n, writeParasite):
     """takes name of original .newick file and the dictionary of host tree branch lengths
