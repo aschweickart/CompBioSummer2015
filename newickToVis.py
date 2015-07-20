@@ -28,7 +28,6 @@ def convert(fileName, HostOrder, n, writeParasite):
     host = treelib1.parse_newick(H, HostOrder)
     for key in HostOrder:
         H = H.replace(str(key), str(key) + ':' + str(HostOrder[key]))
-    print "thing"
     f = open(fileName[:-7]+ str(n) +".stree", 'w')
     treelib1.write_newick(host, f, root_data = True)
     f.close()
