@@ -90,12 +90,12 @@ def createParentsDict(H, P):
 			parentsDict[key[1]] = P[key][0]
 	return parentsDict
 
-def uniquify(list):
+def uniquify(genericList):
 	"""Takes as input a list and returns a list containing only the unique 
 	elements of the input list."""
 
 	holdDict = {}
-	for thing in list:
+	for thing in genericList:
 		holdDict[thing] = 1
 	return holdDict.keys()
 
