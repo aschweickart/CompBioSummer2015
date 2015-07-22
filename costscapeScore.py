@@ -1,6 +1,6 @@
 # costscapeScore.py
 # Ran Libeskind-Hadas, Jessica Yi-Chieh Wu, Mukul Bansal, November 2013
-# Updated by Juliet Forman and Srinidhi Srinivasan
+# Updated by Juliet Forman and Srinidhi Srinivasan, July 2015
 
 # This file contains functions that find the centers of the regions in 
 # costscape for a given .newick file. The main function is findCenters, and 
@@ -42,10 +42,11 @@ def getNewCoordList(newickFile, switchLo, switchHi, lossLo, lossHi):
         switchHi, lossLo, lossHi)
     coordList = plotcosts.plotcosts(CVlist, lossLo, lossHi, switchLo, \
         switchHi, "", False, False)
+    print coordList
     newCoordList = []
-    for element in coordList:
+    for vertexList in coordList:
         string = "POLYGON(("
-        for i in element:
+        for vertex in vertexList:
             string = string + str(i[0]) + ' ' + str(i[1]) + ','
         string = string[:-1] + '))'
         newCoordList.append(string)
@@ -90,29 +91,3 @@ def findCenters(newickFile, switchLo, switchHi, lossLo, lossHi):
             pointList.append("POINT " + str(coordList[i][0]))
 
     return pointList
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -65,12 +65,10 @@ def freqSummation(argList):
 	f = open(fileName+"freqFile.txt", 'w')
 	host, paras, phi = newickFormatReader.getInput(newickFile)
 	DTL, numRecon = DP.DP(host, paras, phi, D, T, L)
-	print numRecon
 	if freqType == "Frequency":
 		newDTL = DTL
 	elif freqType == "xscape":
-		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, \
-			switchHi, lossLo, lossHi, D, T, L)
+		newDTL = calcCostscapeScore.newScoreWrapper(newickFile, switchLo, switchHi, lossLo, lossHi, D, T, L)
 	elif freqType == "unit":
 		newDTL = MasterReconciliation.unitScoreDTL(host, paras, phi, D, T, L)
 	scoresList, reconciliation = Greedy.Greedy(newDTL, paras)

@@ -8,9 +8,8 @@
 from rasmus import treelib1, util
 import copy
 import sys
-import ReconciliationGraph
+import cycleCheckingGraph
 import newickFormatReader
-import ReconciliationGraph
 
 def convert(fileName, HostOrder, n, writeParasite):
     """takes name of original .newick file and the dictionary of host tree branch lengths
@@ -19,7 +18,7 @@ def convert(fileName, HostOrder, n, writeParasite):
     f = open(fileName, 'r')
     contents = f.read()
     host, paras, phi = newickFormatReader.getInput(fileName)
-    hostRoot = ReconciliationGraph.findRoot(host)
+    hostRoot = cycleCheckingGraph.findRoot(host)
     f.close()
     H,P,phi = contents.split(";")
     P = P.strip()

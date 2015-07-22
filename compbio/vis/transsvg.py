@@ -352,33 +352,33 @@ def draw_tree(tree, brecon, stree,
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=loss_color,
                         strokeColor=loss_color_border)
-                canvas.text("{:.3f}".format(frequency)+node.name, x-o, y-o, font_size+2, fillColor = loss_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = loss_color)
 
     
             if event == "spec": # draw boxes, frequencies of speciation events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=(0,0,0),
                         strokeColor=(0,0,0))
-                canvas.text("{:.3f}".format(frequency)+node.name, x-o, y-o, font_size+2, fillColor = (0,0,0))
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor = (0,0,0))
 
 
             if event == "dup": # draw boxes, frequencies of duplication events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=dup_color,
                         strokeColor=dup_color_border)
-                canvas.text("{:.3f}".format(frequency)+node.name, x-o, y-o, font_size+2, fillColor=dup_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=dup_color)
 
             elif event == "trans": # draw boxes, frequencies of transfer events
                 canvas.rect(x - o, y - o, event_size, event_size,
                         fillColor=trans_color,
                         strokeColor=trans_color_border)
-                canvas.text("{:.3f}".format(frequency)+node.name, x-o, y-o, font_size+2, fillColor=trans_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=trans_color)
             
             elif event == "gtrans": # draw boxes, frequencies of guilty transfer events
                 canvas.rect(x-o, y-o, event_size, event_size,
                         fillColor=gtrans_color,
                         strokeColor=gtrans_color_border)
-                canvas.text("{:.3f}".format(frequency)+node.name, x-o, y-o, font_size+2, fillColor=gtrans_color)
+                canvas.text("{:.3f}".format(frequency), x-o, y-o, font_size+2, fillColor=gtrans_color)
 
     # draw tree leaves
     for node in tree:
