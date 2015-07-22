@@ -14,12 +14,12 @@ Trabeculus_flemingi	Puffinus_huttoni	gene	1.0
 Harrisoniella_hopkinsi	Diomedea_epomophora	gene	1.0
 Trabeculus_hexakon	h19	loss	1.0
 Austrogoniodes_conci	Megadyptes_antipodes	gene	1.0
-p31	h14	spec	0.5
+p31	h14	spec	1.0
 Halipeurus_diversus	Puffinus_griseus	gene	1.0
 Halipeurus_falsus	Pelecanoides_urinatrixia	gene	1.0
 Trabeculus_flemingi	h17	loss	1.0
 p30	h12	spec	1.0
-p32	Pterodroma_inexpecta	trans	0.5
+p32	Pterodroma_inexpecta	trans	1.0
 p44	h19	spec	1.0
 p27	h9	spec	1.0
 Trabeculus_schillingi	Pterodroma_inexpecta	gene	1.0

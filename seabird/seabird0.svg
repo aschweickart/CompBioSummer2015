@@ -97,7 +97,7 @@
 <rect x='595.000000' y='102.333333' width='10.000000' height='10.000000' stroke='rgb(127,127,0)' fill='rgb(255,255,0)'  stroke-width='1.000000'/>
 <g transform='translate(595.000000,102.333333) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='795.000000' y='351.500000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
-<g transform='translate(795.000000,351.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.500</text></g>
+<g transform='translate(795.000000,351.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='895.000000' y='439.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
 <g transform='translate(895.000000,439.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='995.000000' y='514.000000' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
@@ -107,13 +107,13 @@
 <rect x='545.000000' y='98.166667' width='10.000000' height='10.000000' stroke='rgb(127,0,0)' fill='rgb(255,0,0)'  stroke-width='1.000000'/>
 <g transform='translate(545.000000,98.166667) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='795.000000' y='331.500000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
-<g transform='translate(795.000000,331.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.500</text></g>
+<g transform='translate(795.000000,331.500000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='495.000000' y='94.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
 <g transform='translate(495.000000,94.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='695.000000' y='501.083333' width='10.000000' height='10.000000' stroke='rgb(127,127,127)' fill='rgb(255,255,255)'  stroke-width='1.000000'/>
 <g transform='translate(695.000000,501.083333) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(255,255,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='745.000000' y='409.625000' width='10.000000' height='10.000000' stroke='rgb(0,0,255)' fill='rgb(0,0,255)'  stroke-width='1.000000'/>
-<g transform='translate(745.000000,409.625000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>0.500</text></g>
+<g transform='translate(745.000000,409.625000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,255)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <rect x='895.000000' y='419.000000' width='10.000000' height='10.000000' stroke='rgb(0,0,0)' fill='rgb(0,0,0)'  stroke-width='1.000000'/>
 <g transform='translate(895.000000,419.000000) rotate(0.000000)'><text x='0' y='0' font-size='14.000000' stroke='rgb(0,0,0)' stroke-opacity='0.000000' fill='rgb(0,0,0)'  stroke-width='1.000000' text-anchor='start' style='dominant-baseline: auto'>1.000</text></g>
 <polygon stroke='rgb(255,178,76)' fill='rgb(255,178,76)'  points='80.000000,804.468750 50.000000,834.468750 50.000000,819.468750 10.000000,819.468750 10.000000,789.468750 50.000000,789.468750 50.000000,774.468750 ' stroke-width='1.000000'/>

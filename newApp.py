@@ -1,20 +1,21 @@
-
 #!/usr/local/bin/python
 
 from flask import Flask, request, render_template, send_from_directory, Markup
 from werkzeug import secure_filename
+from werkzeug.debug import DebuggedApplication
+import subprocess
 import os
 #from flask_bootstrap import Bootstrap
-
+from wsgiref.handlers import CGIHandler
 app = Flask(__name__)
 #Bootstrap(app)
-UPLOAD_FOLDER = '~/public_html/'
+UPLOAD_FOLDER = "Users/Annalise/GitHub/CompBioSummer2015/svgFiles/"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/index')
 def index():
   """ Returns the index page"""
-  return render_template('index.html', page='home')
+  return render_template('dtlindex.html', page='home')
 
 @app.route('/form')
 def form():
@@ -24,7 +25,7 @@ def form():
 @app.route('/documentation')
 def documentation():
   """Returns the documentation page"""
-  return render_template('documentation.html')
+  return render_template('dtldocumentation.html')
 
 @app.route('/results')
 def results():
@@ -38,30 +39,31 @@ def reconcile(carousel = None):
     file = request.files['newick']
     if file:
       filename = secure_filename(file.filename)
+      Name = filename[:-7]
+      os.mkdir(Name)
       with open(filename, "w+") as f:
-         print filename          
          f.write(file.read())
       f.close()
-      os.system("mv "+filename+" svgFiles")
-    else: return render_template("documentation.html")
+      os.system("mv "+filename+" "+Name)
+    else: return render_template("dtldocumentation.html")
     if request.form['dup'] != '':
-      Dup = request.form['dup']  
+      Dup = request.form['dup']
     else: Dup = 2
     if request.form['trans'] != '':
       Trans = request.form['trans']
     else: Trans = 3
     if request.form['loss'] != '':
-      Loss = request.form["loss"] 
+      Loss = request.form["loss"]
     else: Loss = 1
-    
+
     if request.form['switchhigh'] != '':
       switchHi = request.form['switchhigh']
     else: switchHi = 4.5
-    
+
     if request.form['switchlow'] != '':
       switchLo = request.form['switchlow']
     else: switchLo = 1.5
-    
+
     if request.form['losshigh'] != '':
       lossHi = request.form['losshigh']
     else: lossHi = 3
@@ -70,15 +72,15 @@ def reconcile(carousel = None):
       lossLo = request.form['losslow']
     else: lossLo = 1
     path2files = Name + '/' + Name
+    subprocess.call(["python", "~/public_html/onlineFolder/MasterReconciliation.py",\
+        path2files + ".newick",str(Dup),str(Trans),str(Loss),str(request.form["scoring"]),\
+        str(switchLo), str(switchHi), str(lossLo), str(lossHi)])
 
-    os.system("python MasterReconciliation.py " + path2files + ".newick" + " " +  \
-        str(Dup) + " " + str(Trans) + " " + str(Loss) + " " + str(request.form["scoring"])\
-         + " " + str(switchLo) + " " + str(switchHi) + " " + str(lossLo) + " " + str(lossHi))
-
-    os.system('python ReconConversion.py ' + path2files + ".newick" + " " + str(Dup) +  \
-        " " + str(Trans) + " " + str(Loss) + " " + str(request.form['scoring']) + " "\
-         + str(switchLo) + " " + str(switchHi) + " " + str(lossLo) + " " + str(lossHi))
-
+    subprocess.call(['python', '~/public_html/onlineFolder/reconConversion.py',\
+        path2files + ".newick", str(Dup), str(Trans), str(Loss),\
+        str(request.form['scoring']), str(switchLo), str(switchHi), str(lossLo),\
+        str(lossHi)])
+  
     with open(path2files + "freqFile.txt") as f:
      lines = f.readlines()
     scoreList = string2List(lines[0])
@@ -88,25 +90,26 @@ def reconcile(carousel = None):
     if request.form['scoring'] == "Frequency":
       scoreMethod = "Frequency"
     elif request.form['scoring'] == "xscape":
-      scoreMethod = "Xscape Scoring"
+      scoreMethod = "Xscape Scoring"  
     else: scoreMethod = "Unit Scoring"
     carouselstr = ""
-    carouselcap= ""
+    carouselcap= ""   
     staticString = "<h4>Duplication Cost:" + str(Dup) + ", Transfer Cost: " + \
     str(Trans) + ", Loss Cost: " + str(Loss) + "<br>Maximum Parsimony Cost: " + \
     str(totalCost) +  "<br>Your scoring method: " + scoreMethod + ", Total Sum" + \
     " of Scores: " + str(totalFreq) + "<br>Total Number of Optimal " + \
     "Reconciliations: " + str(totalRecon) + "</h4>"
     for x in range(len(scoreList)):
-      os.system("python vistrans.py -t " + path2files + ".tree -s " + path2files + \
+      os.system("python onlineFolder/vistrans.py -t " + path2files + ".tree -s " +
+path2files + \
         str(x) + ".stree -b " + path2files + str(x) + ".mowgli.brecon -o " + \
         path2files +  str(x) + ".svg")
-    
+      
       score = scoreList[x]
       percent = 100.0*score/totalFreq
       if x ==0:
-        runningTot = percent     
-         
+        runningTot = percent 
+      
         carouselstr +='<li data-target="#results" data-slide-to="0" ' + \
         'class="active"></li>' + "\n"
     
@@ -116,9 +119,8 @@ def reconcile(carousel = None):
           "Reconciliation 1 of " + str(len(scoreList)) + "</h3><p>Score = " + \
           str(score) + "<br>Percent of total = " + str(percent) + "%<br>Running" + \
           " total = " + str(runningTot) + "%</font></p></div></div>" + "\n"
-    
-        os.system("cp /Users/Annalise/GitHub/CompBioSummer2015/" + \
-          str(path2files) + str(x) + '.svg ' + UPLOAD_FOLDER)
+      
+        os.system("cp " + str(path2files) + str(x) + '.svg ' + UPLOAD_FOLDER)
       else:
         runningTotScore = runningTotal(scoreList, x)
         runningTot = 100.0*runningTotScore/totalFreq
@@ -140,8 +142,8 @@ def reconcile(carousel = None):
   os.system("rm -r " + Name)
   return render_template("results.html", carouselstr = carouselstr, \
     carouselcap = carouselcap, staticString = staticString)
-
     
+        
 def runningTotal(scoresList, index):
   """Takes in a list of scores and an integer, index, and returns the sum of
   the list's entries up to that index"""
@@ -174,4 +176,7 @@ def add_header(response):
     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
-app.run()
+app.debug = True
+application = DebuggedApplication(app, True)
+CGIHandler().run(application)
+
