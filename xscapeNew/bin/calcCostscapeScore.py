@@ -37,6 +37,7 @@ def getDTLReconGraphVals(pointList):
 		for coord in coordList:
 			pair.append(float(coord))
 		DTLReconGraphPairs.append(tuple(pair))
+		print "pair:", pair
 	return DTLReconGraphPairs
 
 
