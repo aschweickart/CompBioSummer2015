@@ -9,7 +9,7 @@ import os
 from wsgiref.handlers import CGIHandler
 app = Flask(__name__)
 #Bootstrap(app)
-UPLOAD_FOLDER = "Users/Annalise/GitHub/CompBioSummer2015/svgFiles/"
+UPLOAD_FOLDER = "/Users/Annalise/GitHub/CompBioSummer2015/svgFiles/"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/index')
@@ -72,14 +72,13 @@ def reconcile(carousel = None):
       lossLo = request.form['losslow']
     else: lossLo = 1
     path2files = Name + '/' + Name
-    subprocess.call(["python", "~/public_html/onlineFolder/MasterReconciliation.py",\
-        path2files + ".newick",str(Dup),str(Trans),str(Loss),str(request.form["scoring"]),\
-        str(switchLo), str(switchHi), str(lossLo), str(lossHi)])
-
-    subprocess.call(['python', '~/public_html/onlineFolder/reconConversion.py',\
-        path2files + ".newick", str(Dup), str(Trans), str(Loss),\
-        str(request.form['scoring']), str(switchLo), str(switchHi), str(lossLo),\
-        str(lossHi)])
+    os.system("python MasterReconciliation.py "+\
+        path2files + ".newick"+" "+str(Dup)+" "+str(Trans)+" "+str(Loss)+" "+str(request.form["scoring"])+\
+        " "+str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+" "+str(lossHi))
+    os.system('python reconConversion.py '+\
+        path2files + ".newick"+" "+ str(Dup)+" "+str(Trans)+" "+str(Loss)+\
+        " "+str(request.form['scoring'])+" "+str(switchLo)+" "+str(switchHi)+" "+str(lossLo)+\
+        " "+str(lossHi))
   
     with open(path2files + "freqFile.txt") as f:
      lines = f.readlines()
@@ -100,10 +99,9 @@ def reconcile(carousel = None):
     " of Scores: " + str(totalFreq) + "<br>Total Number of Optimal " + \
     "Reconciliations: " + str(totalRecon) + "</h4>"
     for x in range(len(scoreList)):
-      os.system("python onlineFolder/vistrans.py -t " + path2files + ".tree -s " +
-path2files + \
-        str(x) + ".stree -b " + path2files + str(x) + ".mowgli.brecon -o " + \
-        path2files +  str(x) + ".svg")
+      os.system("python vistrans.py -t " + path2files + ".tree -s " +
+      path2files + str(x) + ".stree -b " + path2files + str(x) + ".mowgli.brecon -o " + \
+      path2files +  str(x) + ".svg")
       
       score = scoreList[x]
       percent = 100.0*score/totalFreq
@@ -139,7 +137,7 @@ path2files + \
   staticString = Markup(staticString)
   carouselstr = Markup(carouselstr)
   carouselcap = Markup(carouselcap)
-  os.system("rm -r " + Name)
+  #os.system("rm -r " + Name)
   return render_template("results.html", carouselstr = carouselstr, \
     carouselcap = carouselcap, staticString = staticString)
     
@@ -177,6 +175,5 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
 app.debug = True
-application = DebuggedApplication(app, True)
-CGIHandler().run(application)
+app.run()
 
