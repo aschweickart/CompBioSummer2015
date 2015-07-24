@@ -90,3 +90,4 @@ def findCenters(newickFile, switchLo, switchHi, lossLo, lossHi):
             pointList.append("POINT " + str(coordList[i][0]))
 
     return pointList
+
