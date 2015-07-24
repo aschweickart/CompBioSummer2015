@@ -9,7 +9,7 @@ import random
 import newickFormatReader
 import orderGraph
 import DP
-import reconciliationGraph
+import ReconciliationGraph
 import os
 import copy
 import Greedy
@@ -176,7 +176,7 @@ def randomReconWrapper(dirName, D, T, L, numSamples, typeGen):
                     uniqueReconList.append(recon)
             outOf += len(uniqueReconList)
             for recon in uniqueReconList:
-                graph = reconciliationGraph.buildReconstruction\
+                graph = ReconciliationGraph.buildReconstruction\
                     (hostTree, parasiteTree, recon)
                 currentOrder = orderGraph.date(graph)
                 numTrans = findTransfers(recon)
