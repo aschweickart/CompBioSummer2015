@@ -1,0 +1,32 @@
+#############################
+README HOW TO RUN EXPERIMENTS
+#############################
+
+To run a file, enter into the comand line
+python MasterReconciliation.py "newick FileName" duplicationCost TransferCost LosssCost "frequency type" switchLo switchHi lossLo lossHi
+
+Our experiments were run in this matter over a directory of some 4,000-odd newick files, with
+D = 2
+T = 3
+L = 1
+switchLo = 1.5
+switchHi = 4.5
+lossLo = 1
+lossHi = 3
+
+freqType is a string that represents what scoring function is used.
+It can be "frequency" "unit" or "xscape".
+
+User needs the following python modules installed on their machine in order to 
+utilise this software.
+
+BioPython
+MatPlotLib
+Shapely
+
+program will create several files inluding one .tree file and any number of .stree and .brecon files to represent the gene tree, species trees, and reconciliations respectively.
+
+To render the reconciliations, enter into the comand line:
+python vistrans.py -t "fileName.tree" -s "fileName.stree" -b "fileName.brecon"
+
+the result will be a .svg file viewable in a web browser
