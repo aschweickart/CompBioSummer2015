@@ -75,15 +75,15 @@ def freqSummation(argList):
 	totalSum = 0
 	for score in scoresList:
 		totalSum +=score
-	for index in reconciliation:
-		totalCost = 0
-		for key in index:
-			if index[key][0] == "L":
-				totalCost+=L
-			elif index[key][0] == "T":
-				totalCost+=T
-			elif index[key][0] == "D":
-				totalCost+=D
+	totalCost = 0
+	index = reconciliation[0]
+	for key in index:
+		if index[key][0] == "L":
+			totalCost+=L
+		elif index[key][0] == "T":
+			totalCost+=T
+		elif index[key][0] == "D":
+			totalCost+=D
 	f.write(str(scoresList)+'\n')
 	f.write(str(totalSum)+'\n')
 	f.write(str(totalCost)+'\n')
