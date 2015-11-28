@@ -27,7 +27,6 @@ class DistanceFunction(object):
 
     def resetMaxDistance(self):
         self.maxDistance = len(self.vector) + self.offset - 1
-        assert (self.maxDistance - self.offset + 1 == len(self.vector)), "Nope"
 
     def __call__(self, index):
         if index >= self.offset and index <= self.maxDistance:
@@ -48,12 +47,6 @@ class DistanceFunction(object):
         result = DistanceFunction()
         result.offset = self.offset + other.offset
         result.vector = np.convolve(self.vector, other.vector)
-        maxDist = self.maxDistance + other.maxDistance
-        for i in range(result.offset, maxDist + 1):
-            pSum = 0
-            for j in range(other.offset, maxDist + 1):
-                pSum += self(i-j) * other(j)
-            result.vector.append(pSum)
         result.resetMaxDistance()
         return result
 
@@ -64,14 +57,18 @@ class DistanceFunction(object):
         result = DistanceFunction()
         result.offset = min(self.offset, other.offset)
         maxDist = max(self.maxDistance,other.maxDistance)
-        result.vector = [self(i) + other(i) for i in range(result.offset, maxDist + 1)]
+        j = 0
+        result.vector = np.zeros((maxDist + 1 - result.offset,), np.int64)
+        for i in xrange(result.offset, maxDist + 1):
+            result.vector[j] = self(i) + other(i)
+            j += 1
         result.resetMaxDistance()
         return result
 
 def kronicker(i):
     res = DistanceFunction()
     res.offset = i
-    res.vector.append(1)
+    res.vector = np.array([1])
     res.resetMaxDistance()
     return res
 
@@ -165,42 +162,42 @@ class ReconGraphPostorder(object):
             return self.next()
 
 def _subcounts(graph, template_event_set):
-    subcount_table = {}
+    table = {}
     for n in graph.postorder():
         if n.isLeaf():
-            subcount_table[n] = kronicker(0)
+            table[n] = kronicker(-1)
         elif n.ty == MAP_NODE:
-            subcount_table[n] = reduce(lambda x, y: x.sum(y), \
-                                       [subcount_table[c] for c in n.children])
+            table[n] = reduce(lambda x, y: x.sum(y), \
+                                       [table[c] for c in n.children])
         else:
             shift_amount = 1 if n not in template_event_set else -1
-            subcount_table[n] = reduce(lambda x, y: x.convolve(y), \
-                                       [subcount_table[c] for c in n.children])
-            subcount_table[n] = subcount_table[n].shift(shift_amount)
-    return subcount_table
+            table[n] = reduce(lambda x, y: x.convolve(y), \
+                                       [table[c] for c in n.children])
+            table[n] = table[n].shift(shift_amount)
+    return table
 
 def _supercounts(graph, template_event_set, subcount_table):
-    supercount_table = {}
+    table = {}
     for n in graph.preorder():
         if n.isRoot():
-            supercount_table[n] = kronicker(0)
+            table[n] = kronicker(0)
         elif n.ty == MAP_NODE:
             def process_parent(event_parent):
                 shift_amount = 1 if event_parent not in template_event_set else -1
-                parent_super = supercount_table[event_parent]
+                parent_super = table[event_parent]
                 otherChild = event_parent.otherChild(n)
                 convolved = parent_super.convolve(subcount_table[otherChild]) \
                                 if otherChild \
                                 else parent_super
                 return convolved.shift(shift_amount)
             sup_count = reduce(lambda x, y: x.sum(y), map(process_parent, n.parents))
-            supercount_table[n] = sup_count
+            table[n] = sup_count
         else:
             shift_amount = 1 if n not in template_event_set else -1
             # Event nodes inherit their single parent's super-count.
             # Shallow copy is same because we don't mutatate Fn's
-            supercount_table[n] = supercount_table[n.parents[0]]
-    return supercount_table
+            table[n] = table[n.parents[0]]
+    return table
 
 def _counts(graph, template_event_set, subcount_table, supercount_table):
     count_table = {}
@@ -211,12 +208,11 @@ def _counts(graph, template_event_set, subcount_table, supercount_table):
     return count_table
 
 def counts(graph, template_event_set):
-#    print 'Computing subcounts'
     subcount_table = _subcounts(graph, template_event_set)
-#    print 'Computing supercounts'
     supercount_table = _supercounts(graph, template_event_set, subcount_table)
-#    print 'Computing counts'
-    return _counts(graph, template_event_set, subcount_table, supercount_table)
+    return subcount_table, \
+            supercount_table, \
+            _counts(graph, template_event_set, subcount_table, supercount_table)
 
 def get_template(graph):
     random.seed(0)
@@ -243,8 +239,8 @@ GG = ReconGraph(G)
 #     print n
 
 template = get_template(GG)
-cs = counts(GG, template)
-
+sub_cs, sup_cs, cs = counts(GG, template)
+r = GG.roots[0]
 # d1 = DistanceFunction()
 # d2 = DistanceFunction()
 # d1.vector = [1,3,2,0,1]
