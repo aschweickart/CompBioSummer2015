@@ -3,6 +3,7 @@ import numpy as np
 import random
 import copy
 import operator
+import itertools as it
 
 flatten = lambda l: reduce(operator.add, l)
 
@@ -73,6 +74,90 @@ def kronicker(i):
     return res
 
 
+# class for our functions from Z^n -> N, which exist for each node,
+#  mapping the (tuple of distances to various templates) to (counts).
+#  These count represent how many reconciliations the node is in, which
+#  fulfill these distance metrics to their repsective templates
+class NDistanceFunction(object):
+    def __init__(self, dim):
+        dimTuple = tuple([0 for i in range(dim)])
+        #self.vector = np.ndarray(shape=dimTuple, dtype=np.int64)
+        self.vector = np.array([], ndmin=dim)
+        self.dim = dim
+        #maxDistance and offests are defined for each template
+        self.maxDistances = [-1 for i in range(dim)]
+        self.offsets = [0 for i in range(dim)]
+
+#the shape of a numpy ndarray will be (x,y,z) if there are three
+#templates, (R1,R2,R3) and the maximum distance from a reconciliation:
+# R1 is x + offset[0] - 1,
+# R2 is y + offset[1] - 1,
+# R3 is z + offset[2] - 1.
+#minimum distance would be
+# offset[i] for each of these
+
+
+#x = (x + offset[i] - 1) - offset[i] + 1
+#     maxDistances[i] - offset[i] + 1
+
+
+    def __repr__(self):
+        return '%d-dimensional tensor' % self.dim
+
+    def resetMaxDistance(self):
+        self.maxDistances = [l + o - 1 for (l,o) \
+                    in zip(self.vector.shape, self.offsets)]
+
+    def __call__(self, dists):
+        for i in range(len(dists)):
+            if dists[i] < self.offset[i] or dists[i] > self.maxDistances[i]:
+                return 0
+            #     if index - self.offset < len(self.vector):
+            #         return self.vector[index - self.offset]
+            #     else:
+            #         print index, self.offset, self.maxDistance, self.vector
+            #         assert False
+            # else:
+        return self.vector[dists]
+
+    def sum(self, other):
+        result = NDistanceFunction()
+        result.offsets = [min(so, oo) for (so,oo) \
+                        in zip(self.offsets, other.offsets)]
+        rShape = [max(self.maxDistances[i], other.maxDistances[i]) - \
+                  min(self.offsets[i], other.offsets[i]) + 1 \
+                  for i in xrange(len(self.dim))]
+        result.maxDistances = [max(self.maxDistances[i] - self.offsets[i], \
+                                 other.maxDistances[i] - other.offsets[i]) \
+                                for i in xrange(len(self.dim))
+        result.vector = np.zeros(rShape, dtype=np.int64)
+
+        #all valid cartesian products which are in bounds for our vector
+        for our_inds in it.product(*[xrange(d) for d in self.vector.shape]):
+            result_ind = tuple([our_inds[i] + self.offsets[i] - result.offsets[i]])
+            result.vector[result_ind] += self.vector[our_inds]
+        #all valid cartesian products which are in bounds for other vector
+        for other_inds in it.product(*[xrange(d) for d in other.vector.shape]):
+            result_ind = tuple([other_inds[i] + other.offsets[i] - result.offsets[i]])
+            result.vector[result_ind] += other.vector[our_inds]
+        result.resetMaxDistance()
+        return result
+
+    def shift(self, i):
+        res = copy.deepcopy(self)
+        res.offset += i
+        res.resetMaxDistance()
+        return res
+
+    def dump(self, s):
+        print s, self, self.offset, self.maxDistance, self.vector
+
+def NDkronicker(dists):
+    res = NDistanceFunction()
+    res.offsets = dists
+    res.vector = np.array([1], ndmin = len(dists))
+    res.resetMaxDistance()
+    return res
 
 class Node(object):
     def __init__(self, ty, mapping = None):
