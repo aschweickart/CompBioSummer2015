@@ -136,7 +136,7 @@ class NDistanceFunction(object):
 
     def shift(self, i_s):
         res = copy.deepcopy(self)
-        res.offset = [a + b for a, b in zip(res.offsets, i_s)]
+        res.offsets = [a + b for a, b in zip(res.offsets, i_s)]
         res.resetMaxDistance()
         return res
 
