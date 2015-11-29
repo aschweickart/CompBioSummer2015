@@ -60,10 +60,14 @@ class DistanceFunction(object):
         result.offset = min(self.offset, other.offset)
         maxDist = max(self.maxDistance,other.maxDistance)
         result.vector = np.zeros((maxDist + 1 - result.offset,), np.int64)
-        for i in xrange(len(self.vector)):
-            result.vector[i + self.offset - result.offset] += self.vector[i]
-        for i in xrange(len(other.vector)):
-            result.vector[i + other.offset - result.offset] += other.vector[i]
+        result_self_slice = \
+                (slice(0                + self.offset - result.offset,
+                       len(self.vector) + self.offset - result.offset),)
+        result_other_slice = \
+                (slice(0                 + other.offset - result.offset,
+                       len(other.vector) + other.offset - result.offset),)
+        result.vector[result_self_slice] += self.vector
+        result.vector[result_other_slice] += other.vector
         result.resetMaxDistance()
         return result
 
@@ -121,16 +125,16 @@ class NDistanceFunction(object):
                                 for i in xrange(self.dim)]
         result.vector = np.zeros(rShape, dtype=np.int64)
 
-        #all valid cartesian products which are in bounds for our vector
-        for our_inds in it.product(*[xrange(d) for d in self.vector.shape]):
-            result_ind = tuple(our_inds[i] + self.offsets[i] - result.offsets[i] \
-                    for i in xrange(self.dim))
-            result.vector[result_ind] += self.vector[our_inds]
-        #all valid cartesian products which are in bounds for other vector
-        for other_inds in it.product(*[xrange(d) for d in other.vector.shape]):
-            result_ind = tuple(other_inds[i] + other.offsets[i] - result.offsets[i] \
-                    for i in xrange(self.dim))
-            result.vector[result_ind] += other.vector[other_inds]
+        result_self_slice = \
+            tuple(slice(0                    + self.offsets[i] - result.offsets[i],
+                        self.vector.shape[i] + self.offsets[i] - result.offsets[i])
+                        for i in xrange(self.dim))
+        result_other_slice = \
+            tuple(slice(0                     + other.offsets[i] - result.offsets[i],
+                        other.vector.shape[i] + other.offsets[i] - result.offsets[i])
+                        for i in xrange(other.dim))
+        result.vector[result_self_slice] += self.vector
+        result.vector[result_other_slice] += other.vector
 
         result.resetMaxDistance()
         return result
