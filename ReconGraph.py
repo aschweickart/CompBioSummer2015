@@ -59,11 +59,11 @@ class DistanceFunction(object):
         result = DistanceFunction()
         result.offset = min(self.offset, other.offset)
         maxDist = max(self.maxDistance,other.maxDistance)
-        j = 0
         result.vector = np.zeros((maxDist + 1 - result.offset,), np.int64)
-        for i in xrange(result.offset, maxDist + 1):
-            result.vector[j] = self(i) + other(i)
-            j += 1
+        for i in xrange(len(self.vector)):
+            result.vector[i + self.offset - result.offset] += self.vector[i]
+        for i in xrange(len(other.vector)):
+            result.vector[i + other.offset - result.offset] += other.vector[i]
         result.resetMaxDistance()
         return result
 
@@ -130,7 +130,8 @@ class NDistanceFunction(object):
         for other_inds in it.product(*[xrange(d) for d in other.vector.shape]):
             result_ind = tuple(other_inds[i] + other.offsets[i] - result.offsets[i] \
                     for i in xrange(self.dim))
-            result.vector[result_ind] += other.vector[our_inds]
+            result.vector[result_ind] += other.vector[other_inds]
+
         result.resetMaxDistance()
         return result
 
@@ -292,17 +293,16 @@ def counts(graph, template_event_set):
 
 def _subcounts_n(graph, template_event_set_s):
     table = {}
+    N = len([0 for i in graph.postorder()])
+    k = 0
     for n in graph.postorder():
+        k += 1
+        print 'Subcounts N: %d / %d' % (k, N)
         if n.isLeaf():
             table[n] = NDkronicker(tuple(-1 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
             table[n] = reduce(lambda x, y: x.sum(y), \
                                        [table[c] for c in n.children])
-            if (len(n.children) > 1):
-                print n
-                print table[n]
-                print table[n.children[0]]
-                print table[n.children[1]]
         else:
             shift_amount = [1 if n not in template_event_set else -1 for \
                     template_event_set in template_event_set_s]
@@ -313,7 +313,11 @@ def _subcounts_n(graph, template_event_set_s):
 
 def _supercounts_n(graph, template_event_set_s, subcount_table):
     table = {}
+    N = len([0 for i in graph.postorder()])
+    k = 0
     for n in graph.preorder():
+        k += 1
+        print 'Supercounts N: %d / %d' % (k, N)
         if n.isRoot():
             table[n] = NDkronicker(tuple(0 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
@@ -339,7 +343,11 @@ def _supercounts_n(graph, template_event_set_s, subcount_table):
 def _counts_n(graph, template_event_set_s, subcount_table, supercount_table):
     count_table = {}
     offsets = [len(template_event_set) for template_event_set in template_event_set_s]
+    N = len([0 for i in graph.postorder()])
+    k = 0
     for n in graph.postorder():
+        k += 1
+        print 'Counts N: %d / %d' % (k, N)
         count_table[n] = \
                 subcount_table[n].convolve(supercount_table[n]).shift(offsets)
     return count_table
@@ -381,7 +389,7 @@ template2 = get_template(GG)
 sub_cs, sup_cs, cs = counts(GG, template)
 r = GG.roots[0]
 
-sub_cs2, sup_cs2, cs2 = counts_n(GG, [template])
+sub_cs2, sup_cs2, cs2 = counts_n(GG, [template, template2])
 
 # d1 = NDkronicker( (3,4) )
 # d2 = NDkronicker( (1,-4) )
