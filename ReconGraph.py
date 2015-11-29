@@ -293,11 +293,7 @@ def counts(graph, template_event_set):
 
 def _subcounts_n(graph, template_event_set_s):
     table = {}
-    N = len([0 for i in graph.postorder()])
-    k = 0
     for n in graph.postorder():
-        k += 1
-        print 'Subcounts N: %d / %d' % (k, N)
         if n.isLeaf():
             table[n] = NDkronicker(tuple(-1 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
@@ -313,11 +309,7 @@ def _subcounts_n(graph, template_event_set_s):
 
 def _supercounts_n(graph, template_event_set_s, subcount_table):
     table = {}
-    N = len([0 for i in graph.postorder()])
-    k = 0
     for n in graph.preorder():
-        k += 1
-        print 'Supercounts N: %d / %d' % (k, N)
         if n.isRoot():
             table[n] = NDkronicker(tuple(0 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
@@ -343,11 +335,7 @@ def _supercounts_n(graph, template_event_set_s, subcount_table):
 def _counts_n(graph, template_event_set_s, subcount_table, supercount_table):
     count_table = {}
     offsets = [len(template_event_set) for template_event_set in template_event_set_s]
-    N = len([0 for i in graph.postorder()])
-    k = 0
     for n in graph.postorder():
-        k += 1
-        print 'Counts N: %d / %d' % (k, N)
         count_table[n] = \
                 subcount_table[n].convolve(supercount_table[n]).shift(offsets)
     return count_table
