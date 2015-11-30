@@ -1,10 +1,10 @@
 import Queue
-import Convolve
-import numpy as np
 import random
 import copy
 import operator
 import itertools as it
+from DistanceFunction import DistanceFunction, NDistanceFunction
+from DistanceFunction import SparseNDistanceFunction
 
 flatten = lambda l: reduce(operator.add, l)
 
@@ -16,144 +16,6 @@ DUPLICATION   = 'D'
 LOSS          = 'L'
 
 NO_CHILD = (None, None)
-
-class DistanceFunction(object):
-    def __init__(self):
-        self.vector = np.array([])
-        self.maxDistance = -1
-        self.offset = 0
-        #offset is the input that gets mapped to self.vector[0]
-
-    def __repr__(self):
-        return ','.join(['%d:%s' % (i + self.offset, item) for (i, item) in enumerate(self.vector)])
-
-    def resetMaxDistance(self):
-        self.maxDistance = len(self.vector) + self.offset - 1
-
-    def __call__(self, index):
-        if index >= self.offset and index <= self.maxDistance:
-            if index - self.offset < len(self.vector):
-                return self.vector[index - self.offset]
-            else:
-                print index, self.offset, self.maxDistance, self.vector
-                assert False
-        return 0
-
-    def shift(self, i):
-        res = copy.deepcopy(self)
-        res.offset += i
-        res.resetMaxDistance()
-        return res
-
-    def convolve(self, other):
-        result = DistanceFunction()
-        result.offset = self.offset + other.offset
-        result.vector = np.convolve(self.vector, other.vector)
-        result.resetMaxDistance()
-        return result
-
-    def dump(self, s):
-        print s, self, self.offset, self.maxDistance, self.vector
-
-    def sum(self, other):
-        result = DistanceFunction()
-        result.offset = min(self.offset, other.offset)
-        maxDist = max(self.maxDistance,other.maxDistance)
-        result.vector = np.zeros((maxDist + 1 - result.offset,), np.int64)
-        result_self_slice = \
-                (slice(0                + self.offset - result.offset,
-                       len(self.vector) + self.offset - result.offset),)
-        result_other_slice = \
-                (slice(0                 + other.offset - result.offset,
-                       len(other.vector) + other.offset - result.offset),)
-        result.vector[result_self_slice] += self.vector
-        result.vector[result_other_slice] += other.vector
-        result.resetMaxDistance()
-        return result
-
-def kronicker(i):
-    res = DistanceFunction()
-    res.offset = i
-    res.vector = np.array([1])
-    res.resetMaxDistance()
-    return res
-
-
-# class for our functions from Z^n -> N, which exist for each node,
-#  mapping the (tuple of distances to various templates) to (counts).
-#  These count represent how many reconciliations the node is in, which
-#  fulfill these distance metrics to their repsective templates
-class NDistanceFunction(object):
-    def __init__(self, dim):
-        dimTuple = tuple([0 for i in range(dim)])
-        self.vector = np.array([], ndmin=dim)
-        self.dim = dim
-        #maxDistance and offests are defined for each template
-        self.maxDistances = [-1 for i in range(dim)]
-        self.offsets = [0 for i in range(dim)]
-
-    def __repr__(self):
-        return '%d-dimensional tensor\nvec: %s\noff: %s' \
-                % (self.dim, self.vector, self.offsets)
-
-    def resetMaxDistance(self):
-        self.maxDistances = [l + o - 1 for (l,o) \
-                    in zip(self.vector.shape, self.offsets)]
-
-    def __call__(self, dists):
-        for i in range(len(dists)):
-            if dists[i] < self.offsets[i] or dists[i] > self.maxDistances[i]:
-                return 0
-        return self.vector[tuple( d - o for d, o in zip(dists,self.offsets))]
-
-    def convolve(self, other):
-        result = NDistanceFunction(self.dim)
-        result.offsets = [so + oo for so, oo in zip(self.offsets, other.offsets)]
-        result.vector = Convolve.convolve(self.vector, other.vector)
-        result.resetMaxDistance()
-        return result
-
-    def sum(self, other):
-        result = NDistanceFunction(self.dim)
-        result.offsets = [min(so, oo) for (so,oo) \
-                        in zip(self.offsets, other.offsets)]
-        rShape = [max(self.maxDistances[i], other.maxDistances[i]) - \
-                  min(self.offsets[i], other.offsets[i]) + 1 \
-                  for i in xrange(self.dim)]
-        result.maxDistances = [max(self.maxDistances[i] - self.offsets[i], \
-                                 other.maxDistances[i] - other.offsets[i]) \
-                                for i in xrange(self.dim)]
-        result.vector = np.zeros(rShape, dtype=np.int64)
-
-        result_self_slice = \
-            tuple(slice(0                    + self.offsets[i] - result.offsets[i],
-                        self.vector.shape[i] + self.offsets[i] - result.offsets[i])
-                        for i in xrange(self.dim))
-        result_other_slice = \
-            tuple(slice(0                     + other.offsets[i] - result.offsets[i],
-                        other.vector.shape[i] + other.offsets[i] - result.offsets[i])
-                        for i in xrange(other.dim))
-        result.vector[result_self_slice] += self.vector
-        result.vector[result_other_slice] += other.vector
-
-        result.resetMaxDistance()
-        return result
-
-    def shift(self, i_s):
-        res = copy.deepcopy(self)
-        res.offsets = [a + b for a, b in zip(res.offsets, i_s)]
-        res.resetMaxDistance()
-        return res
-
-    def dump(self, s):
-        print s, self, self.offset, self.maxDistance, self.vector
-
-def NDkronicker(dists):
-    res = NDistanceFunction(len(dists))
-    res.offsets = dists
-    res.vector = np.array([1], ndmin = len(dists))
-    res.resetMaxDistance()
-    return res
 
 class Node(object):
     def __init__(self, ty, mapping = None):
@@ -246,7 +108,7 @@ def _subcounts(graph, template_event_set):
     table = {}
     for n in graph.postorder():
         if n.isLeaf():
-            table[n] = kronicker(-1)
+            table[n] = DistanceFunction.kronicker(-1)
         elif n.ty == MAP_NODE:
             table[n] = reduce(lambda x, y: x.sum(y), \
                                        [table[c] for c in n.children])
@@ -261,7 +123,7 @@ def _supercounts(graph, template_event_set, subcount_table):
     table = {}
     for n in graph.preorder():
         if n.isRoot():
-            table[n] = kronicker(0)
+            table[n] = DistanceFunction.kronicker(0)
         elif n.ty == MAP_NODE:
             def process_parent(event_parent):
                 shift_amount = 1 if event_parent not in template_event_set else -1
@@ -295,11 +157,12 @@ def counts(graph, template_event_set):
             supercount_table, \
             _counts(graph, template_event_set, subcount_table, supercount_table)
 
-def _subcounts_n(graph, template_event_set_s):
+def _subcounts_n(graph, template_event_set_s, fn_class):
     table = {}
     for n in graph.postorder():
         if n.isLeaf():
-            table[n] = NDkronicker(tuple(-1 for i in xrange(len(template_event_set_s))))
+            table[n] = fn_class.kronicker(
+                    tuple(-1 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
             table[n] = reduce(lambda x, y: x.sum(y), \
                                        [table[c] for c in n.children])
@@ -311,11 +174,12 @@ def _subcounts_n(graph, template_event_set_s):
             table[n] = table[n].shift(shift_amount)
     return table
 
-def _supercounts_n(graph, template_event_set_s, subcount_table):
+def _supercounts_n(graph, template_event_set_s, subcount_table, fn_class):
     table = {}
     for n in graph.preorder():
         if n.isRoot():
-            table[n] = NDkronicker(tuple(0 for i in xrange(len(template_event_set_s))))
+            table[n] = fn_class.kronicker(
+                    tuple(0 for i in xrange(len(template_event_set_s))))
         elif n.ty == MAP_NODE:
             def process_parent(event_parent):
                 shift_amount = [1 if event_parent not in template_event_set else -1 for \
@@ -344,12 +208,19 @@ def _counts_n(graph, template_event_set_s, subcount_table, supercount_table):
                 subcount_table[n].convolve(supercount_table[n]).shift(offsets)
     return count_table
 
-def counts_n(graph, template_event_set_s):
-    subcount_table = _subcounts_n(graph, template_event_set_s)
-    supercount_table = _supercounts_n(graph, template_event_set_s, subcount_table)
+def counts_n(graph, template_event_set_s, fn_class):
+    subcount_table = _subcounts_n(graph, template_event_set_s, fn_class)
+    supercount_table = _supercounts_n(graph, template_event_set_s, subcount_table, fn_class)
     return subcount_table, \
             supercount_table, \
             _counts_n(graph, template_event_set_s, subcount_table, supercount_table)
+
+def sparse_counts_n(graph, template_event_set_s):
+    return counts_n(graph, template_event_set_s, SparseNDistanceFunction)
+
+def dense_counts_n(graph, template_event_set_s):
+    return counts_n(graph, template_event_set_s, NDistanceFunction)
+
 
 def get_template(graph):
     events = set([])
@@ -369,34 +240,16 @@ G = eval(f.read())
 f.close()
 
 GG = ReconGraph(G)
-# for n in GG.postorder():
-#     print n
-# for n in GG.preorder():
-#     print n
 
 random.seed(0)
 template = get_template(GG)
 template2 = get_template(GG)
+template3 = get_template(GG)
 
 sub_cs, sup_cs, cs = counts(GG, template)
 r = GG.roots[0]
 
-sub_cs2, sup_cs2, cs2 = counts_n(GG, [template, template2])
-
-# d1 = NDkronicker( (3,4) )
-# d2 = NDkronicker( (1,-4) )
-# d3 = d1.sum(d2)
-# d4 = d1.convolve(d2)
-
-# d1 = NDkronicker( (3,) )
-# d2 = NDkronicker( (-1,) )
-# d4 = d1.convolve(d2)
-# d3 = d1.sum(d2)
-
-# d1 = DistanceFunction()
-# d2 = DistanceFunction()
-# d1.vector = [1,3,2,0,1]
-# d2.vector = [2,0,1,1]
-# d2.offset = -1
-# d3 = kronicker(3)
-
+# sub_cs2, sup_cs2, cs2 = counts_n(GG, [template, template2])
+sub_cs2, sup_cs2, cs2 = sparse_counts_n(GG, [template, template2])
+#sub_cs3, sup_cs3, cs3 = dense_counts_n(GG, [template, template2])
+sub_cs4, sup_cs4, cs4 = sparse_counts_n(GG, [template, template2, template3])
