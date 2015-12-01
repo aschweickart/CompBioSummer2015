@@ -3,8 +3,8 @@ import random
 import copy
 import operator
 import itertools as it
-from DistanceFunction import DistanceFunction, NDistanceFunction
-from DistanceFunction import SparseNDistanceFunction
+from DistanceFunction import DistanceFunction, NDistanceFunction, SparseNDistanceFunction
+from collections import defaultdict
 
 flatten = lambda l: reduce(operator.add, l)
 
@@ -30,6 +30,8 @@ class Node(object):
         return len(self.children) == 0
     def isRoot(self):
         return len(self.parents) == 0
+    def isMap(self):
+        return self.ty == MAP_NODE
     def otherChild(self, child):
         ''' Given a child, returns a child of this node which is not that child.
         Will return None if there is no such other child.
@@ -44,7 +46,7 @@ class Node(object):
         else:
             if self.ty != other.ty:
                 return False
-            if self.parents != other.parents:
+            if set(self.parents) != set(other.parents):
                 return False
             return set(self.children) == set(other.children)
 
@@ -235,21 +237,136 @@ def get_template(graph):
             stack.append(random.choice(n.children))
     return events
 
+maximize_best_tables = []
+maximize_trace_tables = []
+maximize_results = []
+maximize_calls = 0
+
+def maximize(graph, value_table, default=0):
+    ''' Given a reconciliation graph and a value mapping, returns
+    the event set of the reconciliation which maximizes the sum of
+    the value function over its nodes '''
+
+    # The value of the best subreconciliation rooted at each node
+    best_value = {}
+    # The index of the child used to get that subreconciliation
+    #  (-1 for all)
+    used_child_index = {}
+    ALL_CHILDREN = -1
+
+    def value(node):
+        ''' Gets the value of a node '''
+        return value_table[node] if node in value_table else default
+
+    # Populate DP tables for the entire graph
+    for n in graph.postorder():
+        if n.isLeaf():
+            used_child_index[n] = ALL_CHILDREN # vacuous
+            best_value[n] = value(n)
+        elif n.isMap():
+            child_values = [best_value[c] for c in n.children]
+            best_value[n] = max(child_values)
+            used_child_index[n] = child_values.index(best_value[n])
+        else:
+            best_value[n] = sum(best_value[c] for c in n.children)
+            used_child_index[n] = ALL_CHILDREN
+
+    # Recover an optimal set of event nodes
+    root_values = [best_value[n] for n in graph.roots]
+    best_root = graph.roots[root_values.index(max(root_values))]
+    q = [best_root]
+    event_set = set([])
+    while len(q) > 0:
+        n = q.pop()
+        if used_child_index[n] == ALL_CHILDREN:
+            for c in n.children:
+                q.append(c)
+        else:
+            q.append(n.children[used_child_index[n]])
+        event_set.add(n)
+
+    global maximize_calls, maximize_results, maximize_best_tables, maximize_trace_tables
+    maximize_calls += 1
+    maximize_best_tables.append(best_value)
+    maximize_trace_tables.append(used_child_index)
+    maximize_results.append(event_set)
+    return best_value, used_child_index, event_set
+
+def k_means_step(graph, reps):
+    ''' Given a
+        graph - reconciliation graph
+        reps  - a list of reconciliations in event-set form
+    returns a new list of representatives.'''
+    _, _, counts = sparse_counts_n(graph, reps)
+    value_maps = [defaultdict(float) for rep in reps]
+    ct = [0, 0]
+    for n in graph.postorder():
+        for pt in counts[n].map:
+            minDist = min(pt)
+            number = counts[n].map[pt]
+            closest_rep_i_s = [i for (i, d) in enumerate(pt) if d == minDist]
+            if len(closest_rep_i_s) > 1:
+                ct[1] += 1
+            else:
+                ct[0] += 1
+            for i in closest_rep_i_s:
+                value_maps[i][n] += float(number) / len(closest_rep_i_s)
+    print '%d diff and %d equisdistant dists' % tuple(ct)
+    p = [[value_map[n] for value_map in value_maps] for n in value_maps[0]]
+    print 'Number of reconciliations: %d' % sum(counts[graph.roots[0]].map.values())
+    # print p
+    res = [maximize(graph, value_map) for value_map in value_maps]
+    q = [r[0][graph.roots[0]] for r in res]
+    print 'Value of each representative: %s' % q
+    print 'Net value: %d' % sum(q)
+    return [r[2] for r in res]
+
+def k_means_step_many(graph, reps, steps):
+    for i in xrange(steps):
+        new_reps = k_means_step(graph, reps)
+        stable = reps == new_reps
+        print 'Stable' if stable else 'Unstable'
+        reps = new_reps
+        if stable:
+            print 'Early exit after %d iterations' % (i + 1)
+            break
+    return reps
+
+def k_means(graph, steps, k, seed=0):
+    print '==========================='
+    print 'K means starting with k = %d, seed = %d' % (k, seed)
+    random.seed(seed)
+    reps = [get_template(graph) for i in xrange(k)]
+    end_reps = k_means_step_many(graph, reps, steps)
+    return end_reps
+
 f = open('t.g')
 G = eval(f.read())
 f.close()
 
 GG = ReconGraph(G)
 
-random.seed(0)
-template = get_template(GG)
-template2 = get_template(GG)
-template3 = get_template(GG)
-
-sub_cs, sup_cs, cs = counts(GG, template)
 r = GG.roots[0]
 
-# sub_cs2, sup_cs2, cs2 = counts_n(GG, [template, template2])
-sub_cs2, sup_cs2, cs2 = sparse_counts_n(GG, [template, template2])
-#sub_cs3, sup_cs3, cs3 = dense_counts_n(GG, [template, template2])
-sub_cs4, sup_cs4, cs4 = sparse_counts_n(GG, [template, template2, template3])
+rep1 = []
+# rep1 = k_means(GG, 10, 1)
+rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(10)]
+rep3s = [[]]
+rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(4)]
+reps = rep1 + flatten(rep2s) + flatten(rep3s)
+
+for r1, r2 in it.product(reps, reps):
+    if r1 != r2:
+        print 'Different results from 2 K-means'
+
+def unique(L):
+    out = []
+    for l in L:
+        if l not in out:
+            out.append(l)
+    return out
+
+print 'Maximize was called %d times' % maximize_calls
+print 'It returned %d different maximum tables' % len(unique(maximize_best_tables))
+print 'It returned %d different trace tables' % len(unique(maximize_trace_tables))
+print 'It returned %d different representatives' % len(unique(maximize_results))
