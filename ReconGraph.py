@@ -3,6 +3,7 @@ import random
 import copy
 import operator
 import itertools as it
+import timeit
 from DistanceFunction import DistanceFunction, NDistanceFunction, SparseNDistanceFunction
 from collections import defaultdict
 
@@ -348,16 +349,16 @@ GG = ReconGraph(G)
 
 r = GG.roots[0]
 
-rep1 = []
+#rep1 = []
 # rep1 = k_means(GG, 10, 1)
-rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(10)]
-rep3s = [[]]
-rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(4)]
-reps = rep1 + flatten(rep2s) + flatten(rep3s)
+#rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(10)]
+#rep3s = [[]]
+#rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(4)]
+#reps = rep1 + flatten(rep2s) + flatten(rep3s)
 
-for r1, r2 in it.product(reps, reps):
-    if r1 != r2:
-        print 'Different results from 2 K-means'
+#for r1, r2 in it.product(reps, reps):
+#    if r1 != r2:
+#        print 'Different results from 2 K-means'
 
 def unique(L):
     out = []
