@@ -5,6 +5,7 @@
 
 from StratifiedCounts import sparse_counts_n, counts
 from ReconGraph import ReconGraph, MAP_NODE
+import testgen
 import random
 import operator
 from collections import defaultdict
@@ -311,11 +312,16 @@ def get_template(graph):
 
 rep1 = []
 # rep1 = k_means(GG, 10, 1)
+rep2s = [[]]
 # rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(1)]
-rep2s = [inv_sq(GG, 10, 5, seed) for seed in xrange(5)]
+# rep2s = [inv_sq(GG, 10, 5, seed) for seed in xrange(5)]
 rep3s = [[]]
 # rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(1)]
 reps = rep1 + flatten(rep2s) + flatten(rep3s)
+
+TestGGDict = testgen.gen(1)
+TestGG = ReconGraph(testgen.gen(1))
+
 
 print '%d distinct representatives out of %d' % (len(unique(reps)), len(reps))
 print 'Maximize was called %d times' % maximize_call_counts
