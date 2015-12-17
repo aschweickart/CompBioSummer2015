@@ -1,4 +1,5 @@
 import sys
+import os
 
 # Include the upper level directory in the import search path
 sys.path.append('../')
@@ -9,25 +10,54 @@ import KMeans
 import newickFormatReader
 import copy
 import ReconGraph
+import random
 
-fileName = sys.argv[1]
+def run_test(fileName, max_k):
+    cache_dir = './cache'
+    D = 2.
+    T = 3.
+    L = 1.
 
-D = 2.
-T = 3.
-L = 1.
+    host, paras, phi = newickFormatReader.getInput(fileName)
 
-host, paras, phi = newickFormatReader.getInput(fileName)
-# Default scoring function (if freqtype == Frequency scoring)
-DictGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+        f = open('%s/README' % cache_dir, 'w')
+        f.write('This directory holds a cache of reconciliation graph for the TreeLife data set')
+        f.close()
 
-print 'DP complete, doing greedy'
+    cache_location = '%s/%s.graph' % (cache_dir, os.path.split(fileName)[1])
+    if not os.path.isfile(cache_location):
+        print >> sys.stderr, 'A reconciliation graph has not been built yet for this newick file'
+        print >> sys.stderr, 'Doing so now...'
 
-scoresList, dictReps = Greedy.Greedy(DictGraph, paras)
+        DictGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 
-print 'Found cluster representatives usign point-collecting'
-print 'Converting to memory representation'
+        f = open(cache_location, 'w+')
+        f.write(repr(DictGraph))
+        f.close()
 
-graph = ReconGraph.ReconGraph(DictGraph)
-setReps = [ReconGraph.dictRecToSetRec(graph, dictRep) for dictRep in dictReps]
+    print >> sys.stderr, 'Loading reonciliation graph from cache'
+    f = open(cache_location)
+    DictGraph = eval(f.read())
+    f.close()
 
-KMeans.k_means(graph, 10, 3, 0, setReps[:4])
+    scoresList, dictReps = Greedy.Greedy(DictGraph, paras)
+
+    print >> sys.stderr, 'Found cluster representatives usign point-collecting'
+
+    graph = ReconGraph.ReconGraph(DictGraph)
+    setReps = [ReconGraph.dictRecToSetRec(graph, dictRep) for dictRep in dictReps]
+    random.seed(0)
+    extra_reps = [KMeans.get_template(graph) for i in xrange(max_k)]
+
+    representatives = setReps + extra_reps
+
+
+    for i in xrange(1, max_k + 1):
+        print 'k = %d' % i
+        KMeans.k_means(graph, 10, i, 0, representatives[:i])
+
+fileNames = sys.argv[1]
+max_k = int(sys.argv[2])
+list(run_test(fileName, max_k) for fileName in fileNames.split(','))

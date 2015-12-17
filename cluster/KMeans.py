@@ -8,6 +8,7 @@ from ReconGraph import ReconGraph, MAP_NODE
 import testgen
 import random
 import operator
+import sys
 from collections import defaultdict
 
 flatten = lambda l: reduce(operator.add, l)
@@ -123,42 +124,10 @@ def node_value_maps_symmetric(graph, reps):
             value_map[n] = 2 * value_map[n] - K
 
     if not abs(sum(Ks) - sum(counts[graph.roots[0]].map.values())) < 1:
-        print 'Reconciliation count by constant: %d' % abs(sum(Ks))
-        print 'Reconciliation count by roots   : %d' % sum(counts[graph.roots[0]].map.values())
-        print 'Should be equal'
+        print >> sys.stderr, 'Reconciliation count by constant: %d' % abs(sum(Ks))
+        print >> sys.stderr, 'Reconciliation count by roots   : %d' % sum(counts[graph.roots[0]].map.values())
+        print >> sys.stderr, 'Should be equal'
         assert False
-    return value_maps
-
-def node_value_maps_asymmetric(graph, reps):
-    ''' Given a
-        graph - reconcilliation graph
-        reps  - a list of reconciliations in event-set form
-    returns a list of value maps (in the same order as the reps)
-
-    where a value map is a mapping from a node in the reconciliation graph
-      to a number (See the 'Computing Weighted Means' section of the paper)
-    '''
-    counts = sparse_counts_n(graph, reps)
-    value_maps = [defaultdict(float) for rep in reps]
-    ct = [0, 0]
-    amt= [0, 0]
-    for n in graph.postorder():
-        for pt in counts[n].map:
-            minDist = min(pt)
-            number = counts[n].map[pt]
-            closest_rep_i_s = [i for (i, d) in enumerate(pt) if d == minDist]
-            if len(closest_rep_i_s) > 1:
-                ct[1] += 1
-                amt[1] += float(number)
-            else:
-                ct[0] += 1
-                amt[0] += float(number)
-            for i in closest_rep_i_s:
-                value_maps[i][n] += float(number) / len(closest_rep_i_s)
-    print '%d diff and %d equisdistant dists' % tuple(ct)
-    print 'Distinct closest reps got %d weight, and ties got %d' % tuple(amt)
-    p = [[value_map[n] for value_map in value_maps] for n in value_maps[0]]
-    print 'Number of reconciliations: %d' % sum(counts[graph.roots[0]].map.values())
     return value_maps
 
 def k_means_step(graph, reps):
@@ -176,10 +145,7 @@ def k_means_step(graph, reps):
     #print 'Printing the numbers of the map nodes in the reconciliations'
     #for T in [r[2] for r in res]:
     #    print sorted([n.parents[0].mapping[0][1:] for n in T])
-    mean_0, max_0 = cluster_quality(graph, reps)
-    mean_1, max_1 = cluster_quality(graph, [r[2] for r in res])
-    print 'Mean Radius: %f -> %f' % (mean_0, mean_1)
-    print 'Max Radius: %d -> %d' % (max_1, max_1)
+    print '%f %f' % cluster_quality(graph, [r[2] for r in res])
     return [r[2] for r in res]
 
 def step_many(step_fn, graph, reps, steps):
@@ -188,10 +154,10 @@ def step_many(step_fn, graph, reps, steps):
         stable = reps == new_reps
         for rep in new_reps:
             if not verify_reconciliation(graph, rep):
-                print 'Invalid reconciliation!'
+                print >> sys.stderr, 'Invalid reconciliation!'
         reps = new_reps
         if stable:
-            print 'Early exit after %d iterations' % (i + 1)
+            print >> sys.stderr, 'Early exit after %d iterations' % (i + 1)
             break
     return reps
 
@@ -201,10 +167,10 @@ def k_means(graph, steps, k, seed=0, reps=None):
         reps = [get_template(graph) for i in xrange(k)]
     else:
         k = len(reps)
-
-    print '==========================='
-    print 'K means starting with k = %d, seed = %d' % (k, seed)
-    print 'Size of graph: %d' % len(graph)
+    print '%f %f' % cluster_quality(graph, reps)
+    print >> sys.stderr, '==========================='
+    print >> sys.stderr, 'K means starting with k = %d, seed = %d' % (k, seed)
+    print >> sys.stderr, 'Size of graph: %d' % len(graph)
 
     ## Print the map node numbers
     #print 'Printing the numbers of the map nodes in the reconciliations'
@@ -214,8 +180,8 @@ def k_means(graph, steps, k, seed=0, reps=None):
     return end_reps
 
 def inv_sq(graph, steps, k, seed=0, reps=None):
-    print '==========================='
-    print 'Inverse Square starting with k = %d, seed = %d' % (k, seed)
+    print >> sys.stderr, '==========================='
+    print >> sys.stderr, 'Inverse Square starting with k = %d, seed = %d' % (k, seed)
     random.seed(seed)
     if reps is None:
         reps = [get_template(graph) for i in xrange(k)]
