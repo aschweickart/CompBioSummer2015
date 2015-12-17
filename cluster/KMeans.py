@@ -66,6 +66,21 @@ def maximize(graph, value_table, default=0):
     maximize_call_counts += 1
     return best_value, used_child_index, event_set
 
+def reconciliations_at_each_distance_from_representatives(graph, reps):
+    ''' Given a set of cluster representatives, computes a map for each
+    representative, which sends distances to the number of reonciliations
+    at that distance which are in the cluster of that representative'''
+    counts = sparse_counts_n(graph, reps)
+    distances = [defaultdict(float) for rep in reps]
+    for n in graph.roots:
+        for pt in counts[n].map:
+            minDist = min(pt)
+            number = counts[n].map[pt]
+            closest_rep_i_s = [i for (i, d) in enumerate(pt) if d == minDist]
+            for i in closest_rep_i_s:
+                distances[i][minDist] += float(number) / len(closest_rep_i_s)
+    return distances
+
 def node_value_maps_symmetric(graph, reps):
     ''' Given a
         graph - reconcilliation graph
@@ -78,28 +93,37 @@ def node_value_maps_symmetric(graph, reps):
     counts = sparse_counts_n(graph, reps)
     Ks = [0 for rep in reps]
     for n in graph.roots:
+        # Perhaps pt is (1, 4, 1, 9)
         for pt in counts[n].map:
             minDist = min(pt)
             number = counts[n].map[pt]
+            # so closest_rep_i_s is [0, 2]
             closest_rep_i_s = [i for (i, d) in enumerate(pt) if d == minDist]
-            for i in closest_rep_i_s:
-                Ks[i] += float(number) / len(closest_rep_i_s)
+            i = min(closest_rep_i_s)
+            Ks[i] += float(number)
+            #for i in closest_rep_i_s:
+            #    Ks[i] += float(number) / len(closest_rep_i_s)
 
     value_maps = [defaultdict(float) for rep in reps]
-    for n in graph.postorder():
+    for n in (n for n in graph.postorder() if n.isEvent()):
         for pt in counts[n].map:
             minDist = min(pt)
             number = counts[n].map[pt]
             closest_rep_i_s = [i for (i, d) in enumerate(pt) if d == minDist]
-            for i in closest_rep_i_s:
-                value_maps[i][n] += float(number) / len(closest_rep_i_s)
-
-    for (value_map,K) in zip(value_maps, Ks):
-        for n in value_map:
+            i = min(closest_rep_i_s)
+            value_maps[i][n] += float(number)
+#            if n.parents[0].mapping[0] == 'm3':
+#                print 'Value %d at node %s going to rep %d' % (number, n, i)
+#                if len(closest_rep_i_s) > 1:
+#                    print 'Chose %d from %s' % (i, closest_rep_i_s)
+            #for i in closest_rep_i_s:
+            #    value_maps[i][n] += float(number) / len(closest_rep_i_s)
+    for n in (n for n in graph.postorder() if n.isEvent()):
+        for (value_map,K) in zip(value_maps, Ks):
             value_map[n] = 2 * value_map[n] - K
 
     if not abs(sum(Ks) - sum(counts[graph.roots[0]].map.values())) < 1:
-        print 'Reconciliation count by constant: %d' % abs(sum(ks))
+        print 'Reconciliation count by constant: %d' % abs(sum(Ks))
         print 'Reconciliation count by roots   : %d' % sum(counts[graph.roots[0]].map.values())
         print 'Should be equal'
         assert False
@@ -148,9 +172,14 @@ def k_means_step(graph, reps):
     for i in xrange(len(net)):
         for n in graph.postorder():
             net[i] += value_maps[i][n]
-    print 'Net values by rep they get assigned to: %s' % net
-    print 'Rep 1 size: %d  Rep 2 size: %d  Sym Diff: %d' % (len(reps[0]), len(reps[1]), len(reps[0] ^ reps[1]))
-    print 'Rep 1 size: %d  Rep 2 size: %d  Sym Diff: %d' % (len(res[0][2]), len(res[1][2]), len(res[0][2] ^ res[1][2]))
+    ## Print the map node numbers
+    #print 'Printing the numbers of the map nodes in the reconciliations'
+    #for T in [r[2] for r in res]:
+    #    print sorted([n.parents[0].mapping[0][1:] for n in T])
+    mean_0, max_0 = cluster_quality(graph, reps)
+    mean_1, max_1 = cluster_quality(graph, [r[2] for r in res])
+    print 'Mean Radius: %f -> %f' % (mean_0, mean_1)
+    print 'Max Radius: %d -> %d' % (max_1, max_1)
     return [r[2] for r in res]
 
 def step_many(step_fn, graph, reps, steps):
@@ -160,20 +189,27 @@ def step_many(step_fn, graph, reps, steps):
         for rep in new_reps:
             if not verify_reconciliation(graph, rep):
                 print 'Invalid reconciliation!'
-        print 'Stable' if stable else 'Unstable'
-        print 'Differences %s' % [len(rep - new_rep) for rep, new_rep in zip(reps, new_reps)]
         reps = new_reps
         if stable:
             print 'Early exit after %d iterations' % (i + 1)
             break
     return reps
 
-def k_means(graph, steps, k, seed=0):
+def k_means(graph, steps, k, seed=0, reps=None):
+    random.seed(seed)
+    if reps == None:
+        reps = [get_template(graph) for i in xrange(k)]
+    else:
+        k = len(reps)
+
     print '==========================='
     print 'K means starting with k = %d, seed = %d' % (k, seed)
     print 'Size of graph: %d' % len(graph)
-    random.seed(seed)
-    reps = [get_template(graph) for i in xrange(k)]
+
+    ## Print the map node numbers
+    #print 'Printing the numbers of the map nodes in the reconciliations'
+    #for T in reps:
+    #    print sorted([n.parents[0].mapping[0][1:] for n in T])
     end_reps = step_many(k_means_step, graph, reps, steps)
     return end_reps
 
@@ -230,14 +266,6 @@ def node_value_map_inv_sq(graph, rep):
         value_map[n] = 2 * value_map[n] - K
 
     return value_map
-
-f = open('t.g')
-G = eval(f.read())
-f.close()
-
-GG = ReconGraph(G)
-
-r = GG.roots[0]
 
 def unique(L):
     out = []
@@ -309,21 +337,94 @@ def get_template(graph):
             stack.append(random.choice(n.children))
     return events
 
+def k_means_quality(graph, steps, k, seed):
+    Ts = k_means(graph, steps, k, seed)
+    return cluster_quality(graph, Ts)
 
-rep1 = []
-# rep1 = k_means(GG, 10, 1)
-rep2s = [[]]
-# rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(1)]
-# rep2s = [inv_sq(GG, 10, 5, seed) for seed in xrange(5)]
-rep3s = [[]]
-# rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(1)]
-reps = rep1 + flatten(rep2s) + flatten(rep3s)
+def cluster_quality(graph, reps):
+    ''' Given
+        graph - a reconciliation graph
+        reps  - a list of reconciliations in the graph that are representatives
+                of clusters in the graph
 
-TestGGDict = testgen.gen(1)
-TestGG = ReconGraph(testgen.gen(1))
+    computes and returns various statistics about the clusters
+        1. the maximum radius of any cluster
+        2. the average radius of the clusters (weighted by cluster size)
+    '''
 
+    # Get how many reconciliations in each cluster are at each distance from
+    # the representative
+    ds = reconciliations_at_each_distance_from_representatives(graph, reps)
 
-print '%d distinct representatives out of %d' % (len(unique(reps)), len(reps))
-print 'Maximize was called %d times' % maximize_call_counts
-print 'Maximize built %d tables' % len(maximize_value_lists)
-print 'Maximize built %d parent tables' % len(maximize_parent_lists)
+    # Compute statistics
+    mean_cluster_radius = sum(sum(d[i] * i for i in d) for d in ds) / \
+                          float( sum(sum(d.values()) for d in ds) )
+    maximum_cluster_radius = max(max(d.keys()) for d in ds)
+
+    return mean_cluster_radius, maximum_cluster_radius
+
+mean = lambda l: sum(l) / float(len(l))
+
+if __name__ == '__main__':
+
+    f = open('t.g')
+    G = eval(f.read())
+    f.close()
+
+    GG = ReconGraph(G)
+
+    r = GG.roots[0]
+
+    rep1 = []
+    # rep1 = k_means(GG, 10, 1)
+    rep2s = [[]]
+    # rep2s = [k_means(GG, 10, 2, seed) for seed in xrange(1)]
+    # rep2s = [inv_sq(GG, 10, 5, seed) for seed in xrange(5)]
+    rep3s = [[]]
+    # rep3s = [k_means(GG, 10, 3, seed) for seed in xrange(1)]
+    reps = rep1 + flatten(rep2s) + flatten(rep3s)
+
+    TestGGDict = testgen.gen(2)
+    TestGGDict = testgen.augment(TestGGDict, ('m3', 'n'))
+    TestGGDict = testgen.augment(TestGGDict, ('m10', 'n'))
+    TestGG = ReconGraph(TestGGDict)
+    r = TestGG.roots[0]
+
+    assert r.mapping == ('m0','n')
+    assert r.mc(0).mapping == ('m1','n')
+    assert r.mc(1).mapping == ('m2','n')
+    assert r.mc(0).mc(0).mapping == ('m3','n')
+    assert r.mc(0).mc(1).mapping == ('m4','n')
+    assert r.mc(1).mc(0).mapping == ('m5','n')
+    assert r.mc(1).mc(1).mapping == ('m6','n')
+    # assert r.mc(0).mc(0).mc(0).mapping == ('m7','n')
+    # assert r.mc(0).mc(1).mc(0).mapping == ('m7','n')
+    # assert r.mc(1).mc(0).mc(0).mapping == ('m8','n')
+    # assert r.mc(1).mc(1).mc(0).mapping == ('m8','n')
+
+    # Ts = k_means(TestGG, 10, 2, 0)
+    # value_maps = node_value_maps_symmetric(TestGG, Ts)
+    # Cs = sparse_counts_n(TestGG, Ts)
+    # ds = reconciliations_at_each_distance_from_representatives(TestGG, Ts)
+    # 
+    # 
+    # print 'Value of %s for all templates %s' % (r.c[0], [m[r.c[0]] for m in value_maps])
+    # print 'Counts:', Cs[r.c[0]]
+    # print 'Value of %s for all templates %s' % (r.c[1], [m[r.c[1]] for m in value_maps])
+    # print 'Counts:', Cs[r.c[1]]
+    # print 'Custer distances'
+    # print '\n'.join(map(str,ds))
+    # print 'Cluster sizes:', [sum(d[i] for i in d) for d in ds]
+    # print 'Mean distances:', [sum(d[i] * i for i in d) / sum(d[i] for i in d) for d in ds]
+    # print 'Q:', mean([sum(d[i] * i for i in d) / sum(d[i] for i in d) for d in ds])
+
+    # Vals = [k_means_quality(TestGG, 10, 2, i)[0] for i in xrange(100)]
+    Vals = [k_means_quality(TestGG, 10, 2, i) for i in xrange(1)]
+    print 'Value mean %f min %f max %f' % (mean(Vals), min(Vals), max(Vals))
+    print Vals.count(min(Vals))
+    #Q, CS, VS = k_means_quality(TestGG, 10, 2, 7)
+    #print '\n'.join('%s:%s'%(c,CS[c]) for c in CS if c.isEvent())
+    # print '%d distinct representatives out of %d' % (len(unique(reps)), len(reps))
+    print 'Maximize was called %d times' % maximize_call_counts
+    print 'Maximize built %d tables' % len(maximize_value_lists)
+    print 'Maximize built %d parent tables' % len(maximize_parent_lists)

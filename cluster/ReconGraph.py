@@ -18,16 +18,25 @@ NO_CHILD = (None, None)
 class Node(object):
     def __init__(self, ty, mapping = None):
         self.children = []
+        self.c = self.children
         self.parents = []
         self.ty = ty
         self.mapping = mapping
+    def mc(self,i):
+        return self.c[i].c[0]
     def __repr__(self):
-        return '<Node type: %s, mapping: %s, #child: %d, #parent: %d>' % \
-                (self.ty, self.mapping, len(self.children), len(self.parents))
+        if self.isMap():
+            return '<Node type: %s, mapping: %s, #child: %d, #parent: %d>' % \
+                    (self.ty, self.mapping, len(self.children), len(self.parents))
+        else:
+            return '<Node type: %s, parent mapping:%s, #child: %d>' % \
+                    (self.ty, self.parents[0].mapping, len(self.children))
     def isLeaf(self):
         return len(self.children) == 0
     def isRoot(self):
         return len(self.parents) == 0
+    def isEvent(self):
+        return self.ty != MAP_NODE
     def isMap(self):
         return self.ty == MAP_NODE
     def otherChild(self, child):
@@ -75,7 +84,8 @@ class ReconGraph(object):
         self.roots = [self.map_nodes[root] for root in self.get_root_mappings()]
     def get_root_mappings(self):
         G = self.map_node_map
-        childrenMaps = flatten(flatten([[children[1:-1] for children in vals if type(children) == type([])] for vals in G.values()]))
+        childrenMaps = flatten(flatten([[children[1:-1] for children in vals \
+                if type(children) == type([])] for vals in G.values()]))
         return list(set(G.keys()) - set(childrenMaps))
     def postorder(self):
         return ReconGraphPostorder(self)
@@ -108,3 +118,43 @@ class ReconGraphPostorder(object):
                 if child not in self.visited:
                     self.q.append(child)
             return self.next()
+
+def dictRecToSetRec(graph, dictRec):
+    '''
+    Given
+        dictRec - a single reconciliation in dictionary form
+        graph - a reconciliation graph in nodes-in-memory form
+
+    returns the reconciliation as a set of event nodes in the graph
+
+    dictRec should be a Map<Mapping,Event> where Event = (Type,Child1,Child2)
+
+    As an example:
+    {
+        ('n50', 'm117') : ['L', ('n49', 'm116'), (None, None)],
+        ...
+    }
+    '''
+    roots_in_rec = filter(lambda root: root.mapping in dictRec, graph.roots)
+    assert len(roots_in_rec) == 1, '''
+        The dictionary form reconciliation %s should have exactly 1 root node
+        in the graph %s, but actually had %d (%s)''' % \
+                (dictRec, graph, len(roots_in_rec), roots_in_rec)
+    setRec = set([])
+    map_node_stack = roots_in_rec
+    while len(map_node_stack) > 0:
+        node = map_node_stack.pop()
+        candidate_events = []
+        for eventNode in node.children:
+            if eventNode.ty == dictRec[node.mapping][0]:
+                if set(c.mapping for c in eventNode.children) == \
+                   set([s for s in dictRec[node.mapping][1:] if s != (None, None)]):
+                    candidate_events.append(eventNode)
+        assert len(candidate_events) == 1, \
+                'Ambiguity in which event to use. Options: %s' % candidate_events
+        event = candidate_events[0]
+        setRec.add(event)
+        map_node_stack.extend(event.children)
+    return setRec
+
+
