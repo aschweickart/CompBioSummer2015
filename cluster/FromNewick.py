@@ -1,9 +1,10 @@
 import sys
-import os
 
 # Include the upper level directory in the import search path
 sys.path.append('../')
 
+import os
+from multiprocessing import Pool
 import DP
 import Greedy
 import KMeans
@@ -29,7 +30,7 @@ def run_test(fileName, max_k):
     cache_location = '%s/%s.graph' % (cache_dir, os.path.split(fileName)[1])
     if not os.path.isfile(cache_location):
         print >> sys.stderr, 'A reconciliation graph has not been built yet for this newick file'
-        print >> sys.stderr, 'Doing so now...'
+        print >> sys.stderr, 'Doing so now {%s}...' % cache_location
 
         DictGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 
@@ -58,6 +59,17 @@ def run_test(fileName, max_k):
         print 'k = %d' % i
         KMeans.k_means(graph, 10, i, 0, representatives[:i])
 
+def doFile(fileName):
+    try:
+        run_test(fileName, max_k)
+    except:
+        pass
+
 fileNames = sys.argv[1]
 max_k = int(sys.argv[2])
-list(run_test(fileName, max_k) for fileName in fileNames.split(','))
+num_processors = 1
+if num_processors > 1:
+    p = Pool(num_processors)
+    p.map(doFile, fileNames.split(','))
+else:
+    [run_test(fileName, max_k) for fileName in fileNames.split(',')]
