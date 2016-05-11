@@ -6,9 +6,10 @@ import itertools as it
 
 flatten = lambda l: reduce(operator.add, l)
 
-MAP_NODE      = 'map-node'
+# Nodes in a reconcilliation graph can be of different types.
+MAP_NODE      = 'map-node' # A map-node (the rest are subtypes of event-node)
 COSPECIATION  = 'S'
-LEAF_PAIR     = 'C'
+LEAF_PAIR     = 'C'        # Leaf-to-leaf mappings have this after them
 TRANSFER      = 'T'
 DUPLICATION   = 'D'
 LOSS          = 'L'
@@ -16,13 +17,23 @@ LOSS          = 'L'
 NO_CHILD = (None, None)
 
 class Node(object):
+    '''  A node in a reconciliation graph '''
     def __init__(self, ty, mapping = None):
+        ''' A node is created with just a type and optional
+        (parasite-to-host mapping).
+
+        It maintains both children and parent pointers
+
+        The type is either a map-node, or some type of event, as found at
+        the head of the file.
+        '''
         self.children = []
-        self.c = self.children
+        self.c = self.children # shortcut
         self.parents = []
         self.ty = ty
         self.mapping = mapping
     def mc(self,i):
+        '''shortcut'''
         return self.c[i].c[0]
     def __repr__(self):
         if self.isMap():
@@ -58,13 +69,22 @@ class Node(object):
             return set(self.children) == set(other.children)
 
 class ReconGraph(object):
+    ''' A representation of a Reconciliation Graph as a bunch of nodes in
+    memory with pointers between them.
+
+    Parent pointers are maintained'''
     def __init__(self, map_node_map):
-        # Map mappings (parasite, host) to nodes
+        # A dictionary which maps (parasite-to-host mappings) to nodes in the
+        # graph
         self.map_nodes = {}
+
         def get_or_make_map_node(mapping):
+            '''Gets the node for a parasite-to-host mapping, creating a new
+            node for the mapping if needed'''
             if mapping not in self.map_nodes:
                 self.map_nodes[mapping] = Node(MAP_NODE, mapping)
             return self.map_nodes[mapping]
+
         for mapping in map_node_map:
             event_children = map_node_map[mapping][:-1]
             for ty, child1mapping, child2mapping, _ in event_children:
@@ -88,8 +108,12 @@ class ReconGraph(object):
                 if type(children) == type([])] for vals in G.values()]))
         return list(set(G.keys()) - set(childrenMaps))
     def postorder(self):
+        ''' Visit the nodes child-first.
+        reasonably efficient'''
         return ReconGraphPostorder(self)
     def preorder(self):
+        ''' Visit the nodes parent-first.
+        Inefficient'''
         return reversed(list(self.postorder()))
     def __len__(self):
         ct = 0
@@ -98,6 +122,7 @@ class ReconGraph(object):
         return ct
 
 class ReconGraphPostorder(object):
+    ''' Iterator class for post-order travesals of the Reconciliation Graph '''
     def __init__(self, G):
         self.G = G
         self.q = G.roots[:]
@@ -138,7 +163,7 @@ def dictRecToSetRec(graph, dictRec):
     roots_in_rec = filter(lambda root: root.mapping in dictRec, graph.roots)
     assert len(roots_in_rec) == 1, '''
         The dictionary form reconciliation %s should have exactly 1 root node
-        in the graph %s, but actually had %d (%s)''' % \
+        in the graph %s, but actually had %d {%s}''' % \
                 (dictRec, graph, len(roots_in_rec), roots_in_rec)
     setRec = set([])
     map_node_stack = roots_in_rec

@@ -30,7 +30,7 @@ def run_test(fileName, max_k):
     cache_location = '%s/%s.graph' % (cache_dir, os.path.split(fileName)[1])
     if not os.path.isfile(cache_location):
         print >> sys.stderr, 'A reconciliation graph has not been built yet for this newick file'
-        print >> sys.stderr, 'Doing so now {%s}...' % cache_location
+        print >> sys.stderr, 'Doing so now and caching it in {%s}...' % cache_location
 
         DictGraph, numRecon = DP.DP(host, paras, phi, D, T, L)
 
@@ -45,7 +45,7 @@ def run_test(fileName, max_k):
 
     scoresList, dictReps = Greedy.Greedy(DictGraph, paras)
 
-    print >> sys.stderr, 'Found cluster representatives usign point-collecting'
+    print >> sys.stderr, 'Found cluster representatives using point-collecting'
 
     graph = ReconGraph.ReconGraph(DictGraph)
     setReps = [ReconGraph.dictRecToSetRec(graph, dictRep) for dictRep in dictReps]
@@ -54,6 +54,8 @@ def run_test(fileName, max_k):
 
     representatives = setReps + extra_reps
 
+    print >> sys.stderr, 'Starting K Means algorithm ... '
+    print >> sys.stderr, 'Printing Average and Maximum cluster radius at each step'
 
     for i in xrange(1, max_k + 1):
         print 'k = %d' % i

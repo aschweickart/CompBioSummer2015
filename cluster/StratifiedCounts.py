@@ -2,9 +2,16 @@
 # December 2015
 #
 # This file holds the functions for computing stratified counts
+#
+# For a careful definition of stratified counts, supercounts, and subcounts,
+# see the write-up
 
 from ReconGraph import ReconGraph
 from DistanceFunction import DistanceFunction, NDistanceFunction, SparseNDistanceFunction
+
+######################################################
+### Computing counts with respect to a single template
+######################################################
 
 def _subcounts(graph, template_event_set):
     ''' Given
@@ -84,6 +91,10 @@ def counts(graph, template_event_set):
     supercount_table = _supercounts(graph, template_event_set, subcount_table)
     return _counts(graph, template_event_set, subcount_table, supercount_table)
 
+#########################################################
+### Computing counts with respect to a multiple templates
+#########################################################
+
 def _subcounts_n(graph, template_event_set_s, fn_class):
     table = {}
     for n in graph.postorder():
@@ -141,8 +152,12 @@ def counts_n(graph, template_event_set_s, fn_class):
     return _counts_n(graph, template_event_set_s, subcount_table, supercount_table)
 
 def sparse_counts_n(graph, template_event_set_s):
+    ''' Computing the counts with respect to many templates using the sparse
+    function class '''
     return counts_n(graph, template_event_set_s, SparseNDistanceFunction)
 
 def dense_counts_n(graph, template_event_set_s):
+    ''' Computing the counts with respect to many templates using the dense
+    function class '''
     return counts_n(graph, template_event_set_s, NDistanceFunction)
 

@@ -5,13 +5,18 @@
 # This file holds classes which represent functions from Z^n -> Z
 # In particular the classes can represent functions which are non-zero on only
 # a finite set of inputs.
+#
+# We build functions backed by both python dicitonaries and NumPy arrays
+#
+# We've empirically determined that for resonable values of n (2-5), the python
+# dictionaries win by a long shot
 
 import numpy as np
 import Convolve
 import copy
 from collections import defaultdict
 
-def _pt_sum(v1, v2):
+def _vec_sum(v1, v2):
     return tuple(a + b for a, b in zip(v1, v2))
 
 class DistanceFunction(object):
@@ -79,11 +84,9 @@ class DistanceFunction(object):
         res.resetMaxDistance()
         return res
 
-# class for our functions from Z^n -> N, which exist for each node,
-#  mapping the (tuple of distances to various templates) to (counts).
-#  These count represent how many reconciliations the node is in, which
-#  fulfill these distance metrics to their repsective templates
 class NDistanceFunction(object):
+    ''' class for [dense] functions from Z^n -> N
+    backed by NumPy arrays'''
     def __init__(self, dim):
         dimTuple = tuple([0 for i in range(dim)])
         self.vector = np.array([], ndmin=dim)
@@ -157,6 +160,9 @@ class NDistanceFunction(object):
         return res
 
 class SparseNDistanceFunction(object):
+    ''' Represents functions from Z^n -> Z
+    backed by a python dictionary - best option for sparse functions
+    (functions that are 0 for a large amount of the interesting domain) '''
     def __init__(self, dim):
         self.dim = dim
         self.map = defaultdict(int)
@@ -179,13 +185,13 @@ class SparseNDistanceFunction(object):
         result = SparseNDistanceFunction(self.dim)
         for pt1 in self.map:
             for pt2 in other.map:
-                result.map[_pt_sum(pt1, pt2)] += self.map[pt1] * other.map[pt2]
+                result.map[_vec_sum(pt1, pt2)] += self.map[pt1] * other.map[pt2]
         return result
 
     def shift(self, i_s):
         result = SparseNDistanceFunction(self.dim)
         for pt in self.map:
-            result.map[_pt_sum(pt, i_s)] = self.map[pt]
+            result.map[_vec_sum(pt, i_s)] = self.map[pt]
         return result
 
     def __repr__(self):

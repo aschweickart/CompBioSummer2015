@@ -2,25 +2,6 @@ import itertools as it
 import numpy as np
 from scipy import ndimage
 
-def natural_number_sum(n, s):
-    '''Returns a generator which yields all tuples of n natural numbers which
-    sum to s (0 is a natural number)'''
-    numbers = [0 for i in xrange(n)]
-    numbers[0] = s
-    while True:
-        yield tuple(numbers)
-        carry = numbers[n-1]
-        numbers[n-1] = 0
-        done = True
-        for i in xrange(n-2,-1,-1):
-            if numbers[i] != 0:
-                numbers[i] -= 1
-                numbers[i+1] = carry + 1
-                done = False
-                break
-        if done:
-            return
-
 def convolve(A, B):
     '''Returns the convolution of A and B where
 
@@ -28,7 +9,12 @@ def convolve(A, B):
 
     Their convolution, C, is an ndarray. If we interpret A and B as tensors
     which hold the coefficients of some multivariate polynomial, C is a tensor
-    which holds the coefficients for their polynomial product.'''
+    which holds the coefficients for their polynomial product.
+
+    This version of convolve is backed by the convolution function found in
+    ndimage (with some adjustments to get the edges to work right).
+    It is _by far_ the faster of the two
+    '''
     assert len(A.shape) == len(B.shape),\
             "Input A has dimension %d but B has dimension %d." % (len(A.shape), len(B.shape))
 
@@ -52,7 +38,12 @@ def convolve_py(A, B):
 
     Their convolution, C, is an ndarray. If we interpret A and B as tensors
     which hold the coefficients of some multivariate polynomial, C holds the
-    coefficients for their polynomial product.'''
+    coefficients for their polynomial product.
+
+    This version of convolve is naive - it is entirely python code.
+    It is pretty slow, and we just wrote it because it is easier to understand,
+    so it can be used to test the numpy-backed convolution
+    '''
     assert len(A.shape) == len(B.shape),\
             "Input A has dimension %d but B has dimension %d." % (len(A.shape), len(B.shape))
 
@@ -75,7 +66,28 @@ def convolve_py(A, B):
         O[O_indices] = accum
     return O
 
-if __name__ == '__main__':
+# This is acutally unused, but left here in case it is needed in the future
+def natural_number_sum(n, s):
+    '''Returns a generator which yields all tuples of n natural numbers which
+    sum to s (0 is a natural number)'''
+    numbers = [0 for i in xrange(n)]
+    numbers[0] = s
+    while True:
+        yield tuple(numbers)
+        carry = numbers[n-1]
+        numbers[n-1] = 0
+        done = True
+        for i in xrange(n-2,-1,-1):
+            if numbers[i] != 0:
+                numbers[i] -= 1
+                numbers[i+1] = carry + 1
+                done = False
+                break
+        if done:
+            return
+
+def run_tests():
+    print 'Running tests ...'
     A = np.array([1, 2])
     B = np.array([4, 2])
     C = np.array([4, 5, 6, 7])
@@ -95,3 +107,7 @@ if __name__ == '__main__':
     check(C, A)
     check(B, C)
     check(C, B)
+    print 'Done with tests!'
+
+if __name__ == '__main__':
+    run_tests()
