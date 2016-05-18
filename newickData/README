@@ -1,0 +1,22 @@
+Each file holds the results of running the K-Means clustering on the data-set
+indicated by the filename.
+
+For each value of K the mean distance from reconciliation to cluster
+representative is given, along with the maximum distance from reconciliation
+to cluster representative. This pair of values is given once for each
+time it occured during the algorithm (A singe line indicates that KMeans did
+not move the cluster representatives at all, 2 lines indicates that KMeans
+stabilized after 1 change, etc.).
+
+I.E.
+
+k = 1
+25.0 30.0
+k = 2
+22.0 26.0
+21.5 25.0
+
+
+This means we ran KMeans with k \in \{1, 2\}.
+For k = 1 the representative was already optimal. For k = 2 KMeans change the
+representatives once, improving mean radius by 0.5.

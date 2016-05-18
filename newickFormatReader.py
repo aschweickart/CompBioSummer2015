@@ -3,15 +3,15 @@
 # Newick file reader and parser
 
 # Uses BioPython's Phylo package to read and parse a newick tree with internal
-# node names specified.  Specifically, the input is of the form 
+# node names specified.  Specifically, the input is of the form
 # (LeftTree, RightTree) RootName
 # LeftTree and RightTree are themselves newick trees and RootName is the
-# name given to the root node. 
+# name given to the root node.
 
 # All node names (internal and tips) must be non-numeric!
 
 # Returns a dictionary representation of the tree where
-# keys are strings that are the names of edges and values are 4-tuples 
+# keys are strings that are the names of edges and values are 4-tuples
 # of strings of the form:
 # (topVertex, bottomVertex, leftEdgeName, rightEdgeName)
 
@@ -23,12 +23,12 @@ from Bio import Phylo
 
 def getInput(fileName):
     """ Takes a fileName as input and returns the hostTree, parasiteTree, and tip mapping phi. """
-    
+
     fileHandle = open(fileName, 'r')
     hostTree, parasiteTree, phi = newickFormatReader(fileHandle)
     fileHandle.close()
     return hostTree, parasiteTree, phi
-    
+
 def newickFormatReader(fileHandle):
     """ Queries the user for a newick host tree, newick parasite tree, and
         a tip association file.  Reads those files, parses them, and returns
@@ -37,7 +37,7 @@ def newickFormatReader(fileHandle):
         The trees are returned in the dictionary format
         used by xscape and the tip associations are returned as a dictionary
         with parasite names as keys and host tips as values. """
-    
+
     if isinstance(fileHandle, basestring):
         fileHandle = open(fileHandle, 'r')
         autoclose = True
@@ -50,7 +50,7 @@ def newickFormatReader(fileHandle):
     hostString = hostString.strip()
     parasiteString = parasiteString.strip()
     phiList = phiString.split()
-    
+
     # Parse the input and build dictionary representations
     hostDict = parseNewick(hostString, "host")
     parasiteDict = parseNewick(parasiteString, "parasite")
@@ -58,7 +58,7 @@ def newickFormatReader(fileHandle):
 
     if autoclose:
         fileHandle.close()
-    
+
     return hostDict, parasiteDict, phiDict
 
 def parseNewick(newickString, treeType):
@@ -91,7 +91,7 @@ def buildTree(dfsList):
         dist = dfsList[0][1]
         splitPoint = 0
         for x in range(len(dfsList)-1, 0, -1):
-            if dfsList[x][1] == dist+1: 
+            if dfsList[x][1] == dist+1:
                 splitPoint = x
                 break
         leftList = dfsList[1:splitPoint]
@@ -127,12 +127,12 @@ def buildTreeDictionary(tupleTree, parentVertex, D, treeType):
             D[edgeName] = edgeName + (leftEdgeName, rightEdgeName)
         buildTreeDictionary(leftTree, root, D, treeType)
         buildTreeDictionary(rightTree, root, D, treeType)
-        
+
 def parsePhi(pairs):
     """ Queries the user for a file name containing tip associations of
         the form parasiteTip:hostTip, one entry per line.  Returns a
         tip association dictionary. """
-        
+
     phiDict = {}
     for pair in pairs:
         parasite, colon, host = pair.partition(":")
@@ -140,5 +140,5 @@ def parsePhi(pairs):
         value = host.strip()
         phiDict[key] = value
     return phiDict
-    
-    
+
+
